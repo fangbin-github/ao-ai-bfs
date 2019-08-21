@@ -6,16 +6,17 @@
 <generatorConfiguration>
 	
 	<context id="DB2Tables" targetRuntime="MyBatis3">
-		<commentGenerator>
-		  <property name="suppressAllComments" value="true" />
-		</commentGenerator>	
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<commentGenerator type="gov.cnao.ao.ai.bfs.mybatisgenerator.MyCommentGenerator">
+		    <!-- <property name="suppressAllComments" value="true"/> -->
+		</commentGenerator>
 		<!-- 配置数据库连接信息 -->
 		<jdbcConnection
-			driverClass="com.mysql.cj.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/aidb?useUnicode=true
+			driverClass="com.oscar.Driver"
+			connectionURL="jdbc:oscar://128.194.10.215:2003/aidb?useUnicode=true
 				&amp;characterEncoding=UTF-8&amp;useJDBCCompliantTimezoneShift=true
 				&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC" 
-			userId="root" password="root">
+			userId="sysdba" password="szoscar55">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -26,24 +27,30 @@
 		<javaModelGenerator 
 			targetPackage="gov.cnao.ao.ai.bfs.entity"
 			targetProject=".\src\main\java">
-			<property name="enableSubPackages" value="true" />
-			<property name="trimStrings" value="true" />
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="false" />
 		</javaModelGenerator>
 		
 		<!-- 指定SQL映射文件生成的位置 -->
 		<sqlMapGenerator targetPackage="mybatis"
 			targetProject=".\src\main\resources">
-			<property name="enableSubPackages" value="true" />
+			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
 
 		<!-- 指定dao接口生成的位置，mapper接口生成的位置 -->
 		<javaClientGenerator type="XMLMAPPER"
 			targetPackage="gov.cnao.ao.ai.bfs.mapper" 
 			targetProject=".\src\main\java">
-			<property name="enableSubPackages" value="true" />
+			<property name="enableSubPackages" value="false" />
 		</javaClientGenerator>
 
 		<!-- 指定每个表的生成策略 -->
-		<table tableName="t_bfs_dict_type" domainObjectName="DictType"></table>
+		<table tableName="PT_USER" 
+				domainObjectName="PtUser"
+				enableCountByExample = "false"
+				enableDeleteByExample = "false"
+				enableSelectByExample = "false"
+				enableUpdateByExample = "false">
+		</table>
 	</context>
 </generatorConfiguration>
