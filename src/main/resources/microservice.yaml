@@ -1,0 +1,10 @@
+APPLICATION_ID: ao-ai  #应用名
+service_description:
+  name: ao-ai-bfs  #微服务名
+  version: 0.0.7  #微服务版本
+cse:
+  service:
+    registry:
+      address: http://128.194.10.223:30100  #连接SC(Service Center,注册中心)的地址
+  rest:
+    address: 0.0.0.0:7111  #Rest通信地址

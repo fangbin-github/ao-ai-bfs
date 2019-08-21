@@ -1,0 +1,16 @@
+gov\cnao\ao\ai\bfs\controller\PersonController.class
+gov\cnao\ao\ai\bfs\entity\Persons.class
+gov\cnao\ao\ai\bfs\mapper\PersonsMapper.class
+gov\cnao\ao\ai\bfs\controller\Hello.class
+gov\cnao\ao\ai\bfs\ServerMain.class
+gov\cnao\ao\ai\bfs\controller\HelloController.class
+gov\cnao\ao\ai\bfs\entity\DictTypeExample.class
+gov\cnao\ao\ai\bfs\entity\DictType.class
+gov\cnao\ao\ai\bfs\controller\Person.class
+gov\cnao\ao\ai\bfs\entity\DictTypeExample$Criteria.class
+gov\cnao\ao\ai\bfs\entity\DictTypeExample$GeneratedCriteria.class
+gov\cnao\ao\ai\bfs\mapper\DictTypeMapper.class
+gov\cnao\ao\ai\bfs\entity\DictTypeExample$Criterion.class
+gov\cnao\ao\ai\bfs\service\PersionService.class
+gov\cnao\ao\ai\bfs\util\CommonUtil.class
+gov\cnao\ao\ai\bfs\mybatisgenerator\MybatisGenerator.class

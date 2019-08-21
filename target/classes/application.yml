@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ao-ai-bfs
+  datasource:
+    username: sysdba
+    password: szoscar55
+    url: jdbc:oscar://128.194.10.215:2003/aidb
+    driver-class-name: com.oscar.Driver
+mybatis:
+  mapper-locations: classpath:mybatis/*Mapper.xml,classpath:mybatis/*/*Mapper.xml
+  type-aliases-package: gov.cnao.ao.ai.bfs.entity
+server:
+  port: 7111
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7071/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
+
