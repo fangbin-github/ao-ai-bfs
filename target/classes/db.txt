@@ -1,1 +1,0 @@
-在AI下创建PERSIONS数据库表,字段id,name 类型VARCHAR 并添加数据
