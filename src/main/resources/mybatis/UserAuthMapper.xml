@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.cnao.ao.ai.bfs.mapper.UserAuthMapper">
+  <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <id column="AUDIT_PRJ_ID" jdbcType="VARCHAR" property="auditPrjId" />
+    <id column="VISIT_TAB_NM" jdbcType="VARCHAR" property="visitTabNm" />
+    <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+    <result column="CREATE_USER_NM" jdbcType="VARCHAR" property="createUserNm" />
+    <result column="CREATE_TM" jdbcType="TIMESTAMP" property="createTm" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    USER_ID, 
+    AUDIT_PRJ_ID, 
+    VISIT_TAB_NM, 
+    CREATE_USER_ID, 
+    CREATE_USER_NM, 
+    CREATE_TM
+  </sql>
+  
+  <!-- 查询授权信息 -->
+  <select id="queryUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCM_BFS.T_BFS_USER_AUTH
+    where 1=1
+     <if test = "visitTabNm !='' and visitTabNm != null ">
+      AND USER_ID = #{userId,jdbcType=VARCHAR}
+     </if>
+     <if test = "visitTabNm !='' and visitTabNm != null ">
+      AND AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+     </if>
+     <if test = "visitTabNm !='' and visitTabNm != null ">
+      AND VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUserId !='' and createUserId != null ">
+      AND CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUserNm !='' and createUserNm != null ">
+      AND CREATE_USER_NM like ('%'|| #{createUserNm,jdbcType=VARCHAR} || '%')
+     </if>
+     <if test = "createTm !='' and createTm != null ">
+      AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') = #{createTm}
+<!--       AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') <![CDATA[ >= ]]> #{createTm} -->
+     </if>
+     ORDER BY CREATE_TM DESC
+  </select>
+  
+  <!-- 删除授权信息 -->
+  <delete id="deleteUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    delete from SCM_BFS.T_BFS_USER_AUTH
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+      and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 新增授权信息 -->
+  <insert id="insertUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    insert into SCM_BFS.T_BFS_USER_AUTH (USER_ID, AUDIT_PRJ_ID, VISIT_TAB_NM, 
+      CREATE_USER_ID, CREATE_USER_NM, CREATE_TM
+      )
+    values (#{userId,jdbcType=VARCHAR}, #{auditPrjId,jdbcType=VARCHAR}, #{visitTabNm,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=VARCHAR}, #{createUserNm,jdbcType=VARCHAR}, sysdate
+      )
+  </insert>
+  
+   <!-- 修改授权信息 -->
+  <update id="updateUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    update SCM_BFS.T_BFS_USER_AUTH
+    set CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
+      CREATE_TM = #{createTm,jdbcType=TIMESTAMP}
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+      and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 选择性新增授权信息 -->
+  <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    insert into SCM_BFS.T_BFS_USER_AUTH
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="auditPrjId != null">
+        AUDIT_PRJ_ID,
+      </if>
+      <if test="visitTabNm != null">
+        VISIT_TAB_NM,
+      </if>
+      <if test="createUserId != null">
+        CREATE_USER_ID,
+      </if>
+      <if test="createUserNm != null">
+        CREATE_USER_NM,
+      </if>
+      <if test="createTm != null">
+        CREATE_TM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="auditPrjId != null">
+        #{auditPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitTabNm != null">
+        #{visitTabNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserNm != null">
+        #{createUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createTm != null">
+        #{createTm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 选择性修改授权信息 -->
+  <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+    update SCM_BFS.T_BFS_USER_AUTH
+    <set>
+      <if test="createUserId != null">
+        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserNm != null">
+        CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createTm != null">
+        CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=VARCHAR}
+      and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+      and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

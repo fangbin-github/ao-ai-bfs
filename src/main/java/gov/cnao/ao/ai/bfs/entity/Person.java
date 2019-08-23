@@ -1,6 +1,6 @@
 package gov.cnao.ao.ai.bfs.entity;
 
-public class Persons {
+public class Person {
     private String id;
 
     private String name;

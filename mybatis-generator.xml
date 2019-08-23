@@ -45,8 +45,8 @@
 		</javaClientGenerator>
 
 		<!-- 指定每个表的生成策略 -->
-		<table tableName="PT_USER" 
-				domainObjectName="PtUser"
+		<table tableName="T_BFS_USER_AUTH" 
+				domainObjectName="UserAuth"
 				enableCountByExample = "false"
 				enableDeleteByExample = "false"
 				enableSelectByExample = "false"

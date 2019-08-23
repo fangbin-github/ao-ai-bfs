@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import gov.cnao.ao.ai.bfs.contract.Hello;
+
 @RestSchema(schemaId="hello")
 @RequestMapping(path = "/hello")
 public class HelloController implements Hello {

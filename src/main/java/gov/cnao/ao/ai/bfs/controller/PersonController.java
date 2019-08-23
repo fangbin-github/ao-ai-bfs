@@ -9,46 +9,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import gov.cnao.ao.ai.bfs.entity.Persons;
-import gov.cnao.ao.ai.bfs.service.PersionService;
+import gov.cnao.ao.ai.bfs.contract.IPerson;
+import gov.cnao.ao.ai.bfs.entity.Person;
+import gov.cnao.ao.ai.bfs.service.PersonService;
 
-@RestSchema(schemaId = "person")
-@RequestMapping(path = "/person")
-public class PersonController implements Person {
+@RestSchema(schemaId = "iPerson")
+@RequestMapping(path = "/ao-ai-bfs/person")
+public class PersonController implements IPerson {
     @Autowired
-    private PersionService persionService;
+    private PersonService personService;
     
     /**
      * 查询人员列表
      */
 	@Override
-	@RequestMapping(path = "/queryPersons", method = RequestMethod.POST)
-	public List<Persons> queryPersions(@RequestBody Persons persons) {
-		return persionService.queryPersons(persons);
+	@RequestMapping(path = "/queryPerson", method = RequestMethod.POST)
+	public List<Person> queryPerson(@RequestBody Person person) {
+		return personService.queryPerson(person);
 	}
 
 	/**
 	 * 新增人员信息
 	 */
 	@Override
-	@RequestMapping(path = "/insertPersons", method = RequestMethod.POST)
-	public Persons save(@RequestBody Persons persons) {
-		return persionService.save(persons);
+	@RequestMapping(path = "/insertPerson", method = RequestMethod.POST)
+	public Person insertPerson(@RequestBody Person person) {
+		return personService.insertPerson(person);
 	}
 	
 	/**
 	 * 修改人员信息
 	 */
 	@Override
-	@RequestMapping(path = "/updatePersons", method = RequestMethod.POST)
-	public Persons update(@RequestBody Persons persons) {
-		return persionService.update(persons);
+	@RequestMapping(path = "/updatePerson", method = RequestMethod.POST)
+	public Person updatePerson(@RequestBody Person person) {
+		return personService.updatePerson(person);
 	}
 	
 	@Override
-	@RequestMapping(path = "/deletePersons", method = RequestMethod.POST)
-	public int deletePersions(@RequestBody Persons persons){
-    	return persionService.deletePersons(persons);
+	@RequestMapping(path = "/deletePerson", method = RequestMethod.POST)
+	public int deletePerson(@RequestBody Person person){
+    	return personService.deletePerson(person);
     }
 
 }
