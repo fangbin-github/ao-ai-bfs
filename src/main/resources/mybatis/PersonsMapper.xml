@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="gov.cnao.ao.ai.bfs.mapper.PersonsMapper">
-  <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.Persons">
+<mapper namespace="gov.cnao.ao.ai.bfs.mapper.PersonMapper">
+  <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.Person">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
@@ -9,10 +9,10 @@
     id, name
   </sql>
   
-  <select id="selectByExample" parameterType="gov.cnao.ao.ai.bfs.entity.Persons" resultMap="BaseResultMap">
+  <select id="queryPerson" parameterType="gov.cnao.ao.ai.bfs.entity.Person" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from persions
+    from person
     where 1=1
     <if test="id != null and id != ''">
             and ID = #{id}
@@ -22,19 +22,12 @@
     </if>
   </select>
   
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from persions
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  
-   <insert id="insertPersions" parameterType="gov.cnao.ao.ai.bfs.entity.Persons">
+   <insert id="insertPerson" parameterType="gov.cnao.ao.ai.bfs.entity.Person">
         <selectKey keyProperty="id" resultType="String" order="BEFORE">
             select replace(UUID(),'-','') from dual
         </selectKey>
         INSERT INTO
-        persions
+        person
         (
 	         ID,
 			 NAME
@@ -46,13 +39,13 @@
         )
     </insert>
     
-    <update id="updatePersions" parameterType="gov.cnao.ao.ai.bfs.entity.Persons">
-       update persions set 
+    <update id="updatePerson" parameterType="gov.cnao.ao.ai.bfs.entity.Person">
+       update person set 
        	   NAME=#{name}
         where id=#{id}
     </update>
     
-    <delete id="deletePersions" parameterType="gov.cnao.ao.ai.bfs.entity.Persons">
-        delete from persions where id = #{id}
+    <delete id="deletePerson" parameterType="gov.cnao.ao.ai.bfs.entity.Person">
+        delete from person where id = #{id}
     </delete> 
 </mapper>

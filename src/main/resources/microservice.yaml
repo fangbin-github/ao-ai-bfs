@@ -1,7 +1,7 @@
 APPLICATION_ID: ao-ai  #应用名
 service_description:
-  name: ao-ai-bfs  #微服务名
-  version: 0.0.7  #微服务版本
+  name: ao-ai-bfs-fb  #微服务名
+  version: 0.0.1  #微服务版本
 cse:
   service:
     registry:
