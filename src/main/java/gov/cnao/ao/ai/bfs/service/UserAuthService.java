@@ -1,9 +1,13 @@
 package gov.cnao.ao.ai.bfs.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.mapper.UserAuthMapper;
@@ -40,6 +44,24 @@ public class UserAuthService {
 	 */
 	public int deleteUserAuth(UserAuth userAuth) {
 		return userAuthMapper.deleteUserAuth(userAuth);
+	}
+
+	/**
+	 * 授权
+	 * @param userAuths
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public List<UserAuth> getAuth(List<UserAuth> userAuths) {
+		SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+		for (int i = 0; i < userAuths.size(); i++) {
+			UserAuth userAuth = userAuths.get(i);
+			userAuth.setCreateUserId("" + System.currentTimeMillis() + "");
+			userAuth.setCreateUserNm("测试" + (i+1));
+			userAuth.setCreateTm(format.format(new Date()));
+			userAuthMapper.insertUserAuth(userAuth);
+		}
+		return userAuths;
 	}
 
 }

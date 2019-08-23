@@ -28,7 +28,10 @@ public interface IUserAuth {
 	int deleteUserAuth(UserAuth userAuth);
 	
 	/**
-	 * 
+	 * 授权
+	 * @param userAuths
+	 * @return
 	 */
+	List<UserAuth> getAuth(List<UserAuth> userAuths);
 	
 }

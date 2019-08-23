@@ -45,6 +45,15 @@ public class UserAuthController implements IUserAuth{
 	public int deleteUserAuth(@RequestBody UserAuth userAuth) {
 		return userAuthService.deleteUserAuth(userAuth);
 	}
+
+	/**
+	 * 授权
+	 */
+	@Override
+	@RequestMapping(path = "/getAuth", method = RequestMethod.POST)
+	public List<UserAuth> getAuth(@RequestBody List<UserAuth> userAuths) {
+		return userAuthService.getAuth(userAuths);
+	}
 	
 	
 

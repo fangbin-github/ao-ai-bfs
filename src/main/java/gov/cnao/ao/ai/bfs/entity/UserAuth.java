@@ -1,7 +1,6 @@
 package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class UserAuth implements Serializable {
 	
