@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.cnao.ao.ai.bfs.mapper.DictTypeMapper">
+  <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.DictType">
+    <id column="DICT_TYPE_ID" jdbcType="VARCHAR" property="dictTypeId" />
+    <result column="DICT_TYPE_NM" jdbcType="VARCHAR" property="dictTypeNm" />
+    <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+    <result column="CREATE_USER_NM" jdbcType="VARCHAR" property="createUserNm" />
+    <result column="CREATE_TM" jdbcType="TIMESTAMP" property="createTm" />
+    <result column="UPDATE_USER_ID" jdbcType="VARCHAR" property="updateUserId" />
+    <result column="UPDATE_USER_NM" jdbcType="VARCHAR" property="updateUserNm" />
+    <result column="UPDATE_TM" jdbcType="TIMESTAMP" property="updateTm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER_ID, CREATE_USER_NM, CREATE_TM, UPDATE_USER_ID, 
+    UPDATE_USER_NM, UPDATE_TM
+  </sql>
+  <!--查询字典类别信息  -->
+  <select id="queryDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from SCM_BFS.T_BFS_DICT_TYPE 
+    where 1=1
+    <if test="dictTypeId != null">
+        and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictTypeNm != null">
+        and DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR}
+    </if>
+   </select>
+   <!--删除字典类别信息  -->
+  <delete id="deleteDictType" parameterType="java.lang.String">
+    delete from SCM_BFS.T_BFS_DICT_TYPE
+    where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+  </delete> 
+  <!--新增字典类别信息-->
+  <insert id="insertDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
+    insert into SCM_BFS.T_BFS_DICT_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictTypeId != null">
+        DICT_TYPE_ID,
+      </if>
+      <if test="dictTypeNm != null">
+        DICT_TYPE_NM,
+      </if>
+      <if test="createUserId != null">
+        CREATE_USER_ID,
+      </if>
+      <if test="createUserNm != null">
+        CREATE_USER_NM,
+      </if>
+      <if test="createTm != null">
+        CREATE_TM,
+      </if>
+      <if test="updateUserId != null">
+        UPDATE_USER_ID,
+      </if>
+      <if test="updateUserNm != null">
+        UPDATE_USER_NM,
+      </if>
+      <if test="updateTm != null">
+        UPDATE_TM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictTypeId != null">
+        #{dictTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="dictTypeNm != null">
+        #{dictTypeNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserNm != null">
+        #{createUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createTm != null">
+        #{createTm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserNm != null">
+        #{updateUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTm != null">
+        #{updateTm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--修改字典类别  -->
+  <update id="updateDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
+    update SCM_BFS.T_BFS_DICT_TYPE
+    <set>
+      <if test="dictTypeNm != null">
+        DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserNm != null">
+        CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="createTm != null">
+        CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserNm != null">
+        UPDATE_USER_NM = #{updateUserNm,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTm != null">
+        UPDATE_TM = #{updateTm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
+    insert into SCM_BFS.T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER_ID, 
+      CREATE_USER_NM, CREATE_TM, UPDATE_USER_ID, 
+      UPDATE_USER_NM, UPDATE_TM)
+    values (#{dictTypeId,jdbcType=VARCHAR}, #{dictTypeNm,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createUserNm,jdbcType=VARCHAR}, #{createTm,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, 
+      #{updateUserNm,jdbcType=VARCHAR}, #{updateTm,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
+    update SCM_BFS.T_BFS_DICT_TYPE
+    set DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
+      CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
+      CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+      UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR},
+      UPDATE_USER_NM = #{updateUserNm,jdbcType=VARCHAR},
+      UPDATE_TM = #{updateTm,jdbcType=TIMESTAMP}
+    where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+  </update>
+</mapper>
