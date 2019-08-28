@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.cnao.ao.ai.bfs.mapper.OperLogMapper">
+  <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.OperLog">
+    <id column="LOG_ID" jdbcType="VARCHAR" property="logId" />
+    <id column="PROJ_ID" jdbcType="VARCHAR" property="projId" />
+    <result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+    <result column="USER_NM" jdbcType="VARCHAR" property="userNm" />
+    <result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
+    <result column="ORG_NM" jdbcType="VARCHAR" property="orgNm" />
+    <result column="LOGIN_IP" jdbcType="VARCHAR" property="loginIp" />
+    <result column="OPER_TM" jdbcType="TIMESTAMP" property="operTm" />
+    <result column="LOG_TYPE" jdbcType="VARCHAR" property="logType" />
+    <result column="FUN_FLG" jdbcType="VARCHAR" property="funFlg" />
+    <result column="LOG_CONT" jdbcType="VARCHAR" property="logCont" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    LOG_ID, 
+    PROJ_ID, 
+    USER_ID, 
+    USER_NM, 
+    ORG_ID, 
+    ORG_NM, 
+    LOGIN_IP, 
+    OPER_TM, 
+    LOG_TYPE, 
+    FUN_FLG, 
+    LOG_CONT
+  </sql>
+  
+  <!-- 操作日志查询 -->
+  <select id="queryOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_BFS_OPER_LOG
+    where 1=1
+    <if test = "logId !='' and logId != null ">
+      AND LOG_ID = #{logId,jdbcType=VARCHAR}
+    </if>
+    <if test = "projId !='' and projId != null ">
+      AND PROJ_ID = #{projId,jdbcType=VARCHAR}
+    </if>
+    <if test = "userId !='' and userId != null ">
+      AND USER_ID = #{userId,jdbcType=VARCHAR}
+    </if>
+    <if test = "userNm !='' and userNm != null ">
+      AND USER_NM = ('%'|| #{userNm,jdbcType=VARCHAR} || '%')
+    </if>
+    <if test = "orgId !='' and orgId != null ">
+      AND ORG_ID = #{orgId,jdbcType=VARCHAR}
+    </if>
+    <if test = "orgNm !='' and orgNm != null ">
+      AND ORG_NM = ('%'|| #{orgNm,jdbcType=VARCHAR} || '%')
+    </if>
+    <if test = "loginIp !='' and loginIp != null ">
+      AND LOGIN_IP = #{loginIp,jdbcType=VARCHAR}
+    </if>
+    <if test = "operTm !='' and operTm != null ">
+      AND TO_CHAR(OPER_TM , 'YYYY-MM-DD HH:MI:SS') = #{operTm}
+    </if>
+    <if test = "logType !='' and logType != null ">
+      AND LOG_TYPE = #{logType}
+    </if>
+    <if test = "funFlg !='' and funFlg != null ">
+      AND FUN_FLG = ('%'|| #{funFlg,jdbcType=VARCHAR} || '%')
+    </if>
+    <if test = "logCont !='' and logCont != null ">
+      AND LOG_CONT = ('%'|| #{logCont,jdbcType=VARCHAR} || '%')
+    </if>
+    ORDER BY OPER_TM desc
+  </select>
+  
+  <!-- 操作日志删除 -->
+  <delete id="deleteOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
+    delete from T_BFS_OPER_LOG
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+    and PROJ_ID = #{projId,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 操作日志新增 -->
+  <insert id="insertOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
+    insert into T_BFS_OPER_LOG (LOG_ID, PROJ_ID, USER_ID, 
+      USER_NM, ORG_ID, ORG_NM, 
+      LOGIN_IP, OPER_TM, LOG_TYPE, 
+      FUN_FLG, LOG_CONT)
+    values (#{logId,jdbcType=VARCHAR}, #{projId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{userNm,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{orgNm,jdbcType=VARCHAR}, 
+      #{loginIp,jdbcType=VARCHAR}, #{operTm,jdbcType=TIMESTAMP}, #{logType,jdbcType=VARCHAR}, 
+      #{funFlg,jdbcType=VARCHAR}, #{logCont,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 操作日志修改 -->
+  <update id="updateOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
+    update T_BFS_OPER_LOG
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      USER_NM = #{userNm,jdbcType=VARCHAR},
+      ORG_ID = #{orgId,jdbcType=VARCHAR},
+      ORG_NM = #{orgNm,jdbcType=VARCHAR},
+      LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      OPER_TM = #{operTm,jdbcType=TIMESTAMP},
+      LOG_TYPE = #{logType,jdbcType=VARCHAR},
+      FUN_FLG = #{funFlg,jdbcType=VARCHAR},
+      LOG_CONT = #{logCont,jdbcType=VARCHAR}
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+      and PROJ_ID = #{projId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 操作日志选择性新增 -->
+  <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
+    insert into T_BFS_OPER_LOG
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        LOG_ID,
+      </if>
+      <if test="projId != null">
+        PROJ_ID,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userNm != null">
+        USER_NM,
+      </if>
+      <if test="orgId != null">
+        ORG_ID,
+      </if>
+      <if test="orgNm != null">
+        ORG_NM,
+      </if>
+      <if test="loginIp != null">
+        LOGIN_IP,
+      </if>
+      <if test="operTm != null">
+        OPER_TM,
+      </if>
+      <if test="logType != null">
+        LOG_TYPE,
+      </if>
+      <if test="funFlg != null">
+        FUN_FLG,
+      </if>
+      <if test="logCont != null">
+        LOG_CONT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="logId != null">
+        #{logId,jdbcType=VARCHAR},
+      </if>
+      <if test="projId != null">
+        #{projId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userNm != null">
+        #{userNm,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgNm != null">
+        #{orgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operTm != null">
+        #{operTm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="funFlg != null">
+        #{funFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="logCont != null">
+        #{logCont,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 操作日志选择性修改 -->
+  <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
+    update T_BFS_OPER_LOG
+    <set>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userNm != null">
+        USER_NM = #{userNm,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        ORG_ID = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="orgNm != null">
+        ORG_NM = #{orgNm,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null">
+        LOGIN_IP = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="operTm != null">
+        OPER_TM = #{operTm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logType != null">
+        LOG_TYPE = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="funFlg != null">
+        FUN_FLG = #{funFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="logCont != null">
+        LOG_CONT = #{logCont,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where LOG_ID = #{logId,jdbcType=VARCHAR}
+      and PROJ_ID = #{projId,jdbcType=VARCHAR}
+  </update>
+</mapper>

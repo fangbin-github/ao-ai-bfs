@@ -2,6 +2,11 @@ package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author fangbin
+ *
+ */
 public class UserAuth implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
