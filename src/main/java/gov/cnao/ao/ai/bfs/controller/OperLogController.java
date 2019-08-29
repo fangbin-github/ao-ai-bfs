@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,7 +28,7 @@ public class OperLogController implements IOperLog {
 	 */
 	@Override
 	@RequestMapping(path = "/queryOperLog", method = RequestMethod.POST)
-	public List<OperLog> queryOperLog(OperLog operLog) {
+	public List<OperLog> queryOperLog(@RequestBody OperLog operLog) {
 		return operLogService.queryOperLog(operLog);
 	}
 
@@ -36,7 +37,7 @@ public class OperLogController implements IOperLog {
 	 */
 	@Override
 	@RequestMapping(path = "/insertOperLog", method = RequestMethod.POST)
-	public OperLog insertOperLog(OperLog operLog) {
+	public OperLog insertOperLog(@RequestBody OperLog operLog) {
 		return operLogService.insertOperLog(operLog);
 	}
 
@@ -44,8 +45,9 @@ public class OperLogController implements IOperLog {
 	 * 操作日志导出
 	 */
 	@Override
-	public void exportOperLog(OperLog operLog) {
-		operLogService.exportOperLog(operLog);
+	@RequestMapping(path = "/exportOperLog", method = RequestMethod.GET)
+	public void exportOperLog() {
+		operLogService.exportOperLog();
 	}
 
 }

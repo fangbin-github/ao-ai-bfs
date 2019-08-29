@@ -32,7 +32,7 @@
   <select id="queryOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from T_BFS_OPER_LOG
+    from SCM_BFS.T_BFS_OPER_LOG
     where 1=1
     <if test = "logId !='' and logId != null ">
       AND LOG_ID = #{logId,jdbcType=VARCHAR}
@@ -72,14 +72,14 @@
   
   <!-- 操作日志删除 -->
   <delete id="deleteOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
-    delete from T_BFS_OPER_LOG
+    delete from SCM_BFS.T_BFS_OPER_LOG
     where LOG_ID = #{logId,jdbcType=VARCHAR}
     and PROJ_ID = #{projId,jdbcType=VARCHAR}
   </delete>
   
   <!-- 操作日志新增 -->
   <insert id="insertOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
-    insert into T_BFS_OPER_LOG (LOG_ID, PROJ_ID, USER_ID, 
+    insert into SCM_BFS.T_BFS_OPER_LOG (LOG_ID, PROJ_ID, USER_ID, 
       USER_NM, ORG_ID, ORG_NM, 
       LOGIN_IP, OPER_TM, LOG_TYPE, 
       FUN_FLG, LOG_CONT)
@@ -91,7 +91,7 @@
   
   <!-- 操作日志修改 -->
   <update id="updateOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
-    update T_BFS_OPER_LOG
+    update SCM_BFS.T_BFS_OPER_LOG
     set USER_ID = #{userId,jdbcType=VARCHAR},
       USER_NM = #{userNm,jdbcType=VARCHAR},
       ORG_ID = #{orgId,jdbcType=VARCHAR},
@@ -107,7 +107,7 @@
   
   <!-- 操作日志选择性新增 -->
   <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
-    insert into T_BFS_OPER_LOG
+    insert into SCM_BFS.T_BFS_OPER_LOG
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="logId != null">
         LOG_ID,
@@ -182,7 +182,7 @@
   
   <!-- 操作日志选择性修改 -->
   <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
-    update T_BFS_OPER_LOG
+    update SCM_BFS.T_BFS_OPER_LOG
     <set>
       <if test="userId != null">
         USER_ID = #{userId,jdbcType=VARCHAR},

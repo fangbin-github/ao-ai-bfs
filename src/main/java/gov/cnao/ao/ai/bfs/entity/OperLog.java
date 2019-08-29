@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author fangbin
@@ -121,7 +122,7 @@ public class OperLog implements Serializable {
         this.loginIp = loginIp;
     }
 
-    public String getOperTm() {
+	public String getOperTm() {
 		return operTm;
 	}
 

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gov.cnao.ao.ai.bfs.entity.OperLog;
-import gov.cnao.ao.ai.bfs.entity.Person;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
 import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
@@ -50,6 +49,7 @@ public class OperLogService {
 	 * @return
 	 */
 	public OperLog insertOperLog(OperLog operLog) {
+		operLog.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		operLogMapper.insertOperLog(operLog);
 		return operLog;
 	}
@@ -58,13 +58,13 @@ public class OperLogService {
 	 * 操作日志导出
 	 * @param operLog
 	 */
-	public void exportOperLog(OperLog operLog) {
+	public void exportOperLog() {
 		HSSFWorkbook workBook = new HSSFWorkbook();
 		ServletOutputStream out = null;
 		String[] titles = {"序号", "用户名称", "日志类型", "登录IP", "机构名称", "功能标识", "日志内容"};
-		List<OperLog> list = operLogMapper.queryOperLog(operLog);
+		List<OperLog> list = operLogMapper.queryOperLog(null);
 		
-        HSSFSheet sheet = workBook.createSheet("人员信息");
+        HSSFSheet sheet = workBook.createSheet("操作信息");
         Row desRow = sheet.createRow(0);
         sheet.addMergedRegion(new Region(0, (short) 0, 0, titles.length > 0 ? (short) (titles.length - 1) : (short) 0));
         Cell descell = desRow.createCell(0);

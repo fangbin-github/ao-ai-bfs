@@ -1,6 +1,5 @@
 package gov.cnao.ao.ai.bfs.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.mapper.UserAuthMapper;
+import gov.cnao.ao.ai.bfs.util.DateUtil;
 
 @Service
 public class UserAuthService {
@@ -53,12 +53,11 @@ public class UserAuthService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public List<UserAuth> getAuth(List<UserAuth> userAuths) {
-		SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
 		for (int i = 0; i < userAuths.size(); i++) {
 			UserAuth userAuth = userAuths.get(i);
 			userAuth.setCreateUserId("" + System.currentTimeMillis() + "");
 			userAuth.setCreateUserNm("测试" + (i+1));
-			userAuth.setCreateTm(format.format(new Date()));
+			userAuth.setCreateTm(DateUtil.dateToString(new Date(), "YYYY-MM-DD HH:MM:SS"));
 			userAuthMapper.insertUserAuth(userAuth);
 		}
 		return userAuths;
