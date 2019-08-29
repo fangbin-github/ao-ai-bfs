@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
+import java.util.Map;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 
@@ -9,6 +10,14 @@ public interface IDictInfo {
      * 查询字典列表
      */
 	List<DictInfo> queryDictInfo(DictInfo dictInfo);
+	/**
+	 * 根据ID查询字典信息名称
+	 */
+	List<DictInfo>  queryDictInfoById(DictInfo dictInfo);
+	/**
+	 * 根据字典信息名称查询ID
+	 */
+	List<DictInfo>  queryDictInfoByName(DictInfo dictInfo);
 	/**
 	 * 新增字典信息
 	 */

@@ -32,6 +32,29 @@
          and DICT_NM = #{dictNm,jdbcType=VARCHAR}
     </if>
    </select>
+    <!--根据ID查询字典信息名称  -->
+  <select id="queryDictInfoById" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo"  resultMap="BaseResultMap">
+    select 
+     DICT_NM
+    from SCM_BFS.T_BFS_DICT_INFO 
+    where 1=1
+    <if test="dictTypeId != null">
+	     and DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictCd != null">
+         and DICT_CD = #{dictCd,jdbcType=VARCHAR}
+    </if>
+  </select>
+    <!--根据字典信息名称查询ID -->
+  <select id="queryDictInfoByName" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultMap="BaseResultMap">
+    select 
+     DICT_TYPE_ID,DICT_CD 
+    from SCM_BFS.T_BFS_DICT_INFO 
+    where 1=1 
+    <if test="dictNm != null">
+      and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%')
+    </if> 
+  </select>
    <!--删除字典信息  -->
   <delete id="deleteDictInfo" parameterType="java.lang.String">
     delete from SCM_BFS.T_BFS_DICT_INFO

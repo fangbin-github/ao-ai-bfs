@@ -15,6 +15,19 @@
     DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER_ID, CREATE_USER_NM, CREATE_TM, UPDATE_USER_ID, 
     UPDATE_USER_NM, UPDATE_TM
   </sql>
+  <!--查询字典类别目录  -->
+  <select id="queryDictTypeConent" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
+    select 
+    DICT_TYPE_NM 
+    from SCM_BFS.T_BFS_DICT_TYPE 
+    where 1=1
+    <if test="dictTypeId != null">
+        and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictTypeNm != null">
+        and DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR}
+    </if>
+   </select>
   <!--查询字典类别信息  -->
   <select id="queryDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
     select 
