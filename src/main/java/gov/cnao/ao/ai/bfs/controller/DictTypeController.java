@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,15 @@ public class DictTypeController implements IDictType{
 	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictTypeController.class);
 	@Autowired
 	private DictTypeService dictTypeService;
-
+	
+	/**
+	 * 查询字典类别目录信息
+	 */
+	@Override
+    @RequestMapping(value = "/queryDictTypeCon", method = RequestMethod.POST)
+	public Map<String, Object> queryDictTypeCon(@RequestBody DictType dictType) {
+	        return dictTypeService.queryDictTypeCon(dictType);
+	}
 	/**
 	 * 查询字典类别信息
 	 */

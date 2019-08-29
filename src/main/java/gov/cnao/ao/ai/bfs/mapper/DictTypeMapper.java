@@ -8,7 +8,10 @@ import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 @Mapper
 public interface DictTypeMapper {
-    
+	 /**
+     * 查询字典类别目录信息
+     */
+    List<DictType> queryDictTypeConent(DictType dictType);
     /**
      * 查询字典类别信息
      */

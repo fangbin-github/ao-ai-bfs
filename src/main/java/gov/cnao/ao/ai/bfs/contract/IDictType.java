@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,10 @@ import gov.cnao.ao.ai.bfs.entity.DictType;
 
 
 public interface IDictType {
+	 /**
+     * 查询字典类别目录
+     */
+	Map<String, Object> queryDictTypeCon(DictType dictType);
 	 /**
      * 查询字典类别信息列表
      */

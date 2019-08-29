@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,9 +9,8 @@ import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 @Mapper
 public interface DictInfoMapper {
-	
-	
-    /**
+
+	/**
      * 新增字典信息
      */
 	void insertDictInfo(DictInfo dictInfo);
@@ -27,4 +27,12 @@ public interface DictInfoMapper {
 	 * 删除数据字典
 	 */
 	int deleteDictInfo(DictInfo dictInfo);
+	/**
+	 * 根据ID查询字典信息名称
+	 */
+	List<DictInfo> queryDictInfoById(DictInfo dictInfo);
+	/**
+	 * 根据字典信息名称查询ID
+	 */
+	List<DictInfo> queryDictInfoByName(DictInfo dictInfo);
 }
