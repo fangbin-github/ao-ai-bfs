@@ -45,7 +45,7 @@ public class OperLogController implements IOperLog {
 	 * 操作日志导出
 	 */
 	@Override
-	@RequestMapping(path = "/exportOperLog", method = RequestMethod.GET)
+	@RequestMapping(path = "/exportOperLog", method = RequestMethod.POST)
 	public void exportOperLog() {
 		operLogService.exportOperLog();
 	}

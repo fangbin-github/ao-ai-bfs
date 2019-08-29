@@ -63,8 +63,8 @@ public class OperLogService {
 		ServletOutputStream out = null;
 		String[] titles = {"序号", "用户名称", "日志类型", "登录IP", "机构名称", "功能标识", "日志内容"};
 		List<OperLog> list = operLogMapper.queryOperLog(null);
-		
-        HSSFSheet sheet = workBook.createSheet("操作信息");
+        
+		HSSFSheet sheet = workBook.createSheet("操作信息");
         Row desRow = sheet.createRow(0);
         sheet.addMergedRegion(new Region(0, (short) 0, 0, titles.length > 0 ? (short) (titles.length - 1) : (short) 0));
         Cell descell = desRow.createCell(0);
