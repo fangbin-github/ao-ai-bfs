@@ -17,6 +17,8 @@ import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
+import io.vertx.core.json.JsonObject;
+import net.sf.json.JSONObject;
 
 @Service
 public class DictTypeService {
@@ -28,19 +30,34 @@ public class DictTypeService {
 	/**
 	 * 查询字典类别信息目录
 	 */
-	public Map<String, Object> queryDictTypeCon(DictType dictType){
-		List<DictType> list= dictTypeMapper.queryDictTypeConent(dictType);
+	public List<Map<String, Object>> queryDictTypeCon(DictType dictType){
+		List<DictType> list1= dictTypeMapper.queryDictTypeConent(dictType);
+		//对里层数据进行处理
+		List<Object> list = new ArrayList<>(); 
+		for(DictType c : list1) {
+			JSONObject object = new JSONObject();
+			object.put("label", c.getDictTypeNm());
+			object.put("id", c.getDictTypeId());
+			object.put("dictTypeNm", c.getDictTypeNm());
+			object.put("dictTypeId", c.getDictTypeId());
+//			object.put("children", c.getDictTypeNm());
+			list.add(object);
+		}
+		
 		Map<String,Object> map = new HashMap<>();
 		map.put("id", 2);
-		map.put("lable", "字典类别");
+		map.put("label", "字典类别");
 		map.put("children", list);
 		List<Map<String, Object>> list2 = new ArrayList<Map<String,Object>>();
 		list2.add(map);
 		Map<String,Object> amap = new HashMap<String,Object>();
 		amap.put("id", 1);
-		amap.put("lable", "数据字典管理");
+		amap.put("label", "数据字典管理");
 		amap.put("children", list2);
-		return amap;
+		List<Map<String, Object>> list3 = new ArrayList<Map<String, Object>>();
+		list3.add(amap);
+		//返回包装的数据
+		return list3;
 	}
 	/**
 	 * 查询字典类别信息

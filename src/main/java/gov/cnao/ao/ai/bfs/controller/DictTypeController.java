@@ -28,7 +28,7 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
     @RequestMapping(value = "/queryDictTypeCon", method = RequestMethod.POST)
-	public Map<String, Object> queryDictTypeCon(@RequestBody DictType dictType) {
+	public List<Map<String, Object>> queryDictTypeCon(@RequestBody DictType dictType) {
 	        return dictTypeService.queryDictTypeCon(dictType);
 	}
 	/**

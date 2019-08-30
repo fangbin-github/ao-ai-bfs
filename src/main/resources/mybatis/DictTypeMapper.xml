@@ -4,21 +4,21 @@
   <resultMap id="BaseResultMap" type="gov.cnao.ao.ai.bfs.entity.DictType">
     <id column="DICT_TYPE_ID" jdbcType="VARCHAR" property="dictTypeId" />
     <result column="DICT_TYPE_NM" jdbcType="VARCHAR" property="dictTypeNm" />
-    <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUserId" />
     <result column="CREATE_USER_NM" jdbcType="VARCHAR" property="createUserNm" />
-    <result column="CREATE_TM" jdbcType="TIMESTAMP" property="createTm" />
+    <result column="CREATE_TMS" jdbcType="TIMESTAMP" property="createTm" />
     <result column="UPDATE_USER_ID" jdbcType="VARCHAR" property="updateUserId" />
     <result column="UPDATE_USER_NM" jdbcType="VARCHAR" property="updateUserNm" />
     <result column="UPDATE_TM" jdbcType="TIMESTAMP" property="updateTm" />
   </resultMap>
   <sql id="Base_Column_List">
-    DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER_ID, CREATE_USER_NM, CREATE_TM, UPDATE_USER_ID, 
+    DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER, CREATE_USER_NM, CREATE_TMS, UPDATE_USER_ID, 
     UPDATE_USER_NM, UPDATE_TM
   </sql>
   <!--查询字典类别目录  -->
   <select id="queryDictTypeConent" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
     select 
-    DICT_TYPE_NM 
+    DICT_TYPE_NM,DICT_TYPE_ID 
     from SCM_BFS.T_BFS_DICT_TYPE 
     where 1=1
     <if test="dictTypeId != null">
@@ -57,13 +57,13 @@
         DICT_TYPE_NM,
       </if>
       <if test="createUserId != null">
-        CREATE_USER_ID,
+        CREATE_USER,
       </if>
       <if test="createUserNm != null">
         CREATE_USER_NM,
       </if>
       <if test="createTm != null">
-        CREATE_TM,
+        CREATE_TMS,
       </if>
       <if test="updateUserId != null">
         UPDATE_USER_ID,
@@ -110,13 +110,13 @@
         DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
       </if>
       <if test="createUserId != null">
-        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+        CREATE_USER = #{createUserId,jdbcType=VARCHAR},
       </if>
       <if test="createUserNm != null">
         CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
       </if>
       <if test="createTm != null">
-        CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+        CREATE_TMS = #{createTm,jdbcType=TIMESTAMP},
       </if>
       <if test="updateUserId != null">
         UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR},
@@ -131,8 +131,8 @@
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </update>
   <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
-    insert into SCM_BFS.T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER_ID, 
-      CREATE_USER_NM, CREATE_TM, UPDATE_USER_ID, 
+    insert into SCM_BFS.T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER, 
+      CREATE_USER_NM, CREATE_TMS, UPDATE_USER_ID, 
       UPDATE_USER_NM, UPDATE_TM)
     values (#{dictTypeId,jdbcType=VARCHAR}, #{dictTypeNm,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
       #{createUserNm,jdbcType=VARCHAR}, #{createTm,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, 
@@ -141,9 +141,9 @@
   <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
     update SCM_BFS.T_BFS_DICT_TYPE
     set DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
-      CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      CREATE_USER = #{createUserId,jdbcType=VARCHAR},
       CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
-      CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+      CREATE_TMS = #{createTm,jdbcType=TIMESTAMP},
       UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR},
       UPDATE_USER_NM = #{updateUserNm,jdbcType=VARCHAR},
       UPDATE_TM = #{updateTm,jdbcType=TIMESTAMP}

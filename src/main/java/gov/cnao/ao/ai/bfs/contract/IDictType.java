@@ -14,7 +14,7 @@ public interface IDictType {
 	 /**
      * 查询字典类别目录
      */
-	Map<String, Object> queryDictTypeCon(DictType dictType);
+	List<Map<String, Object>> queryDictTypeCon(DictType dictType);
 	 /**
      * 查询字典类别信息列表
      */
