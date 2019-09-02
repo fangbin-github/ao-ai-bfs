@@ -1,7 +1,6 @@
 package gov.cnao.ao.ai.bfs.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.slf4j.LoggerFactory;
@@ -9,14 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.cnao.ao.ai.bfs.contract.IDictInfo;
-import gov.cnao.ao.ai.bfs.contract.IDictType;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
-import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.service.DictInfoService;
-import gov.cnao.ao.ai.bfs.service.DictTypeService;
 
 @RestSchema(schemaId = "iDictInfo")
 @RequestMapping(path = "/ao-ai-bfs/dict")
@@ -38,7 +33,7 @@ public class DictInfoController implements IDictInfo{
 	 */
 	@Override
     @RequestMapping(value = "/queryDictInfoById", method = RequestMethod.POST)
-	public List<DictInfo> queryDictInfoById(@RequestBody DictInfo dictInfo) {
+	public String queryDictInfoById(@RequestBody DictInfo dictInfo) {
 		return dictInfoService.queryDictInfoById(dictInfo);
 	}
 	/**
@@ -46,7 +41,7 @@ public class DictInfoController implements IDictInfo{
 	 */
 	@Override
     @RequestMapping(value = "/queryDictInfoByName", method = RequestMethod.POST)
-	public List<DictInfo> queryDictInfoByName(@RequestBody DictInfo dictInfo) {
+	public String queryDictInfoByName(@RequestBody DictInfo dictInfo) {
 		return dictInfoService.queryDictInfoByName(dictInfo);
 	}
 	/**
@@ -66,13 +61,18 @@ public class DictInfoController implements IDictInfo{
 	public DictInfo updateDictInfo(@RequestBody DictInfo dictInfo) {
 		return dictInfoService.updateDictInfo(dictInfo);
 	}
+	
 	/**
 	 * 删除字典信息
 	 */
 	@Override
 	@RequestMapping(path = "/deleteDictInfo", method = RequestMethod.POST)
-	public int deleteDictInfo(@RequestBody DictInfo dictInfo) {
-    	return dictInfoService.deleteDictInfo(dictInfo);
-    }
+	public int deleteDictInfo(@RequestBody List<DictInfo> list) {
+		return dictInfoService.deleteDictInfo(list);
+	}
+	
+//	public int deleteDictInfo(@RequestBody DictInfo dictInfo) {
+//    	return dictInfoService.deleteDictInfo(dictInfo);
+//    }
 }
 

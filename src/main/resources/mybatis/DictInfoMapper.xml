@@ -33,32 +33,33 @@
     </if>
    </select>
     <!--根据ID查询字典信息名称  -->
-  <select id="queryDictInfoById" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo"  resultMap="BaseResultMap">
+  <select id="queryDictInfoById" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo"  resultType="java.lang.String">
     select 
      DICT_NM
     from SCM_BFS.T_BFS_DICT_INFO 
     where 1=1
-    <if test="dictTypeId != null">
+    <!-- <if test="dictTypeId != null">
 	     and DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
-	</if>
+	</if> -->
 	<if test="dictCd != null">
          and DICT_CD = #{dictCd,jdbcType=VARCHAR}
     </if>
   </select>
     <!--根据字典信息名称查询ID -->
-  <select id="queryDictInfoByName" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultMap="BaseResultMap">
+  <select id="queryDictInfoByName" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultType="java.lang.String">
     select 
-     DICT_TYPE_ID,DICT_CD 
+    	DICT_CD 
     from SCM_BFS.T_BFS_DICT_INFO 
     where 1=1 
     <if test="dictNm != null">
-      and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%')
+      and DICT_NM = #{dictNm,jdbcType=VARCHAR}
+<!--       and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%') -->
     </if> 
   </select>
    <!--删除字典信息  -->
   <delete id="deleteDictInfo" parameterType="java.lang.String">
     delete from SCM_BFS.T_BFS_DICT_INFO
-    where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+    where DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </delete> 
   <!--新增字典信息  -->
   <insert id="insertDictInfo" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
@@ -166,7 +167,7 @@
         UPDATE_TM = #{updateTm,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+    where DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </update>
   
    <select id="selectByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultMap="BaseResultMap">
@@ -176,11 +177,10 @@
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
       and DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </select>
-<!--   <delete id="deleteByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfoKey">
+  <delete id="deleteDictInfoByTypeId" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
     delete from SCM_BFS.T_BFS_DICT_INFO
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
-      and DICT_CD = #{dictCd,jdbcType=VARCHAR}
-  </delete> -->
+  </delete>
   <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
     insert into SCM_BFS.T_BFS_DICT_INFO (DICT_TYPE_ID, DICT_CD, DICT_NM, 
       SUP_DICT_CD, SORT_NO, CREATE_USER, 

@@ -30,6 +30,6 @@ public interface IDictType {
 	/**
 	 * 删除字典类别信息
 	 */
-	int deleteDictType(DictType dictType);
+	int deleteDictType(List<DictType> list);
 	
 }

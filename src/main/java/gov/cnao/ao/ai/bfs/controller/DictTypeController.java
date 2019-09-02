@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.cnao.ao.ai.bfs.contract.IDictType;
-import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.service.DictTypeService;
 
@@ -61,7 +59,7 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
 	@RequestMapping(path = "/deleteDictType", method = RequestMethod.POST)
-	public int deleteDictType(@RequestBody DictType dictType) {
-    	return dictTypeService.deleteDictType(dictType);
+	public int deleteDictType(@RequestBody List<DictType> list) {
+    	return dictTypeService.deleteDictType(list);
     }
 }

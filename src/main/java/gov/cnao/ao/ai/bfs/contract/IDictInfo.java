@@ -13,11 +13,11 @@ public interface IDictInfo {
 	/**
 	 * 根据ID查询字典信息名称
 	 */
-	List<DictInfo>  queryDictInfoById(DictInfo dictInfo);
+	String queryDictInfoById(DictInfo dictInfo);
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	List<DictInfo>  queryDictInfoByName(DictInfo dictInfo);
+	String queryDictInfoByName(DictInfo dictInfo);
 	/**
 	 * 新增字典信息
 	 */
@@ -29,6 +29,7 @@ public interface IDictInfo {
 	/**
 	 * 删除字典信息
 	 */
-	int deleteDictInfo(DictInfo dictInfo);
+	int deleteDictInfo(List<DictInfo> list);
+//	int deleteDictInfo(DictInfo dictInfo);
 	
 }

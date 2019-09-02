@@ -30,9 +30,15 @@ public interface DictInfoMapper {
 	/**
 	 * 根据ID查询字典信息名称
 	 */
-	List<DictInfo> queryDictInfoById(DictInfo dictInfo);
+	String queryDictInfoById(DictInfo dictInfo);
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	List<DictInfo> queryDictInfoByName(DictInfo dictInfo);
+	String queryDictInfoByName(DictInfo dictInfo);
+	
+	/**
+	 * 根据数据字典类型删除数据字典信息
+	 * @param dictInfo
+	 */
+	void deleteDictInfoByTypeId(DictInfo dictInfo);
 }
