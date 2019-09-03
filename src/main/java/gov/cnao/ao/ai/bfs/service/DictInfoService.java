@@ -37,16 +37,16 @@ public class DictInfoService {
 	/**
 	 * 根据ID查询字典信息名称  
 	 */
-	public List<DictInfo> queryDictInfoById(DictInfo dictInfo){
-		List<DictInfo> list = dictInfoMapper.queryDictInfoById(dictInfo);
-		return list;
+	public String queryDictInfoById(DictInfo dictInfo){
+		String dictNm = dictInfoMapper.queryDictInfoById(dictInfo);
+		return dictNm;
 	}
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	public List<DictInfo> queryDictInfoByName(DictInfo dictInfo){
-		List<DictInfo> list = dictInfoMapper.queryDictInfoByName(dictInfo);
-		return list;
+	public String queryDictInfoByName(DictInfo dictInfo){
+		String dictCd = dictInfoMapper.queryDictInfoByName(dictInfo);
+		return dictCd;
 	}
 //	public List<Map<String, Object>> queryDictInfo(DictInfo dictInfo){
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -62,8 +62,14 @@ public class DictInfoService {
 	/**
 	 * 删除字典信息
 	 */
-	public int deleteDictInfo(DictInfo dictInfo) {
-		return dictInfoMapper.deleteDictInfo(dictInfo);
+	public int deleteDictInfo(List<DictInfo> list) {
+		int num =0;
+		for (int i = 0; i < list.size(); i++) {
+			DictInfo dictInfo = list.get(i);
+			dictInfoMapper.deleteDictInfo(dictInfo);
+			num++;
+		}
+		return num;
 	}
 	
 	
@@ -72,13 +78,11 @@ public class DictInfoService {
 	 */
 	public DictInfo insertDictInfo(DictInfo dictInfo) {
 		dictInfo.setCreateTm(DateTimeUtil.getCurrentTime());
-		
-		DictType  dictType = new DictType();
-		String getInfoID = dictInfo.getDictTypeId();
-		dictType.setDictTypeId(getInfoID);
-		dictType.setCreateTm(DateTimeUtil.getCurrentTime());
-		
-		dictTypeMapper.insertDictType(dictType);
+//		DictType  dictType = new DictType();
+//		String getInfoID = dictInfo.getDictTypeId();
+//		dictType.setDictTypeId(getInfoID);
+//		dictType.setCreateTm(DateTimeUtil.getCurrentTime());
+//		dictTypeMapper.insertDictType(dictType);
 		dictInfoMapper.insertDictInfo(dictInfo);
 		return dictInfo;
 	}
