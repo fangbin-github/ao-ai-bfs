@@ -70,28 +70,37 @@ public class DictTypeService {
 	 */
 	public DictType insertDictType(DictType dictType) {
 //		 dictType.setUpdateTm(DateTimeUtil.getCurrentTime());
-		 dictType.setCreateTm(DateTimeUtil.getCurrentTime());
-		 dictTypeMapper.insertDictType(dictType);
+		dictType.setCreateTm(DateTimeUtil.getCurrentTime());
+		dictTypeMapper.insertDictType(dictType);
 		return dictType;
 	}
 	/**
 	 * 修改字典类别信息
 	 */
 	public DictType updateDictType(DictType dictType) {
-		 dictType.setUpdateTm(DateTimeUtil.getCurrentTime());
-		 dictTypeMapper.updateDictType(dictType);
+		dictType.setUpdateTm(DateTimeUtil.getCurrentTime());
+		dictTypeMapper.updateDictType(dictType);
 		return dictType;
 	}
 	/**
 	 * 删除字典类别信息
 	 */
-	public int deleteDictType(DictType dictType) {
-		int num1 = dictTypeMapper.deleteDictType(dictType);
-		DictInfo dictInfo = new DictInfo();
-		String getDictID = dictType.getDictTypeId();
-		dictInfo.setDictTypeId(getDictID);
-		int num2 = dictInfoMapper.deleteDictInfo(dictInfo);
-		int num = num1+num2;
+	public int deleteDictType(List<DictType> list) {
+		int num = 0;
+		for (int i = 0; i < list.size(); i++) {
+			DictType dictType = list.get(i);
+			dictTypeMapper.deleteDictType(dictType);
+			DictInfo dictInfo = new DictInfo();
+			dictInfo.setDictTypeId(dictType.getDictTypeId());
+			dictInfoMapper.deleteDictInfoByTypeId(dictInfo);
+			num++;
+		}
+//		int num1 = dictTypeMapper.deleteDictType(dictType);
+//		DictInfo dictInfo = new DictInfo();
+//		String getDictID = dictType.getDictTypeId();
+//		dictInfo.setDictTypeId(getDictID);
+//		int num2 = dictInfoMapper.deleteDictInfo(dictInfo);
+//		int num = num1+num2;
     	return num;
     }
 }

@@ -130,6 +130,7 @@
     </set>
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </update>
+  
   <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
     insert into SCM_BFS.T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER, 
       CREATE_USER_NM, CREATE_TMS, UPDATE_USER_ID, 
