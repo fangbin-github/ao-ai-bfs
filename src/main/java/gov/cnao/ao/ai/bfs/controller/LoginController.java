@@ -37,9 +37,9 @@ import com.bjsasc.drap.sso.SimpleClientHttpRequestFactory4Https;
 import gov.cnao.ao.ai.bfs.contract.Login;
 
 @RestController
-@RequestMapping("/login")
-@RestSchema(schemaId="login")
-public class LoginController implements Login {
+@RequestMapping("/Login")
+@RestSchema(schemaId="Ilogin")
+public class LoginController implements ILogin {
 
 	private final static String SSO_CODE = "sso_code";
 
