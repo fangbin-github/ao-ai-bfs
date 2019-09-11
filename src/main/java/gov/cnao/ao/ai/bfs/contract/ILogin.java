@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 
-public interface Login {
+public interface ILogin {
 
 	 ResponseEntity<Map<String,String>> login(String sso_code) throws IOException;
 }
