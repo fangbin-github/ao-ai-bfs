@@ -34,7 +34,7 @@ import com.bjsasc.drap.pt.context.ContextUser;
 import com.bjsasc.drap.sso.SSOService;
 import com.bjsasc.drap.sso.SimpleClientHttpRequestFactory4Https;
 
-import gov.cnao.ao.ai.bfs.contract.Login;
+import gov.cnao.ao.ai.bfs.contract.ILogin;
 
 @RestController
 @RequestMapping("/Login")
