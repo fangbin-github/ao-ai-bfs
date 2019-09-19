@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DictInfo implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
     /**
      * 字典项名称
      */
@@ -22,7 +25,7 @@ public class DictInfo implements Serializable {
     /**
      * 创建人
      */
-    private String createUserId;
+    private String createUser;
 
     /**
      * 创建人名称
@@ -32,12 +35,12 @@ public class DictInfo implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTm;
+    private Date createTms;
 
     /**
      * 更新人
      */
-    private String updateUserId;
+    private String updateUser;
 
     /**
      * 更新人名称
@@ -58,8 +61,6 @@ public class DictInfo implements Serializable {
      * 字典项代码
      */
     private String dictCd;
-
-    private static final long serialVersionUID = 1L;
 
     public String getDictTypeId() {
         return dictTypeId;
@@ -102,14 +103,6 @@ public class DictInfo implements Serializable {
         this.sortNo = sortNo;
     }
 
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId;
-    }
-
     public String getCreateUserNm() {
         return createUserNm;
     }
@@ -117,24 +110,32 @@ public class DictInfo implements Serializable {
     public void setCreateUserNm(String createUserNm) {
         this.createUserNm = createUserNm;
     }
+    
+    public String getCreateUser() {
+		return createUser;
+	}
 
-    public Date getCreateTm() {
-        return createTm;
-    }
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
 
-    public void setCreateTm(Date createTm) {
-        this.createTm = createTm;
-    }
+	public Date getCreateTms() {
+		return createTms;
+	}
 
-    public String getUpdateUserId() {
-        return updateUserId;
-    }
+	public void setCreateTms(Date createTms) {
+		this.createTms = createTms;
+	}
 
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId;
-    }
+	public String getUpdateUser() {
+		return updateUser;
+	}
 
-    public String getUpdateUserNm() {
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public String getUpdateUserNm() {
         return updateUserNm;
     }
 

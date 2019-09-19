@@ -11,6 +11,12 @@ import gov.cnao.ao.ai.bfs.entity.DictType;
 
 
 public interface IDictType {
+	/**
+	 * 通过字典类型代码查询字典类型信息
+	 * @param dictType
+	 * @return
+	 */
+	DictType queryDictTypeByDictTypeId(DictType dictType);
 	 /**
      * 查询字典类别目录
      */

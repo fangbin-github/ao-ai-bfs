@@ -13,6 +13,8 @@
     <result column="LOG_TYPE" jdbcType="VARCHAR" property="logType" />
     <result column="FUN_FLG" jdbcType="VARCHAR" property="funFlg" />
     <result column="LOG_CONT" jdbcType="VARCHAR" property="logCont" />
+    <result column="VISIT_MICR" jdbcType="VARCHAR" property="visitMicr" />
+    <result column="VISIT_MENU" jdbcType="VARCHAR" property="visitMenu" />
   </resultMap>
   <sql id="Base_Column_List">
     LOG_ID, 
@@ -25,7 +27,9 @@
     OPER_TM, 
     LOG_TYPE, 
     FUN_FLG, 
-    LOG_CONT
+    LOG_CONT, 
+    VISIT_MICR, 
+    VISIT_MENU
   </sql>
   
   <!-- 操作日志查询 -->
@@ -44,7 +48,7 @@
       AND USER_ID = #{userId,jdbcType=VARCHAR}
     </if>
     <if test = "userNm !='' and userNm != null ">
-      AND USER_NM = ('%'|| #{userNm,jdbcType=VARCHAR} || '%')
+      AND USER_NM = ('%' || #{userNm,jdbcType=VARCHAR} || '%')
     </if>
     <if test = "orgId !='' and orgId != null ">
       AND ORG_ID = #{orgId,jdbcType=VARCHAR}
@@ -56,25 +60,31 @@
       AND LOGIN_IP = #{loginIp,jdbcType=VARCHAR}
     </if>
     <if test = "operTm !='' and operTm != null ">
-      AND TO_CHAR(OPER_TM , 'YYYY-MM-DD HH:MI:SS') = #{operTm}
+      AND TO_CHAR(OPER_TM , 'YYYY-MM-DD') = #{operTm}
     </if>
     <if test = "logType !='' and logType != null ">
       AND LOG_TYPE = #{logType}
     </if>
     <if test = "funFlg !='' and funFlg != null ">
-      AND FUN_FLG = ('%'|| #{funFlg,jdbcType=VARCHAR} || '%')
+      AND FUN_FLG like ('%'|| #{funFlg,jdbcType=VARCHAR} || '%')
     </if>
     <if test = "logCont !='' and logCont != null ">
-      AND LOG_CONT = ('%'|| #{logCont,jdbcType=VARCHAR} || '%')
+      AND LOG_CONT like ('%'|| #{logCont,jdbcType=VARCHAR} || '%')
     </if>
-    ORDER BY OPER_TM desc
+    <if test = "visitMicr !='' and visitMicr != null ">
+      AND VISIT_MICR like ('%'|| #{visitMicr,jdbcType=VARCHAR} || '%')
+    </if>
+    <if test = "visitMenu !='' and visitMenu != null ">
+      AND VISIT_MENU like ('%'|| #{visitMenu,jdbcType=VARCHAR} || '%')
+    </if>
+    ORDER BY OPER_TM DESC
   </select>
   
   <!-- 操作日志删除 -->
   <delete id="deleteOperLog" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
     delete from SCM_BFS.T_BFS_OPER_LOG
     where LOG_ID = #{logId,jdbcType=VARCHAR}
-    and PROJ_ID = #{projId,jdbcType=VARCHAR}
+      and PROJ_ID = #{projId,jdbcType=VARCHAR}
   </delete>
   
   <!-- 操作日志新增 -->
@@ -82,11 +92,13 @@
     insert into SCM_BFS.T_BFS_OPER_LOG (LOG_ID, PROJ_ID, USER_ID, 
       USER_NM, ORG_ID, ORG_NM, 
       LOGIN_IP, OPER_TM, LOG_TYPE, 
-      FUN_FLG, LOG_CONT)
+      FUN_FLG, LOG_CONT, VISIT_MICR, 
+      VISIT_MENU)
     values (#{logId,jdbcType=VARCHAR}, #{projId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
       #{userNm,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{orgNm,jdbcType=VARCHAR}, 
       #{loginIp,jdbcType=VARCHAR}, #{operTm,jdbcType=TIMESTAMP}, #{logType,jdbcType=VARCHAR}, 
-      #{funFlg,jdbcType=VARCHAR}, #{logCont,jdbcType=VARCHAR})
+      #{funFlg,jdbcType=VARCHAR}, #{logCont,jdbcType=VARCHAR}, #{visitMicr,jdbcType=VARCHAR}, 
+      #{visitMenu,jdbcType=VARCHAR})
   </insert>
   
   <!-- 操作日志修改 -->
@@ -100,12 +112,14 @@
       OPER_TM = #{operTm,jdbcType=TIMESTAMP},
       LOG_TYPE = #{logType,jdbcType=VARCHAR},
       FUN_FLG = #{funFlg,jdbcType=VARCHAR},
-      LOG_CONT = #{logCont,jdbcType=VARCHAR}
+      LOG_CONT = #{logCont,jdbcType=VARCHAR},
+      VISIT_MICR = #{visitMicr,jdbcType=VARCHAR},
+      VISIT_MENU = #{visitMenu,jdbcType=VARCHAR}
     where LOG_ID = #{logId,jdbcType=VARCHAR}
       and PROJ_ID = #{projId,jdbcType=VARCHAR}
   </update>
   
-  <!-- 操作日志选择性新增 -->
+   <!-- 操作日志选择性新增 -->
   <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.entity.OperLog">
     insert into SCM_BFS.T_BFS_OPER_LOG
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -142,6 +156,12 @@
       <if test="logCont != null">
         LOG_CONT,
       </if>
+      <if test="visitMicr != null">
+        VISIT_MICR,
+      </if>
+      <if test="visitMenu != null">
+        VISIT_MENU,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="logId != null">
@@ -177,6 +197,12 @@
       <if test="logCont != null">
         #{logCont,jdbcType=VARCHAR},
       </if>
+      <if test="visitMicr != null">
+        #{visitMicr,jdbcType=VARCHAR},
+      </if>
+      <if test="visitMenu != null">
+        #{visitMenu,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   
@@ -210,6 +236,12 @@
       </if>
       <if test="logCont != null">
         LOG_CONT = #{logCont,jdbcType=VARCHAR},
+      </if>
+      <if test="visitMicr != null">
+        VISIT_MICR = #{visitMicr,jdbcType=VARCHAR},
+      </if>
+      <if test="visitMenu != null">
+        VISIT_MENU = #{visitMenu,jdbcType=VARCHAR},
       </if>
     </set>
     where LOG_ID = #{logId,jdbcType=VARCHAR}

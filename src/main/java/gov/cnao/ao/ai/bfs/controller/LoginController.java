@@ -1,16 +1,15 @@
 package gov.cnao.ao.ai.bfs.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -20,12 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.bjsasc.drap.auth.AuthUtils;
@@ -36,10 +33,11 @@ import com.bjsasc.drap.sso.SimpleClientHttpRequestFactory4Https;
 
 import gov.cnao.ao.ai.bfs.contract.ILogin;
 
-@RestController
-@RequestMapping("/Login")
-@RestSchema(schemaId="Ilogin")
+@RestSchema(schemaId="iLogin")
+@RequestMapping("/login")
 public class LoginController implements ILogin {
+	
+	private static org.slf4j.Logger log = LoggerFactory.getLogger(LoginController.class);
 
 	private final static String SSO_CODE = "sso_code";
 
@@ -65,15 +63,22 @@ public class LoginController implements ILogin {
 
 	private RestTemplate restTemplate;
 
+	/**
+	 * sso_code换取token
+	 */
+	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping
 	@Override
-	public ResponseEntity<Map<String,String>> login(@RequestParam String sso_code) throws IOException {
+	public ResponseEntity<Map<String,String>> login(@RequestParam(value = "sso_code") String sso_code) throws IOException {
+		log.info("Access /ILogin/login -- sso_code换取token, sso_code =" + sso_code);
+		String app_id = "edge";
+		System.out.println(sso_code);
 		try {
 			Object[] result = null;
 
 			// 从url参数获取sso_code
-			//String sso_code = getSSOCodeFromQueryStr(request);
+//			String sso_code = getSSOCodeFromQueryStr(request);
 			if (!StringUtils.isEmpty(sso_code)) {
 				// 换取token
 				result = ssoService.getIdentityTokenByCode(sso_code,app_id);
@@ -135,7 +140,13 @@ public class LoginController implements ILogin {
 
 	}
 
+	/**
+	 * 从请求中获取sso_code
+	 * @param request
+	 * @return
+	 */
 	private String getSSOCodeFromQueryStr(HttpServletRequest request) {
+		log.info("Access /ILogin/getSSOCodeFromQueryStr -- 从请求中获取sso_code");
 		String queryStr = request.getQueryString();
 		if (queryStr != null) {
 			String[] paras = queryStr.split("&");
@@ -149,8 +160,12 @@ public class LoginController implements ILogin {
 		return null;
 	}
 
+	/**
+	 * http请求工程初始化
+	 */
 	@PostConstruct
 	public void init() {
+		log.info("Access /ILogin/init -- http请求工程初始化");
 		SimpleClientHttpRequestFactory4Https requestFactory = new SimpleClientHttpRequestFactory4Https();
 
 		requestFactory.setReadTimeout(120 * 1000);

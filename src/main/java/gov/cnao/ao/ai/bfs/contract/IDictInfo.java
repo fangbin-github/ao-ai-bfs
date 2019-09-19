@@ -6,6 +6,13 @@ import java.util.Map;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 
 public interface IDictInfo {
+	
+	/**
+	 * 通过字典项代码查询字典信息
+	 * @param dictInfo
+	 * @return
+	 */
+	DictInfo queryDictInfoByDictCd(DictInfo dictInfo);
 	 /**
      * 查询字典列表
      */

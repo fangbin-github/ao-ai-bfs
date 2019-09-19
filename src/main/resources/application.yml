@@ -6,6 +6,24 @@ spring:
     password: szoscar55
     url: jdbc:oscar://128.194.10.215:2003/aidb
     driver-class-name: com.oscar.Driver
+  redis:
+    host: 128.194.10.223
+    port: 6379
+    password: 
+   # cluster:
+     # nodes:
+       #    - 128.194.10.223:6379
+           # - 10.0.47.22:22400
+           # - 10.0.47.23:22400
+           #        spring.redis.cluster.nodes=127.0.0.1:7001,127.0.0.1:7002,127.0.0.1:7003,127.0.0.1:7004
+    timeout: 1000
+    database: 0
+    pool:
+      max-active: 10
+      max-idle: 8
+      min-idle: 2
+      max-wait: 1000
+  
 mybatis:
   mapper-locations: classpath:mybatis/*Mapper.xml,classpath:mybatis/*/*Mapper.xml
   type-aliases-package: gov.cnao.ao.ai.bfs.entity

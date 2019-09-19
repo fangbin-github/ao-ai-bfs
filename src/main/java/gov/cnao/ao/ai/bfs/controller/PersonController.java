@@ -14,7 +14,7 @@ import gov.cnao.ao.ai.bfs.entity.Person;
 import gov.cnao.ao.ai.bfs.service.PersonService;
 
 @RestSchema(schemaId = "iPerson")
-@RequestMapping(path = "/ao-ai-bfs/person")
+@RequestMapping(path = "/person")
 public class PersonController implements IPerson {
     @Autowired
     private PersonService personService;

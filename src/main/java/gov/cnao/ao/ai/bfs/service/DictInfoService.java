@@ -2,72 +2,81 @@ package gov.cnao.ao.ai.bfs.service;
 
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
-import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
-import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
 
 @Service
 public class DictInfoService {
+	
+	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictInfoService.class);
+	
 	@Autowired
 	private DictInfoMapper dictInfoMapper;
+	
 	@Autowired
-	private DictTypeMapper dictTypeMapper;
-	private DictInfo temp;
+    private StringRedisTemplate stringRedisTemplate;
 	
 	/**
 	 *查询字典信息列表
 	 * @throws ParseException 
 	 */
 	public List<DictInfo> queryDictInfo(DictInfo dictInfo){
-		List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfo);
-		return list;
+		try {
+			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfo);
+			return list;
+		} catch (Exception e) {
+			log.error("查询字典信息列表失败", e);
+		}
+		return null;
 	}
+	
 	/**
 	 * 根据ID查询字典信息名称  
 	 */
 	public String queryDictInfoById(DictInfo dictInfo){
-		String dictNm = dictInfoMapper.queryDictInfoById(dictInfo);
-		return dictNm;
+		try {
+			String dictNm = dictInfoMapper.queryDictInfoById(dictInfo);
+			return dictNm;
+		} catch (Exception e) {
+			log.error("根据ID查询字典信息名称失败", e);
+		}
+		return null;
 	}
+	
 	/**
 	 * 根据字典信息名称查询ID
 	 */
 	public String queryDictInfoByName(DictInfo dictInfo){
-		String dictCd = dictInfoMapper.queryDictInfoByName(dictInfo);
-		return dictCd;
+		try {
+			String dictCd = dictInfoMapper.queryDictInfoByName(dictInfo);
+			return dictCd;
+		} catch (Exception e) {
+			log.error("根据字典信息名称查询ID失败", e);
+		}
+		return null;
 	}
-//	public List<Map<String, Object>> queryDictInfo(DictInfo dictInfo){
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		List<DictInfo> list= dictInfoMapper.queryDictInfo(dictInfo);
-//		Map<String,Object> map = new HashMap<>();
-//		map.put("id", 1);
-//		map.put("lable", "数据字典管理");
-//		map.put("字典信息", list);
-//		List<Map<String, Object>> list2 = new ArrayList<Map<String,Object>>();
-//		list2.add(map);
-//		return list2;
-//	}
+	
 	/**
 	 * 删除字典信息
 	 */
 	public int deleteDictInfo(List<DictInfo> list) {
 		int num =0;
-		for (int i = 0; i < list.size(); i++) {
-			DictInfo dictInfo = list.get(i);
-			dictInfoMapper.deleteDictInfo(dictInfo);
-			num++;
+		try {
+			for (int i = 0; i < list.size(); i++) {
+				DictInfo dictInfo = list.get(i);
+				dictInfoMapper.deleteDictInfo(dictInfo);
+				num++;
+			}
+		} catch (Exception e) {
+			log.error("删除字典信息失败", e);
 		}
 		return num;
 	}
@@ -77,22 +86,46 @@ public class DictInfoService {
 	 * 新增字典信息
 	 */
 	public DictInfo insertDictInfo(DictInfo dictInfo) {
-		dictInfo.setCreateTm(DateTimeUtil.getCurrentTime());
-//		DictType  dictType = new DictType();
-//		String getInfoID = dictInfo.getDictTypeId();
-//		dictType.setDictTypeId(getInfoID);
-//		dictType.setCreateTm(DateTimeUtil.getCurrentTime());
-//		dictTypeMapper.insertDictType(dictType);
-		dictInfoMapper.insertDictInfo(dictInfo);
-		return dictInfo;
+		try {
+			dictInfo.setCreateTms(DateTimeUtil.getCurrentTime());
+			stringRedisTemplate.opsForValue().set(dictInfo.getDictCd(), dictInfo.getDictNm());
+			dictInfoMapper.insertDictInfo(dictInfo);
+			return dictInfo;
+		} catch (Exception e) {
+			log.error("新增字典信息失败", e);
+		}
+		return null;
 	}
+	
 	/**
 	 * 修改字典信息
 	 */
 	public DictInfo updateDictInfo(DictInfo dictInfo) {
-		dictInfo.setUpdateTm(DateTimeUtil.getCurrentTime());
-		dictInfoMapper.updateDictInfo(dictInfo);
-		return dictInfo;
+		try {
+			dictInfo.setUpdateTm(DateTimeUtil.getCurrentTime());
+			dictInfoMapper.updateDictInfo(dictInfo);
+			return dictInfo;
+		} catch (Exception e) {
+			log.error("修改字典信息失败", e);
+		}
+		return null;
+	}
+	
+	/**
+	 * 通过字典项代码查询字典信息
+	 * @param dictInfo
+	 * @return
+	 */
+	public DictInfo queryDictInfoByDictCd(DictInfo dictInfo) {
+		try {
+			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfo);
+			if(list.size()>0){
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			log.error("修改字典信息失败", e);
+		}
+		return null;
 	}
 	
 }

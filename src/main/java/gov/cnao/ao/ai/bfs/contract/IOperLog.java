@@ -27,5 +27,6 @@ public interface IOperLog {
 	 * 操作日志导出
 	 * @param operLog
 	 */
-	void exportOperLog();
+	List<OperLog> exportOperLog(OperLog operLog);
+	
 }

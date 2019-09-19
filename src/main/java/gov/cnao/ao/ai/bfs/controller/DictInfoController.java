@@ -14,9 +14,11 @@ import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.service.DictInfoService;
 
 @RestSchema(schemaId = "iDictInfo")
-@RequestMapping(path = "/ao-ai-bfs/dict")
+@RequestMapping(path = "/dict")
 public class DictInfoController implements IDictInfo{
+	
 	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictInfoController.class);
+	
 	@Autowired
 	private DictInfoService dictInfoService;
 
@@ -26,6 +28,7 @@ public class DictInfoController implements IDictInfo{
 	@Override
     @RequestMapping(value = "/queryDictInfo", method = RequestMethod.POST)
 	public List<DictInfo> queryDictInfo(@RequestBody DictInfo dictInfo) {
+		log.info("Access /IDictInfo/queryDictInfo -- 查询字典信息");
 		return dictInfoService.queryDictInfo(dictInfo);
 	}
 	/**
@@ -34,6 +37,7 @@ public class DictInfoController implements IDictInfo{
 	@Override
     @RequestMapping(value = "/queryDictInfoById", method = RequestMethod.POST)
 	public String queryDictInfoById(@RequestBody DictInfo dictInfo) {
+		log.info("Access /IDictInfo/queryDictInfoById -- 根据ID查询字典信息名称");
 		return dictInfoService.queryDictInfoById(dictInfo);
 	}
 	/**
@@ -42,6 +46,7 @@ public class DictInfoController implements IDictInfo{
 	@Override
     @RequestMapping(value = "/queryDictInfoByName", method = RequestMethod.POST)
 	public String queryDictInfoByName(@RequestBody DictInfo dictInfo) {
+		log.info("Access /IDictInfo/queryDictInfoByName -- 根据字典信息名称查询ID");
 		return dictInfoService.queryDictInfoByName(dictInfo);
 	}
 	/**
@@ -50,6 +55,7 @@ public class DictInfoController implements IDictInfo{
 	@Override
 	@RequestMapping(path = "/insertDictInfo", method = RequestMethod.POST)
 	public DictInfo insertDictInfo(@RequestBody  DictInfo dictInfo) {
+		log.info("Access /IDictInfo/insertDictInfo -- 新增字典信息");
 		return dictInfoService.insertDictInfo(dictInfo);
 	}
 	
@@ -59,6 +65,7 @@ public class DictInfoController implements IDictInfo{
 	@Override
 	@RequestMapping(path = "/updateDictInfo", method = RequestMethod.POST)
 	public DictInfo updateDictInfo(@RequestBody DictInfo dictInfo) {
+		log.info("Access /IDictInfo/updateDictInfo -- 修改字典信息");
 		return dictInfoService.updateDictInfo(dictInfo);
 	}
 	
@@ -68,11 +75,18 @@ public class DictInfoController implements IDictInfo{
 	@Override
 	@RequestMapping(path = "/deleteDictInfo", method = RequestMethod.POST)
 	public int deleteDictInfo(@RequestBody List<DictInfo> list) {
+		log.info("Access /IDictInfo/deleteDictInfo -- 删除字典信息");
 		return dictInfoService.deleteDictInfo(list);
 	}
 	
-//	public int deleteDictInfo(@RequestBody DictInfo dictInfo) {
-//    	return dictInfoService.deleteDictInfo(dictInfo);
-//    }
+	/**
+	 * 通过字典项代码查询字典信息
+	 */
+	@RequestMapping(path = "/queryDictInfoByDictCd", method = RequestMethod.POST)
+	public DictInfo queryDictInfoByDictCd(@RequestBody DictInfo dictInfo) {
+		log.info("Access /IDictInfo/queryDictInfoByDictCd -- 通过字典项代码查询字典信息");
+		return dictInfoService.queryDictInfoByDictCd(dictInfo);
+	}
+	
 }
 

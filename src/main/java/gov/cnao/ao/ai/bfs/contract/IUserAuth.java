@@ -3,6 +3,9 @@ package gov.cnao.ao.ai.bfs.contract;
 import java.util.List;
 
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
+import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
+import gov.cnao.ao.ai.bfs.vo.UsersVO;
+import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
 
 public interface IUserAuth {
 	
@@ -32,6 +35,19 @@ public interface IUserAuth {
 	 * @param userAuths
 	 * @return
 	 */
-	List<UserAuth> getAuth(List<UserAuth> userAuths);
+	List<UserAuth> getAuth(UserAuthVO userAuthVO);
+	
+	/**
+	 * 取消授权
+	 * @param userAuths
+	 * @return
+	 */
+	List<UserAuth> canAuth(List<UserAuth> userAuths);
+	
+	/**
+	 * 查询项目组织机构树
+	 * @return
+	 */
+	XianProjectUserVO xianProjectUser();
 	
 }

@@ -5,18 +5,18 @@
     <id column="USER_ID" jdbcType="VARCHAR" property="userId" />
     <id column="AUDIT_PRJ_ID" jdbcType="VARCHAR" property="auditPrjId" />
     <id column="VISIT_TAB_NM" jdbcType="VARCHAR" property="visitTabNm" />
-    <result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
     <result column="CREATE_USER_NM" jdbcType="VARCHAR" property="createUserNm" />
-    <result column="CREATE_TM" jdbcType="TIMESTAMP" property="createTm" />
+    <result column="CREATE_TMS" jdbcType="TIMESTAMP" property="createTms" />
   </resultMap>
   
   <sql id="Base_Column_List">
     USER_ID, 
     AUDIT_PRJ_ID, 
     VISIT_TAB_NM, 
-    CREATE_USER_ID, 
+    CREATE_USER, 
     CREATE_USER_NM, 
-    CREATE_TM
+    CREATE_TMS
   </sql>
   
   <!-- 查询授权信息 -->
@@ -34,17 +34,26 @@
      <if test = "visitTabNm !='' and visitTabNm != null ">
       AND VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
      </if>
-     <if test = "createUserId !='' and createUserId != null ">
-      AND CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR}
+     <if test = "createUser !='' and createUser != null ">
+      AND CREATE_USER = #{createUser,jdbcType=VARCHAR}
      </if>
      <if test = "createUserNm !='' and createUserNm != null ">
       AND CREATE_USER_NM like ('%'|| #{createUserNm,jdbcType=VARCHAR} || '%')
      </if>
-     <if test = "createTm !='' and createTm != null ">
-      AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') = #{createTm}
+     <if test = "createTms !='' and createTms != null ">
+      AND TO_CHAR(CREATE_TMS , 'YYYY-MM-DD') = #{createTms}
 <!--       AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') <![CDATA[ >= ]]> #{createTm} -->
      </if>
-     ORDER BY CREATE_TM DESC
+     <if test = " visitTabNms != null ">
+     	AND VISIT_TAB_NM NOT IN 
+     	<foreach collection = 'visitTabNms' index = 'index' item = 'item' open = '(' separator = ',' close = ')'>
+     		#{item}
+     	</foreach>  
+      <!-- AND VISIT_TAB_NM NOT in (${visitTabNms})  --> 
+      	
+     </if>
+     
+     ORDER BY CREATE_TMS DESC
   </select>
   
   <!-- 删除授权信息 -->
@@ -58,19 +67,19 @@
   <!-- 新增授权信息 -->
   <insert id="insertUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
     insert into SCM_BFS.T_BFS_USER_AUTH (USER_ID, AUDIT_PRJ_ID, VISIT_TAB_NM, 
-      CREATE_USER_ID, CREATE_USER_NM, CREATE_TM
+      CREATE_USER, CREATE_USER_NM, CREATE_TMS
       )
     values (#{userId,jdbcType=VARCHAR}, #{auditPrjId,jdbcType=VARCHAR}, #{visitTabNm,jdbcType=VARCHAR}, 
-      #{createUserId,jdbcType=VARCHAR}, #{createUserNm,jdbcType=VARCHAR}, sysdate
+      #{createUser,jdbcType=VARCHAR}, #{createUserNm,jdbcType=VARCHAR}, #{createTms,jdbcType=TIMESTAMP}
       )
   </insert>
   
    <!-- 修改授权信息 -->
   <update id="updateUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
     update SCM_BFS.T_BFS_USER_AUTH
-    set CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+    set CREATE_USER = #{createUser,jdbcType=VARCHAR},
       CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
-      CREATE_TM = #{createTm,jdbcType=TIMESTAMP}
+      CREATE_TMS = #{createTms,jdbcType=TIMESTAMP}
     where USER_ID = #{userId,jdbcType=VARCHAR}
       and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
       and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
@@ -89,14 +98,14 @@
       <if test="visitTabNm != null">
         VISIT_TAB_NM,
       </if>
-      <if test="createUserId != null">
-        CREATE_USER_ID,
+      <if test="createUser != null">
+        CREATE_USER,
       </if>
       <if test="createUserNm != null">
         CREATE_USER_NM,
       </if>
-      <if test="createTm != null">
-        CREATE_TM,
+      <if test="createTms != null">
+        CREATE_TMS,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -109,14 +118,14 @@
       <if test="visitTabNm != null">
         #{visitTabNm,jdbcType=VARCHAR},
       </if>
-      <if test="createUserId != null">
-        #{createUserId,jdbcType=VARCHAR},
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="createUserNm != null">
         #{createUserNm,jdbcType=VARCHAR},
       </if>
-      <if test="createTm != null">
-        #{createTm,jdbcType=TIMESTAMP},
+      <if test="createTms != null">
+        #{createTms,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -125,19 +134,18 @@
   <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
     update SCM_BFS.T_BFS_USER_AUTH
     <set>
-      <if test="createUserId != null">
-        CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
+      <if test="createUser != null">
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="createUserNm != null">
         CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
       </if>
-      <if test="createTm != null">
-        CREATE_TM = #{createTm,jdbcType=TIMESTAMP},
+      <if test="createTms != null">
+        CREATE_TMS = #{createTms,jdbcType=TIMESTAMP},
       </if>
     </set>
     where USER_ID = #{userId,jdbcType=VARCHAR}
       and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
       and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
   </update>
-  
 </mapper>

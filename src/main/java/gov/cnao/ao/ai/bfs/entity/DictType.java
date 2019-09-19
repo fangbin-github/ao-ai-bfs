@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DictType implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
     /**
      * 字典类型代码
      */
@@ -17,7 +20,7 @@ public class DictType implements Serializable {
     /**
      * 创建人
      */
-    private String createUserId;
+    private String createUser;
 
     /**
      * 创建人名称
@@ -27,12 +30,12 @@ public class DictType implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTm;
+    private Date createTms;
 
     /**
      * 更新人
      */
-    private String updateUserId;
+    private String updateUser;
 
     /**
      * 更新人名称
@@ -44,7 +47,7 @@ public class DictType implements Serializable {
      */
     private Date updateTm;
 
-    private static final long serialVersionUID = 1L;
+    
 
     public String getDictTypeId() {
         return dictTypeId;
@@ -62,13 +65,6 @@ public class DictType implements Serializable {
         this.dictTypeNm = dictTypeNm;
     }
 
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId;
-    }
 
     public String getCreateUserNm() {
         return createUserNm;
@@ -78,23 +74,31 @@ public class DictType implements Serializable {
         this.createUserNm = createUserNm;
     }
 
-    public Date getCreateTm() {
-        return createTm;
-    }
+    public String getCreateUser() {
+		return createUser;
+	}
 
-    public void setCreateTm(Date createTm) {
-        this.createTm = createTm;
-    }
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
 
-    public String getUpdateUserId() {
-        return updateUserId;
-    }
+	public Date getCreateTms() {
+		return createTms;
+	}
 
-    public void setUpdateUserId(String updateUserId) {
-        this.updateUserId = updateUserId;
-    }
+	public void setCreateTms(Date createTms) {
+		this.createTms = createTms;
+	}
 
-    public String getUpdateUserNm() {
+	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public String getUpdateUserNm() {
         return updateUserNm;
     }
 

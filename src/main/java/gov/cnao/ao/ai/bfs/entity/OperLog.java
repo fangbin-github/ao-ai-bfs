@@ -3,15 +3,9 @@ package gov.cnao.ao.ai.bfs.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author fangbin
- */
-
 public class OperLog implements Serializable {
-	
 	private static final long serialVersionUID = 1L;
-	
-	 /**
+	/**
      * 日志编号
      */
     private String logId;
@@ -66,23 +60,33 @@ public class OperLog implements Serializable {
      */
     private String logCont;
 
+    /**
+     * 访问微服务名称
+     */
+    private String visitMicr;
+
+    /**
+     * 访问菜单
+     */
+    private String visitMenu;
+
     public String getLogId() {
-		return logId;
-	}
+        return logId;
+    }
 
-	public void setLogId(String logId) {
-		this.logId = logId;
-	}
+    public void setLogId(String logId) {
+        this.logId = logId;
+    }
 
-	public String getProjId() {
-		return projId;
-	}
+    public String getProjId() {
+        return projId;
+    }
 
-	public void setProjId(String projId) {
-		this.projId = projId;
-	}
-
-	public String getUserId() {
+    public void setProjId(String projId) {
+        this.projId = projId;
+    }
+    
+    public String getUserId() {
         return userId;
     }
 
@@ -122,15 +126,15 @@ public class OperLog implements Serializable {
         this.loginIp = loginIp;
     }
 
-	public String getOperTm() {
-		return operTm;
-	}
+    public String getOperTm() {
+        return operTm;
+    }
 
-	public void setOperTm(String operTm) {
-		this.operTm = operTm;
-	}
+    public void setOperTm(String operTm) {
+        this.operTm = operTm;
+    }
 
-	public String getLogType() {
+    public String getLogType() {
         return logType;
     }
 
@@ -152,5 +156,21 @@ public class OperLog implements Serializable {
 
     public void setLogCont(String logCont) {
         this.logCont = logCont;
+    }
+
+    public String getVisitMicr() {
+        return visitMicr;
+    }
+
+    public void setVisitMicr(String visitMicr) {
+        this.visitMicr = visitMicr;
+    }
+
+    public String getVisitMenu() {
+        return visitMenu;
+    }
+
+    public void setVisitMenu(String visitMenu) {
+        this.visitMenu = visitMenu;
     }
 }

@@ -15,9 +15,11 @@ import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.service.DictTypeService;
 
 @RestSchema(schemaId = "iDictType")
-@RequestMapping(path = "/ao-ai-bfs/dict")
+@RequestMapping(path = "/dict")
 public class DictTypeController implements IDictType{
+	
 	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictTypeController.class);
+	
 	@Autowired
 	private DictTypeService dictTypeService;
 	
@@ -27,7 +29,8 @@ public class DictTypeController implements IDictType{
 	@Override
     @RequestMapping(value = "/queryDictTypeCon", method = RequestMethod.POST)
 	public List<Map<String, Object>> queryDictTypeCon(@RequestBody DictType dictType) {
-	        return dictTypeService.queryDictTypeCon(dictType);
+		log.info("Access /IDictType/queryDictTypeCon -- 查询字典类别目录信息");
+	    return dictTypeService.queryDictTypeCon(dictType);
 	}
 	/**
 	 * 查询字典类别信息
@@ -35,7 +38,8 @@ public class DictTypeController implements IDictType{
 	@Override
     @RequestMapping(value = "/queryDictType", method = RequestMethod.POST)
 	public List<DictType> queryDictType(@RequestBody DictType dictType) {
-	        return dictTypeService.queryDictType(dictType);
+		log.info("Access /IDictType/queryDictType -- 查询字典类别信息");
+	    return dictTypeService.queryDictType(dictType);
 	}
 	/**
 	 * 新增字典类别信息
@@ -43,6 +47,7 @@ public class DictTypeController implements IDictType{
 	@Override
 	@RequestMapping(path = "/insertDictType", method = RequestMethod.POST)
 	public DictType insertDictType(@RequestBody DictType dictType) {
+		log.info("Access /IDictType/insertDictType -- 新增字典类别信息");
 		return dictTypeService.insertDictType(dictType);
 	}
 	
@@ -52,6 +57,7 @@ public class DictTypeController implements IDictType{
 	@Override
 	@RequestMapping(path = "/updateDictType", method = RequestMethod.POST)
 	public DictType updateDictType(@RequestBody DictType dictType) {
+		log.info("Access /IDictType/updateDictType -- 修改字典类别信息");
 		return dictTypeService.updateDictType(dictType);
 	}
 	/**
@@ -60,6 +66,17 @@ public class DictTypeController implements IDictType{
 	@Override
 	@RequestMapping(path = "/deleteDictType", method = RequestMethod.POST)
 	public int deleteDictType(@RequestBody List<DictType> list) {
+		log.info("Access /IDictType/deleteDictType -- 删除字典类别信息");
     	return dictTypeService.deleteDictType(list);
     }
+	
+	/**
+	 * 通过字典类型代码查询字典类型信息
+	 */
+	@Override
+	@RequestMapping(path = "/queryDictTypeByDictTypeId", method = RequestMethod.POST)
+	public DictType queryDictTypeByDictTypeId(@RequestBody DictType dictType) {
+		log.info("Access /IDictType/queryDictTypeByDictTypeId -- 通过字典类型代码查询字典类型信息");
+		return dictTypeService.queryDictTypeByDictTypeId(dictType);
+	}
 }

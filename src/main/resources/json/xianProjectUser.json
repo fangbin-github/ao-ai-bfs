@@ -1,0 +1,74 @@
+{
+	"resultCode": 200,
+	"resultMsg": "请求成功",
+	"success": true,
+	"data": [
+		{
+			"projectId": "审计项目ID",
+			"projectName": "审计项目名称",
+			"auditGroups": [
+				{
+					"auditGroupId": "审计组ID_1",
+					"auditGroupName": "审计组名称_1",
+					"users": [
+						{
+							"userId": "A0001",
+							"userName": "张三",
+							"roleCode": "10001",
+							"roleName": "组长"
+						},
+						{
+							"userId": "A0002",
+							"userName": "李四",
+							"roleCode": "10002",
+							"roleName": "审计员一"
+						},
+						{
+							"userId": "A0003",
+							"userName": "王五",
+							"roleCode": "10003",
+							"roleName": "审计员二"
+						},
+						{
+							"userId": "A0004",
+							"userName": "赵六",
+							"roleCode": "10004",
+							"roleName": "审计员三"
+						}
+								
+					]
+				},
+				{
+					"auditGroupId": "审计组ID_2",
+					"auditGroupName": "审计组名称_2",
+					"users": [
+						{
+							"userId": "B0001",
+							"userName": "张三1",
+							"roleCode": "20001",
+							"roleName": "组长"
+						},
+						{
+							"userId": "B0002",
+							"userName": "李四1",
+							"roleCode": "20002",
+							"roleName": "审计员一"
+						},
+						{
+							"userId": "B0003",
+							"userName": "王五1",
+							"roleCode": "20003",
+							"roleName": "审计员二"
+						},
+						{
+							"userId": "B0004",
+							"userName": "赵六1",
+							"roleCode": "20004",
+							"roleName": "审计员三"
+						}
+					]
+				}
+			]
+		}
+	]
+}
