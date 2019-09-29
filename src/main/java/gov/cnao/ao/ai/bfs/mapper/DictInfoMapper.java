@@ -1,44 +1,57 @@
 package gov.cnao.ao.ai.bfs.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
-import gov.cnao.ao.ai.bfs.entity.DictType;
+import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 @Mapper
 public interface DictInfoMapper {
 
 	/**
      * 新增字典信息
      */
-	void insertDictInfo(DictInfo dictInfo);
+	void insertDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 修改字典信息
 	 */
-	void updateDictInfo(DictInfo dictInfo);
+	void updateDictInfo(DictInfoVO dictInfoVO);
 	
 	/**
 	 * 查询字典信息列表
 	 */
-	List<DictInfo> queryDictInfo(DictInfo dictInfo);
+	List<DictInfo> queryDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 删除数据字典
 	 */
-	int deleteDictInfo(DictInfo dictInfo);
+	void deleteDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 根据ID查询字典信息名称
 	 */
-	String queryDictInfoById(DictInfo dictInfo);
+	String queryDictInfoById(DictInfoVO dictInfoVO);
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	String queryDictInfoByName(DictInfo dictInfo);
+	String queryDictInfoByName(DictInfoVO dictInfoVO);
 	
 	/**
 	 * 根据数据字典类型删除数据字典信息
 	 * @param dictInfo
 	 */
-	void deleteDictInfoByTypeId(DictInfo dictInfo);
+	void deleteDictInfoByTypeId(DictInfoVO dictInfoVO);
+	
+	/**
+	 * 分页查询字典信息列表
+	 * @param dictInfoVO
+	 * @return
+	 */
+	List<DictInfo> queryDictInfoPage(DictInfoVO dictInfoVO);
+	
+	/**
+	 * 查询数据字典信息总数
+	 * @param dictInfoVO
+	 * @return
+	 */
+	int queryDictInfoCount(DictInfoVO dictInfoVO);
 }

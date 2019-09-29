@@ -9,12 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
+import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 import net.sf.json.JSONObject;
 
 @Service
@@ -34,11 +39,11 @@ public class DictTypeService {
 	/**
 	 * 查询字典类别信息目录
 	 */
-	public List<Map<String, Object>> queryDictTypeCon(DictType dictType){
+	public List<Map<String, Object>> queryDictTypeCon(DictTypeVO dictTypeVO){
 		
 		List<Map<String, Object>> list3 = null;
 		try {
-			List<DictType> list1= dictTypeMapper.queryDictTypeConent(dictType);
+			List<DictType> list1= dictTypeMapper.queryDictTypeConent(dictTypeVO);
 			//对里层数据进行处理
 			List<Object> list = new ArrayList<>(); 
 			for(DictType c : list1) {
@@ -73,9 +78,9 @@ public class DictTypeService {
 	/**
 	 * 查询字典类别信息
 	 */
-	public List<DictType> queryDictType(DictType dictType) {
+	public List<DictType> queryDictType(DictTypeVO dictTypeVO) {
 		try {
-			return dictTypeMapper.queryDictType(dictType);
+			return dictTypeMapper.queryDictType(dictTypeVO);
 		} catch (Exception e) {
 			log.error("查询字典类别信息失败", e);
 		}
@@ -85,12 +90,12 @@ public class DictTypeService {
     /**
 	 * 新增字典类别信息
 	 */
-	public DictType insertDictType(DictType dictType) {
+	public DictTypeVO insertDictType(DictTypeVO dictTypeVO) {
 		try {
-			dictType.setCreateTms(DateTimeUtil.getCurrentTime());
-			stringRedisTemplate.opsForValue().set(dictType.getDictTypeId(), dictType.getDictTypeNm());
-			dictTypeMapper.insertDictType(dictType);
-			return dictType;
+			dictTypeVO.setCreateTms(DateTimeUtil.getCurrentTime());
+			stringRedisTemplate.opsForValue().set(dictTypeVO.getDictTypeId(), dictTypeVO.getDictTypeNm());
+			dictTypeMapper.insertDictType(dictTypeVO);
+			return dictTypeVO;
 		} catch (Exception e) {
 			log.error("新增字典类别信息失败", e);
 		}
@@ -100,11 +105,11 @@ public class DictTypeService {
 	/**
 	 * 修改字典类别信息
 	 */
-	public DictType updateDictType(DictType dictType) {
+	public DictTypeVO updateDictType(DictTypeVO dictTypeVO) {
 		try {
-			dictType.setUpdateTm(DateTimeUtil.getCurrentTime());
-			dictTypeMapper.updateDictType(dictType);
-			return dictType;
+			dictTypeVO.setUpdateTm(DateTimeUtil.getCurrentTime());
+			dictTypeMapper.updateDictType(dictTypeVO);
+			return dictTypeVO;
 		} catch (Exception e) {
 			log.error("修改字典类别信息失败", e);
 		}
@@ -114,15 +119,17 @@ public class DictTypeService {
 	/**
 	 * 删除字典类别信息
 	 */
-	public int deleteDictType(List<DictType> list) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public int deleteDictType(DictTypeVO dictTypeVO) {
 		int num = 0;
+		List<DictTypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
 		try {
-			for (int i = 0; i < list.size(); i++) {
-				DictType dictType = list.get(i);
-				dictTypeMapper.deleteDictType(dictType);
-				DictInfo dictInfo = new DictInfo();
-				dictInfo.setDictTypeId(dictType.getDictTypeId());
-				dictInfoMapper.deleteDictInfoByTypeId(dictInfo);
+			for (int i = 0; i < dictTypeVOs.size(); i++) {
+				DictTypeVO dictTypeVO1 = dictTypeVOs.get(i);
+				dictTypeMapper.deleteDictType(dictTypeVO1);
+				DictInfoVO dictInfoVO = new DictInfoVO();
+				dictInfoVO.setDictTypeId(dictTypeVO1.getDictTypeId());
+				dictInfoMapper.deleteDictInfoByTypeId(dictInfoVO);
 				num++;
 			}
 		} catch (Exception e) {
@@ -136,9 +143,9 @@ public class DictTypeService {
 	 * @param dictType
 	 * @return
 	 */
-	public DictType queryDictTypeByDictTypeId(DictType dictType) {
+	public DictType queryDictTypeByDictTypeId(DictTypeVO dictTypeVO) {
 		try {
-			List<DictType> list = dictTypeMapper.queryDictType(dictType);
+			List<DictType> list = dictTypeMapper.queryDictType(dictTypeVO);
 			if(list.size()>0){
 				return list.get(0);
 			}
@@ -146,5 +153,27 @@ public class DictTypeService {
 			log.error("通过字典类型代码查询字典类型信息失败", e);
 		}
 		return null;
+	}
+
+	/**
+	 * 分页查询字典类别信息列表
+	 * @param dictType
+	 * @return
+	 */
+	public PageBean queryDictTypePage(DictTypeVO dictTypeVO) {
+		PageBean pageBean = new PageBean();
+		try {
+			if(dictTypeVO.getHead().getPgrw() != null && dictTypeVO.getHead().getPgsn() != null) {
+				pageBean = new PageBean(
+						dictTypeVO.getHead().getPgsn(), 
+						dictTypeVO.getHead().getPgrw(), 
+							dictTypeMapper.queryDictTypeCount(dictTypeVO));
+				dictTypeVO.getHead().setPgsn((dictTypeVO.getHead().getPgsn() -1)*dictTypeVO.getHead().getPgrw());
+				pageBean.setContent(dictTypeMapper.queryDictTypePage(dictTypeVO));
+			}
+		} catch (Exception e) {
+			log.error("分页查询字典类别信息列表失败", e);
+		}
+		return pageBean;
 	}
 }

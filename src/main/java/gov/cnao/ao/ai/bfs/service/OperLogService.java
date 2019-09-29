@@ -21,6 +21,8 @@ import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
 import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.util.excelUtil;
+import gov.cnao.ao.ai.bfs.vo.OperLogVO;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 
 /**
  * @author fangbin
@@ -42,9 +44,9 @@ public class OperLogService {
 	 * @param operLog
 	 * @return
 	 */
-	public List<OperLog> queryOperLog(OperLog operLog) {
+	public List<OperLog> queryOperLog(OperLogVO operLogVO) {
 		try {
-			return operLogMapper.queryOperLog(operLog);
+			return operLogMapper.queryOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("操作日志查询失败", e);
 		}
@@ -56,11 +58,11 @@ public class OperLogService {
 	 * @param operLog
 	 * @return
 	 */
-	public OperLog insertOperLog(OperLog operLog) {
+	public OperLogVO insertOperLog(OperLogVO operLogVO) {
 		try {
-			operLog.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			operLogMapper.insertOperLog(operLog);
-			return operLog;
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogMapper.insertOperLog(operLogVO);
+			return operLogVO;
 		} catch (Exception e) {
 			log.error("操作日志新增失败", e);
 		}
@@ -71,9 +73,9 @@ public class OperLogService {
 	 * 操作日志导出
 	 * @param operLog
 	 */
-	public List<OperLog> exportOperLog(OperLog operLog) {
+	public List<OperLog> exportOperLog(OperLogVO operLogVO) {
 		try {
-			return operLogMapper.queryOperLog(operLog);
+			return operLogMapper.queryOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("操作日志导出失败", e);
 		}
@@ -141,6 +143,28 @@ public class OperLogService {
 //				e.printStackTrace();
 //			}
 //		}
+	}
+
+	/**
+	 * 分页查询操作日志
+	 * @param operLogVO
+	 * @return
+	 */
+	public PageBean queryOperLogPage(OperLogVO operLogVO) {
+		PageBean pageBean = new PageBean();
+		try {
+			if(operLogVO.getHead().getPgrw() != null && operLogVO.getHead().getPgsn() != null) {
+				pageBean = new PageBean(
+						operLogVO.getHead().getPgsn(), 
+						operLogVO.getHead().getPgrw(), 
+							operLogMapper.queryOperLogCount(operLogVO));
+				operLogVO.getHead().setPgsn((operLogVO.getHead().getPgsn() -1)*operLogVO.getHead().getPgrw());
+				pageBean.setContent(operLogMapper.queryOperLogPage(operLogVO));
+			}
+		} catch (Exception e) {
+			log.error("分页查询操作日志失败", e);
+		}
+		return pageBean;
 	}
 
 }

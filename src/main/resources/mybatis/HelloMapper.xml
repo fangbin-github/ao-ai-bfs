@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gov.cnao.ao.ai.bfs.mapper.HelloMapper">
+
+  <!-- 通过ID查询T_DMS_AUDI_METH_COL表columnDes信息 -->
+  <select id="queryAudiMethCol" parameterType="java.lang.String" resultType="java.lang.String">
+  	select COLUMN_DES from T_DMS_AUDI_METH_COL where id = #{id}
+  </select>
+  
+</mapper>

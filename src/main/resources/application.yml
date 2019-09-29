@@ -1,11 +1,34 @@
 spring:
   application:
     name: ao-ai-bfs
-  datasource:
-    username: sysdba
-    password: szoscar55
-    url: jdbc:oscar://128.194.10.215:2003/aidb
-    driver-class-name: com.oscar.Driver
+  datasource: 
+    default:
+       username: sysdba
+       password: szoscar55
+#      url: jdbc:oscar://106.13.59.131:2003/aidb
+       driver-class-name: com.oscar.Driver
+       url-base: jdbc:oscar://
+       host: 128.194.10.215
+       port: 2003
+       dbname: aidb
+       schemaName: SCM_BFS
+       url-other: 
+    private:
+       username: sysdba
+       password: szoscar55
+#      url: jdbc:oscar://106.13.59.131:2003/aidb
+       driver-class-name: com.oscar.Driver
+       url-base: jdbc:oscar://
+       host: 128.194.10.215
+       port: 2003
+       dbname: aidb
+       schemaName: {scm_schema}
+       url-other:
+#  datasource:
+#    username: sysdba
+#    password: szoscar55
+#    url: jdbc:oscar://128.194.10.215:2003/aidb
+#    driver-class-name: com.oscar.Driver
   redis:
     host: 128.194.10.223
     port: 6379
@@ -28,7 +51,7 @@ mybatis:
   mapper-locations: classpath:mybatis/*Mapper.xml,classpath:mybatis/*/*Mapper.xml
   type-aliases-package: gov.cnao.ao.ai.bfs.entity
 server:
-  port: 7111
+  port: 7112
 
 eureka:
   client:

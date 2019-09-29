@@ -3,30 +3,43 @@ package gov.cnao.ao.ai.bfs.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-
-import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
+import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
 @Mapper
 public interface DictTypeMapper {
 	 /**
      * 查询字典类别目录信息
      */
-    List<DictType> queryDictTypeConent(DictType dictType);
+    List<DictType> queryDictTypeConent(DictTypeVO dictTypeVO);
     /**
      * 查询字典类别信息
      */
-    List<DictType> queryDictType(DictType dictType);
+    List<DictType> queryDictType(DictTypeVO dictTypeVO);
     /**
      * 新增字典类别信息
      */
-	void insertDictType(DictType dictType);
+	void insertDictType(DictTypeVO dictTypeVO);
 	/**
 	 * 修改字典类别信息
 	 */
-	void updateDictType(DictType dictType);
+	void updateDictType(DictTypeVO dictTypeVO);
 	/**
 	 * 删除字典类别信息
 	 */
-	int deleteDictType(DictType dictType);
+	void deleteDictType(DictTypeVO dictTypeVO);
+	
+	/**
+	 * 查询数据字典类型总数
+	 * @param dictType
+	 * @return
+	 */
+	int queryDictTypeCount(DictTypeVO dictTypeVO);
+	
+	/**
+	 * 
+	 * @param dictType
+	 * @return
+	 */
+	List<DictType> queryDictTypePage(DictTypeVO dictTypeVO);
     
 }

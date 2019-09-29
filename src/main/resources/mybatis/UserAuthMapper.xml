@@ -20,10 +20,10 @@
   </sql>
   
   <!-- 查询授权信息 -->
-  <select id="queryUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth" resultMap="BaseResultMap">
+  <select id="queryUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from SCM_BFS.T_BFS_USER_AUTH
+    from T_BFS_USER_AUTH
     where 1=1
      <if test = "userId !='' and userId != null ">
       AND USER_ID = #{userId,jdbcType=VARCHAR}
@@ -49,23 +49,90 @@
      	<foreach collection = 'visitTabNms' index = 'index' item = 'item' open = '(' separator = ',' close = ')'>
      		#{item}
      	</foreach>  
-      <!-- AND VISIT_TAB_NM NOT in (${visitTabNms})  --> 
-      	
      </if>
      
      ORDER BY CREATE_TMS DESC
   </select>
   
+  <!-- 分页查询授权信息 -->
+  <select id="queryUserAuthPage" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_BFS_USER_AUTH
+    where 1=1
+     <if test = "userId !='' and userId != null ">
+      AND USER_ID = #{userId,jdbcType=VARCHAR}
+     </if>
+     <if test = "auditPrjId !='' and auditPrjId != null ">
+      AND AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+     </if>
+     <if test = "visitTabNm !='' and visitTabNm != null ">
+      AND VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUser !='' and createUser != null ">
+      AND CREATE_USER = #{createUser,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUserNm !='' and createUserNm != null ">
+      AND CREATE_USER_NM like ('%'|| #{createUserNm,jdbcType=VARCHAR} || '%')
+     </if>
+     <if test = "createTms !='' and createTms != null ">
+      AND TO_CHAR(CREATE_TMS , 'YYYY-MM-DD') = #{createTms}
+<!--       AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') <![CDATA[ >= ]]> #{createTm} -->
+     </if>
+     <if test = " visitTabNms != null ">
+     	AND VISIT_TAB_NM NOT IN 
+     	<foreach collection = 'visitTabNms' index = 'index' item = 'item' open = '(' separator = ',' close = ')'>
+     		#{item}
+     	</foreach>  
+     </if>
+     limit #{head.pgsn}, #{head.pgrw}
+     ORDER BY CREATE_TMS DESC
+  </select>
+  
+  <!-- 查询授权信息总数 -->
+  <select id="queryUserAuthCount" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO" resultType="java.lang.Integer">
+    select 
+    	count(*)
+    from T_BFS_USER_AUTH
+    where 1=1
+     <if test = "userId !='' and userId != null ">
+      AND USER_ID = #{userId,jdbcType=VARCHAR}
+     </if>
+     <if test = "auditPrjId !='' and auditPrjId != null ">
+      AND AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
+     </if>
+     <if test = "visitTabNm !='' and visitTabNm != null ">
+      AND VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUser !='' and createUser != null ">
+      AND CREATE_USER = #{createUser,jdbcType=VARCHAR}
+     </if>
+     <if test = "createUserNm !='' and createUserNm != null ">
+      AND CREATE_USER_NM like ('%'|| #{createUserNm,jdbcType=VARCHAR} || '%')
+     </if>
+     <if test = "createTms !='' and createTms != null ">
+      AND TO_CHAR(CREATE_TMS , 'YYYY-MM-DD') = #{createTms}
+<!--       AND TO_CHAR(CREATE_TM , 'YYYY-MM-DD HH:MI:SS') <![CDATA[ >= ]]> #{createTm} -->
+     </if>
+     <if test = " visitTabNms != null ">
+     	AND VISIT_TAB_NM NOT IN 
+     	<foreach collection = 'visitTabNms' index = 'index' item = 'item' open = '(' separator = ',' close = ')'>
+     		#{item}
+     	</foreach>  
+     </if>
+     ORDER BY CREATE_TMS DESC
+  </select>
+  
   <!-- 删除授权信息 -->
-  <delete id="deleteUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
-    delete from SCM_BFS.T_BFS_USER_AUTH
+  <delete id="deleteUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
+    delete from T_BFS_USER_AUTH
     where USER_ID = #{userId,jdbcType=VARCHAR}
       and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}
       and VISIT_TAB_NM = #{visitTabNm,jdbcType=VARCHAR}
   </delete>
   
   <!-- 新增授权信息 -->
-  <insert id="insertUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
+  <insert id="insertUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
     insert into SCM_BFS.T_BFS_USER_AUTH (USER_ID, AUDIT_PRJ_ID, VISIT_TAB_NM, 
       CREATE_USER, CREATE_USER_NM, CREATE_TMS
       )
@@ -75,8 +142,8 @@
   </insert>
   
    <!-- 修改授权信息 -->
-  <update id="updateUserAuth" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
-    update SCM_BFS.T_BFS_USER_AUTH
+  <update id="updateUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
+    update T_BFS_USER_AUTH
     set CREATE_USER = #{createUser,jdbcType=VARCHAR},
       CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},
       CREATE_TMS = #{createTms,jdbcType=TIMESTAMP}
@@ -86,8 +153,8 @@
   </update>
   
   <!-- 选择性新增授权信息 -->
-  <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
-    insert into SCM_BFS.T_BFS_USER_AUTH
+  <insert id="insertSelective" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
+    insert into T_BFS_USER_AUTH
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userId != null">
         USER_ID,
@@ -131,8 +198,8 @@
   </insert>
   
   <!-- 选择性修改授权信息 -->
-  <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.entity.UserAuth">
-    update SCM_BFS.T_BFS_USER_AUTH
+  <update id="updateByPrimaryKeySelective" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
+    update T_BFS_USER_AUTH
     <set>
       <if test="createUser != null">
         CREATE_USER = #{createUser,jdbcType=VARCHAR},

@@ -22,10 +22,10 @@
     UPDATE_TM
   </sql>
   <!--查询字典类别目录  -->
-  <select id="queryDictTypeConent" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
+  <select id="queryDictTypeConent" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO" resultMap="BaseResultMap">
     select 
     DICT_TYPE_NM,DICT_TYPE_ID 
-    from SCM_BFS.T_BFS_DICT_TYPE 
+    from T_BFS_DICT_TYPE 
     where 1=1
     <if test="dictTypeId != null and dictTypeId != '' ">
         and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
@@ -35,10 +35,43 @@
     </if>
    </select>
   <!--查询字典类别信息  -->
-  <select id="queryDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType" resultMap="BaseResultMap">
+  <select id="queryDictType" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from SCM_BFS.T_BFS_DICT_TYPE 
+    from T_BFS_DICT_TYPE 
+    where 1=1
+    <if test="dictTypeId != null and dictTypeId != '' ">
+        and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictTypeNm != null and dictTypeNm != ''">
+        AND DICT_TYPE_NM like ('%' || #{dictTypeNm,jdbcType=VARCHAR} || '%')
+    </if>
+    order by CREATE_TMS desc
+   </select>
+   
+  <!--分页查询数据字典类型信息  -->
+  <select id="queryDictTypePage" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_BFS_DICT_TYPE 
+    where 1=1
+    <if test="dictTypeId != null and dictTypeId != '' ">
+        and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictTypeNm != null and dictTypeNm != ''">
+        AND DICT_TYPE_NM like ('%' || #{dictTypeNm,jdbcType=VARCHAR} || '%')
+    </if>
+    limit #{head.pgsn}, #{head.pgrw}
+    order by CREATE_TMS desc
+   </select>
+   
+   
+   
+  <!--查询数据字典类型总数  -->
+  <select id="queryDictTypeCount" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO" resultType="java.lang.Integer">
+    select 
+    	count(*)
+    from T_BFS_DICT_TYPE 
     where 1=1
     <if test="dictTypeId != null and dictTypeId != '' ">
         and	DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
@@ -48,13 +81,13 @@
     </if>
    </select>
    <!--删除字典类别信息  -->
-  <delete id="deleteDictType" parameterType="java.lang.String">
-    delete from SCM_BFS.T_BFS_DICT_TYPE
+  <delete id="deleteDictType" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+    delete from T_BFS_DICT_TYPE
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </delete> 
   <!--新增字典类别信息-->
-  <insert id="insertDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
-    insert into SCM_BFS.T_BFS_DICT_TYPE
+  <insert id="insertDictType" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+    insert into T_BFS_DICT_TYPE
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="dictTypeId != null">
         DICT_TYPE_ID,
@@ -109,8 +142,8 @@
     </trim>
   </insert>
   <!--修改字典类别  -->
-  <update id="updateDictType" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
-    update SCM_BFS.T_BFS_DICT_TYPE
+  <update id="updateDictType" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+    update T_BFS_DICT_TYPE
     <set>
       <if test="dictTypeNm != null">
         DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
@@ -137,16 +170,16 @@
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </update>
   
-  <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
-    insert into SCM_BFS.T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER, 
+  <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+    insert into T_BFS_DICT_TYPE (DICT_TYPE_ID, DICT_TYPE_NM, CREATE_USER, 
       CREATE_USER_NM, CREATE_TMS, UPDATE_USER, 
       UPDATE_USER_NM, UPDATE_TM)
     values (#{dictTypeId,jdbcType=VARCHAR}, #{dictTypeNm,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
       #{createUserNm,jdbcType=VARCHAR}, #{createTms,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateUserNm,jdbcType=VARCHAR}, #{updateTm,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictType">
-    update SCM_BFS.T_BFS_DICT_TYPE
+  <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+    update T_BFS_DICT_TYPE
     set DICT_TYPE_NM = #{dictTypeNm,jdbcType=VARCHAR},
       CREATE_USER = #{createUser,jdbcType=VARCHAR},
       CREATE_USER_NM = #{createUserNm,jdbcType=VARCHAR},

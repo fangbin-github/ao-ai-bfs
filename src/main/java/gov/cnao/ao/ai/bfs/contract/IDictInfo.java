@@ -1,9 +1,10 @@
 package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
-import java.util.Map;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
+import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 
 public interface IDictInfo {
 	
@@ -12,31 +13,39 @@ public interface IDictInfo {
 	 * @param dictInfo
 	 * @return
 	 */
-	DictInfo queryDictInfoByDictCd(DictInfo dictInfo);
+	DictInfo queryDictInfoByDictCd(DictInfoVO dictInfoVO);
 	 /**
      * 查询字典列表
      */
-	List<DictInfo> queryDictInfo(DictInfo dictInfo);
+	List<DictInfo> queryDictInfo(DictInfoVO dictInfoVO);
+	
+	/**
+	 * 分页查询字典信息列表
+	 * @param dictInfo
+	 * @return
+	 */
+	PageBean queryDictInfoPage(DictInfoVO dictInfoVO);
+	
+	
 	/**
 	 * 根据ID查询字典信息名称
 	 */
-	String queryDictInfoById(DictInfo dictInfo);
+	String queryDictInfoById(DictInfoVO dictInfoVO);
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	String queryDictInfoByName(DictInfo dictInfo);
+	String queryDictInfoByName(DictInfoVO dictInfoVO);
 	/**
 	 * 新增字典信息
 	 */
-	DictInfo insertDictInfo(DictInfo dictInfo);
+	DictInfoVO insertDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 修改字典信息
 	 */
-	DictInfo updateDictInfo(DictInfo dictInfo);
+	DictInfoVO updateDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 删除字典信息
 	 */
-	int deleteDictInfo(List<DictInfo> list);
-//	int deleteDictInfo(DictInfo dictInfo);
+	int deleteDictInfo(DictInfoVO dictInfoVO);
 	
 }

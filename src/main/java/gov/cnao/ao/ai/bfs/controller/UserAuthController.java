@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import gov.cnao.ao.ai.bfs.contract.IUserAuth;
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.service.UserAuthService;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
+import gov.cnao.ao.ai.bfs.vo.AuthVO;
 
-@RestSchema(schemaId = "iUserAuth")
+@RestSchema(schemaId = "iuserauth")
 @RequestMapping(path = "/auth")
 public class UserAuthController implements IUserAuth{
 	
@@ -29,9 +31,9 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/queryUserAuth", method = RequestMethod.POST)
-	public List<UserAuth> queryUserAuth(@RequestBody UserAuth userAuth) {
+	public List<UserAuth> queryUserAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/queryUserAuth -- 查询授权信息列表信息");
-		return userAuthService.queryUserAuth(userAuth);
+		return userAuthService.queryUserAuth(authVO);
 	}
 
 	/**
@@ -39,9 +41,9 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/insertUserAuth", method = RequestMethod.POST)
-	public UserAuth insertUserAuth(@RequestBody UserAuth userAuth) {
+	public AuthVO insertUserAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/insertUserAuth -- 新增授权信息");
-		return userAuthService.insertUserAuth(userAuth);
+		return userAuthService.insertUserAuth(authVO);
 	}
 
 	/**
@@ -49,9 +51,9 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/deleteUserAuth", method = RequestMethod.POST)
-	public int deleteUserAuth(@RequestBody UserAuth userAuth) {
+	public int deleteUserAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/deleteUserAuth -- 删除授权信息");
-		return userAuthService.deleteUserAuth(userAuth);
+		return userAuthService.deleteUserAuth(authVO);
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/getAuth", method = RequestMethod.POST)
-	public List<UserAuth> getAuth(@RequestBody UserAuthVO userAuthVO) {
+	public List<AuthVO> getAuth(@RequestBody UserAuthVO userAuthVO) {
 		log.info("Access /IUserAuth/getAuth -- 授权");
 		return userAuthService.getAuth(userAuthVO);
 	}
@@ -69,18 +71,26 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/canAuth", method = RequestMethod.POST)
-	public List<UserAuth> canAuth(@RequestBody List<UserAuth> userAuths) {
+	public List<AuthVO> canAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/canAuth -- 取消授权");
-		return userAuthService.canAuth(userAuths);
+		return userAuthService.canAuth(authVO);
 	}
 
 	/**
 	 * 查询项目组织机构树
 	 */
 	@RequestMapping(path = "/xianProjectUser", method = RequestMethod.POST)
-	public XianProjectUserVO xianProjectUser() {
+	public XianProjectUserVO xianProjectUser(String userId, String projectIds) {
 		log.info("Access /IUserAuth/xianProjectUser -- 查询项目组织机构树");
-		return userAuthService.xianProjectUser();
+		return userAuthService.xianProjectUser(userId, projectIds);
+	}
+
+	/**
+	 * 分页查询授权信息
+	 */
+	@RequestMapping(path = "/queryUserAuthPage", method = RequestMethod.POST)
+	public PageBean queryUserAuthPage(@RequestBody AuthVO authVO) {
+		return userAuthService.queryUserAuthPage(authVO);
 	}
 	
 

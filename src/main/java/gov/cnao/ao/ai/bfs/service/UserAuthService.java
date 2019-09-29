@@ -27,11 +27,13 @@ import gov.cnao.ao.ai.bfs.vo.AuditGroupVO;
 import gov.cnao.ao.ai.bfs.vo.AuditGroups;
 import gov.cnao.ao.ai.bfs.vo.Data;
 import gov.cnao.ao.ai.bfs.vo.DataVO;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.Users;
 import gov.cnao.ao.ai.bfs.vo.UsersVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUser;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
+import gov.cnao.ao.ai.bfs.vo.AuthVO;
 
 @Service
 public class UserAuthService {
@@ -44,8 +46,8 @@ public class UserAuthService {
 	@Autowired
 	private Environment env;
 	
-	@RpcReference(microserviceName="", schemaId="prjInf_01")
-	Hello client;
+//	@RpcReference(microserviceName="ao-ai-oes", schemaId="fileShare")
+//	Hello client;
 	 
 	RestTemplate restTemplate = RestTemplateBuilder.create();
 	
@@ -54,9 +56,9 @@ public class UserAuthService {
 	 * @param userAuth
 	 * @return
 	 */
-	public List<UserAuth> queryUserAuth(UserAuth userAuth) {
+	public List<UserAuth> queryUserAuth(AuthVO authVO) {
 		try {
-			return userAuthMapper.queryUserAuth(userAuth);
+			return userAuthMapper.queryUserAuth(authVO);
 		} catch (Exception e) {
 			log.error("查询授权信息列表失败", e);
 		}
@@ -68,11 +70,11 @@ public class UserAuthService {
 	 * @param userAuth
 	 * @return
 	 */
-	public UserAuth insertUserAuth(UserAuth userAuth) {
+	public AuthVO insertUserAuth(AuthVO authVO) {
 		try {
-			userAuth.setCreateTms(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			userAuthMapper.insertUserAuth(userAuth);
-			return userAuth;
+			authVO.setCreateTms(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			userAuthMapper.insertUserAuth(authVO);
+			return authVO;
 		} catch (Exception e) {
 			log.error("新增授权信息失败", e);
 		}
@@ -84,9 +86,9 @@ public class UserAuthService {
 	 * @param userAuth
 	 * @return
 	 */
-	public int deleteUserAuth(UserAuth userAuth) {
+	public int deleteUserAuth(AuthVO authVO) {
 		try {
-			return userAuthMapper.deleteUserAuth(userAuth);
+			return userAuthMapper.deleteUserAuth(authVO);
 		} catch (Exception e) {
 			log.error("删除授权信息失败", e);
 		}
@@ -99,13 +101,13 @@ public class UserAuthService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<UserAuth> getAuth(UserAuthVO userAuthVO) {
+	public List<AuthVO> getAuth(UserAuthVO userAuthVO) {
 		try {
-			List<UserAuth> userAuths = userAuthVO.getUserAuths();
+			List<AuthVO> userAuths = userAuthVO.getUserAuths();
 			for (int i = 0; i < userAuths.size(); i++) {
-				UserAuth userAuth = userAuths.get(i);
-				userAuth.setUserId(userAuthVO.getUserId());
-				userAuthMapper.insertUserAuth(userAuth);
+				AuthVO authVO = userAuths.get(i);
+				authVO.setUserId(userAuthVO.getUserId());
+				userAuthMapper.insertUserAuth(authVO);
 			}
 			return userAuths;
 		} catch (Exception e) {
@@ -120,13 +122,14 @@ public class UserAuthService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<UserAuth> canAuth(List<UserAuth> userAuths) {
+	public List<AuthVO> canAuth(AuthVO authVO) {
+		List<AuthVO> authVOs = authVO.getAuthVOs();
 		try {
-			for (int i = 0; i < userAuths.size(); i++) {
-				UserAuth userAuth = userAuths.get(i);
-				userAuthMapper.deleteUserAuth(userAuth);
+			for (int i = 0; i < authVOs.size(); i++) {
+				AuthVO authVO1 = authVOs.get(i);
+				userAuthMapper.deleteUserAuth(authVO1);
 			}
-			return userAuths;
+			return authVOs;
 		} catch (Exception e) {
 			log.error("表数据取消授权失败", e);
 		}
@@ -137,7 +140,7 @@ public class UserAuthService {
 	 * 查询项目组织机构树
 	 * @return
 	 */
-	public XianProjectUserVO xianProjectUser() {
+	public XianProjectUserVO xianProjectUser(String userId, String projectIds) {
 		
 //		调用工行的接口
 //		String userId = ThreadLocalUtil.getContextUser().getUserID();
@@ -148,7 +151,9 @@ public class UserAuthService {
 //					http://"+ip+":"+port+"/rest/apmservice/operationSystem/xianProjectUser?userId =" + 
 //					userId + "&projectIds=" + projectIds , String.class);
 //		调用武开的接口
-//		restTemplate.getForObject("cse://helloprovider/hello/sayhi?userId=" + userId, String.class);
+//		String json = restTemplate.getForObject("cse://ao-ai-oes/fileShare/querySameTeam?userId=" + 
+//					userId + "&projectIds" + projectIds, String.class);
+//		System.out.println(json);
 		try {
 			XianProjectUser xianProjectUser = new XianProjectUser();
 			XianProjectUserVO xianProjectUserVO = new XianProjectUserVO();
@@ -157,6 +162,7 @@ public class UserAuthService {
 			List<DataVO> dataVOs = new ArrayList<DataVO>();
 			
 			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("/json/xianProjectUser");
+//			JSONObject obj = JsonResourceUtils.getJsonObjFromResource(json);
 			xianProjectUser = JSON.parseObject(obj.toJSONString(), XianProjectUser.class);
 			
 			List<Data> datas = xianProjectUser.getData();
@@ -198,6 +204,28 @@ public class UserAuthService {
 			log.error("查询项目组织机构树失败", e);
 		}
 		return null;
+	}
+
+	/**
+	 * 分页查询授权信息
+	 * @param authVO
+	 * @return
+	 */
+	public PageBean queryUserAuthPage(AuthVO authVO) {
+		PageBean pageBean = new PageBean();
+		try {
+			if(authVO.getHead().getPgrw() != null && authVO.getHead().getPgsn() != null) {
+				pageBean = new PageBean(
+						authVO.getHead().getPgsn(), 
+						authVO.getHead().getPgrw(), 
+						userAuthMapper.queryUserAuthCount(authVO));
+				authVO.getHead().setPgsn((authVO.getHead().getPgsn() -1)*authVO.getHead().getPgrw());
+				pageBean.setContent(userAuthMapper.queryUserAuthPage(authVO));
+			}
+		} catch (Exception e) {
+			log.error("分页查询授权信息失败", e);
+		}
+		return pageBean;
 	}
 
 }

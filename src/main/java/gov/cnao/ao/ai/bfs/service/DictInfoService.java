@@ -8,10 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
+import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.PageBean;
 
 @Service
 public class DictInfoService {
@@ -28,9 +32,9 @@ public class DictInfoService {
 	 *查询字典信息列表
 	 * @throws ParseException 
 	 */
-	public List<DictInfo> queryDictInfo(DictInfo dictInfo){
+	public List<DictInfo> queryDictInfo(DictInfoVO dictInfoVO){
 		try {
-			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfo);
+			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfoVO);
 			return list;
 		} catch (Exception e) {
 			log.error("查询字典信息列表失败", e);
@@ -41,9 +45,9 @@ public class DictInfoService {
 	/**
 	 * 根据ID查询字典信息名称  
 	 */
-	public String queryDictInfoById(DictInfo dictInfo){
+	public String queryDictInfoById(DictInfoVO dictInfoVO){
 		try {
-			String dictNm = dictInfoMapper.queryDictInfoById(dictInfo);
+			String dictNm = dictInfoMapper.queryDictInfoById(dictInfoVO);
 			return dictNm;
 		} catch (Exception e) {
 			log.error("根据ID查询字典信息名称失败", e);
@@ -54,9 +58,9 @@ public class DictInfoService {
 	/**
 	 * 根据字典信息名称查询ID
 	 */
-	public String queryDictInfoByName(DictInfo dictInfo){
+	public String queryDictInfoByName(DictInfoVO dictInfoVO){
 		try {
-			String dictCd = dictInfoMapper.queryDictInfoByName(dictInfo);
+			String dictCd = dictInfoMapper.queryDictInfoByName(dictInfoVO);
 			return dictCd;
 		} catch (Exception e) {
 			log.error("根据字典信息名称查询ID失败", e);
@@ -67,12 +71,14 @@ public class DictInfoService {
 	/**
 	 * 删除字典信息
 	 */
-	public int deleteDictInfo(List<DictInfo> list) {
+	@Transactional(propagation = Propagation.REQUIRED)
+	public int deleteDictInfo(DictInfoVO dictInfoVO) {
 		int num =0;
+		List<DictInfoVO> dictInfoVOs = dictInfoVO.getDictInfoVOs();
 		try {
-			for (int i = 0; i < list.size(); i++) {
-				DictInfo dictInfo = list.get(i);
-				dictInfoMapper.deleteDictInfo(dictInfo);
+			for (int i = 0; i < dictInfoVOs.size(); i++) {
+				DictInfoVO dictInfoVO1 = dictInfoVOs.get(i);
+				dictInfoMapper.deleteDictInfo(dictInfoVO1);
 				num++;
 			}
 		} catch (Exception e) {
@@ -85,12 +91,12 @@ public class DictInfoService {
     /**
 	 * 新增字典信息
 	 */
-	public DictInfo insertDictInfo(DictInfo dictInfo) {
+	public DictInfoVO insertDictInfo(DictInfoVO dictInfoVO) {
 		try {
-			dictInfo.setCreateTms(DateTimeUtil.getCurrentTime());
-			stringRedisTemplate.opsForValue().set(dictInfo.getDictCd(), dictInfo.getDictNm());
-			dictInfoMapper.insertDictInfo(dictInfo);
-			return dictInfo;
+			dictInfoVO.setCreateTms(DateTimeUtil.getCurrentTime());
+			stringRedisTemplate.opsForValue().set(dictInfoVO.getDictCd(), dictInfoVO.getDictNm());
+			dictInfoMapper.insertDictInfo(dictInfoVO);
+			return dictInfoVO;
 		} catch (Exception e) {
 			log.error("新增字典信息失败", e);
 		}
@@ -100,11 +106,11 @@ public class DictInfoService {
 	/**
 	 * 修改字典信息
 	 */
-	public DictInfo updateDictInfo(DictInfo dictInfo) {
+	public DictInfoVO updateDictInfo(DictInfoVO dictInfoVO) {
 		try {
-			dictInfo.setUpdateTm(DateTimeUtil.getCurrentTime());
-			dictInfoMapper.updateDictInfo(dictInfo);
-			return dictInfo;
+			dictInfoVO.setUpdateTm(DateTimeUtil.getCurrentTime());
+			dictInfoMapper.updateDictInfo(dictInfoVO);
+			return dictInfoVO;
 		} catch (Exception e) {
 			log.error("修改字典信息失败", e);
 		}
@@ -116,9 +122,9 @@ public class DictInfoService {
 	 * @param dictInfo
 	 * @return
 	 */
-	public DictInfo queryDictInfoByDictCd(DictInfo dictInfo) {
+	public DictInfo queryDictInfoByDictCd(DictInfoVO dictInfoVO) {
 		try {
-			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfo);
+			List<DictInfo> list = dictInfoMapper.queryDictInfo(dictInfoVO);
 			if(list.size()>0){
 				return list.get(0);
 			}
@@ -126,6 +132,28 @@ public class DictInfoService {
 			log.error("修改字典信息失败", e);
 		}
 		return null;
+	}
+
+	/**
+	 * 分页查询字典信息列表
+	 * @param dictInfoVO
+	 * @return
+	 */
+	public PageBean queryDictInfoPage(DictInfoVO dictInfoVO) {
+		PageBean pageBean = new PageBean();
+		try {
+			if(dictInfoVO.getHead().getPgrw() != null && dictInfoVO.getHead().getPgsn() != null) {
+				pageBean = new PageBean(
+						dictInfoVO.getHead().getPgsn(), 
+						dictInfoVO.getHead().getPgrw(), 
+						dictInfoMapper.queryDictInfoCount(dictInfoVO));
+				dictInfoVO.getHead().setPgsn((dictInfoVO.getHead().getPgsn() -1)*dictInfoVO.getHead().getPgrw());
+				pageBean.setContent(dictInfoMapper.queryDictInfoPage(dictInfoVO));
+			}
+		} catch (Exception e) {
+			log.error("分页查询字典信息列表失败", e);
+		}
+		return pageBean;
 	}
 	
 }

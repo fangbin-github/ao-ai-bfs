@@ -29,10 +29,10 @@
   </sql>
   
   <!--查询字典信息  -->
-  <select id="queryDictInfo" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultMap="BaseResultMap">
+  <select id="queryDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from SCM_BFS.T_BFS_DICT_INFO 
+    from T_BFS_DICT_INFO 
     where 1=1
     <if test="dictTypeId != null and dictTypeId != '' ">
 	     and   DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
@@ -44,11 +44,48 @@
          and DICT_CD = #{dictCd,jdbcType=VARCHAR}
     </if>
    </select>
+   
+  <!--分页查询字典信息  -->
+  <select id="queryDictInfoPage" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_BFS_DICT_INFO 
+    where 1=1
+    <if test="dictTypeId != null and dictTypeId != '' ">
+	     and   DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictNm != null and dictNm != '' ">
+         and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%') 
+    </if>
+	<if test="dictCd != null and dictCd != ''">
+         and DICT_CD = #{dictCd,jdbcType=VARCHAR}
+    </if>
+    limit #{head.pgsn}, #{head.pgrw}
+   </select>
+   
+  <!--分页查询字典信息  -->
+  <select id="queryDictInfoCount" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO" resultType="java.lang.Integer">
+    select 
+    	count(*)
+    from T_BFS_DICT_INFO 
+    where 1=1
+    <if test="dictTypeId != null and dictTypeId != '' ">
+	     and   DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	</if>
+	<if test="dictNm != null and dictNm != '' ">
+         and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%') 
+    </if>
+	<if test="dictCd != null and dictCd != ''">
+         and DICT_CD = #{dictCd,jdbcType=VARCHAR}
+    </if>
+   </select>
+   
+   
     <!--根据ID查询字典信息名称  -->
-  <select id="queryDictInfoById" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo"  resultType="java.lang.String">
+  <select id="queryDictInfoById" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO"  resultType="java.lang.String">
     select 
      DICT_NM
-    from SCM_BFS.T_BFS_DICT_INFO 
+    from T_BFS_DICT_INFO 
     where 1=1
     <!-- <if test="dictTypeId != null">
 	     and DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
@@ -58,10 +95,10 @@
     </if>
   </select>
     <!--根据字典信息名称查询ID -->
-  <select id="queryDictInfoByName" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultType="java.lang.String">
+  <select id="queryDictInfoByName" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO" resultType="java.lang.String">
     select 
     	DICT_CD 
-    from SCM_BFS.T_BFS_DICT_INFO 
+    from T_BFS_DICT_INFO 
     where 1=1 
     <if test="dictNm != null and dictNm != '' ">
       and DICT_NM = #{dictNm,jdbcType=VARCHAR}
@@ -69,13 +106,12 @@
     </if> 
   </select>
    <!--删除字典信息  -->
-  <delete id="deleteDictInfo" parameterType="java.lang.String">
-    delete from SCM_BFS.T_BFS_DICT_INFO
-    where DICT_CD = #{dictCd,jdbcType=VARCHAR}
+  <delete id="deleteDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+    delete from T_BFS_DICT_INFO where DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </delete> 
   <!--新增字典信息  -->
-  <insert id="insertDictInfo" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
-    insert into SCM_BFS.T_BFS_DICT_INFO
+  <insert id="insertDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+    insert into T_BFS_DICT_INFO
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="dictTypeId != null">
         DICT_TYPE_ID,
@@ -148,8 +184,8 @@
     </trim>
   </insert>
   <!--修改字典信息-->
-  <update id="updateDictInfo" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
-    update SCM_BFS.T_BFS_DICT_INFO
+  <update id="updateDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+    update T_BFS_DICT_INFO
     <set>
       <if test="dictNm != null">
         DICT_NM = #{dictNm,jdbcType=VARCHAR},
@@ -182,19 +218,21 @@
     where DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </update>
   
-   <select id="selectByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo" resultMap="BaseResultMap">
+   <select id="selectByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from SCM_BFS.T_BFS_DICT_INFO
+    from T_BFS_DICT_INFO
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
       and DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteDictInfoByTypeId" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
-    delete from SCM_BFS.T_BFS_DICT_INFO
+  
+  <delete id="deleteDictInfoByTypeId" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+    delete from T_BFS_DICT_INFO
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
-    insert into SCM_BFS.T_BFS_DICT_INFO (DICT_TYPE_ID, DICT_CD, DICT_NM, 
+  
+  <insert id="insert" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+    insert into T_BFS_DICT_INFO (DICT_TYPE_ID, DICT_CD, DICT_NM, 
       SUP_DICT_CD, SORT_NO, CREATE_USER, 
       CREATE_USER_NM, CREATE_TMS, UPDATE_USER, 
       UPDATE_USER_NM, UPDATE_TM)
@@ -203,7 +241,7 @@
       #{createUserNm,jdbcType=VARCHAR}, #{createTms,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{updateUserNm,jdbcType=VARCHAR}, #{updateTm,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.entity.DictInfo">
+  <update id="updateByPrimaryKey" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
     update T_BFS_DICT_INFO
     set DICT_NM = #{dictNm,jdbcType=VARCHAR},
       SUP_DICT_CD = #{supDictCd,jdbcType=VARCHAR},
