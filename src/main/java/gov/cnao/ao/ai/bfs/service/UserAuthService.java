@@ -20,13 +20,16 @@ import com.bjsasc.drap.pt.context.ThreadLocalUtil;
 
 import gov.cnao.ao.ai.bfs.contract.Hello;
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
+import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
 import gov.cnao.ao.ai.bfs.mapper.UserAuthMapper;
+import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.util.JsonResourceUtils;
 import gov.cnao.ao.ai.bfs.vo.AuditGroupVO;
 import gov.cnao.ao.ai.bfs.vo.AuditGroups;
 import gov.cnao.ao.ai.bfs.vo.Data;
 import gov.cnao.ao.ai.bfs.vo.DataVO;
+import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
@@ -47,9 +50,9 @@ public class UserAuthService {
 	@Autowired
 	private Environment env;
 	
-//	@RpcReference(microserviceName="ao-ai-oes", schemaId="fileShare")
-//	Hello client;
-	 
+	@Autowired
+	private OperLogMapper operLogMapper;
+	
 	RestTemplate restTemplate = RestTemplateBuilder.create();
 	
 	/**
@@ -59,7 +62,24 @@ public class UserAuthService {
 	 */
 	public List<UserAuth> queryUserAuth(AuthVO authVO) {
 		try {
-			return userAuthMapper.queryUserAuth(authVO);
+			List<UserAuth> userAuths = userAuthMapper.queryUserAuth(authVO);
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("查询");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("数据授权管理");
+			operLogMapper.insertOperLog(LogVO);
+			return userAuths;
 		} catch (Exception e) {
 			log.error("查询授权信息列表失败", e);
 		}
@@ -110,6 +130,22 @@ public class UserAuthService {
 				authVO.setUserId(userAuthVO.getUserId());
 				userAuthMapper.insertUserAuth(authVO);
 			}
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("数据授权");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("数据授权管理");
+			operLogMapper.insertOperLog(LogVO);
 			return userAuths;
 		} catch (Exception e) {
 			log.error("表数据授权失败", e);
@@ -130,6 +166,22 @@ public class UserAuthService {
 				UserAuthsVO userAuthsVO = authVOs.get(i);
 				userAuthMapper.deleteUserAuth(userAuthsVO);
 			}
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("取消数据授权");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("数据授权管理");
+			operLogMapper.insertOperLog(LogVO);
 			return authVOs;
 		} catch (Exception e) {
 			log.error("表数据取消授权失败", e);
@@ -223,6 +275,22 @@ public class UserAuthService {
 				authVO.getHead().setPgsn((authVO.getHead().getPgsn() -1)*authVO.getHead().getPgrw());
 				pageBean.setContent(userAuthMapper.queryUserAuthPage(authVO));
 			}
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("查询");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("数据授权管理");
+			operLogMapper.insertOperLog(LogVO);
 		} catch (Exception e) {
 			log.error("分页查询授权信息失败", e);
 		}

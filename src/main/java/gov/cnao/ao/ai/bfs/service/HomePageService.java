@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,11 @@ import com.oscar.jdbc.Array;
 import gov.cnao.ao.ai.bfs.config.DynamicDataSource;
 import gov.cnao.ao.ai.bfs.config.SwitchDB;
 import gov.cnao.ao.ai.bfs.mapper.HomePageMapper;
+import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
+import gov.cnao.ao.ai.bfs.util.CommonUtil;
+import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.MethodStatisticalVO;
+import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.SchemVO;
 
 @Service
@@ -50,6 +55,9 @@ public class HomePageService {
 	@Autowired
 	private SwitchDB switchDB;
 	
+	@Autowired
+	private OperLogMapper operLogMapper;
+	
 	/**
 	 * 查询项目Schem信息
 	 * @param schemVO
@@ -57,20 +65,9 @@ public class HomePageService {
 	 */
 	public SchemVO queryPrjSchem(SchemVO schemVO) {
 		try {
-//			Map<String, String> map = new HashMap<String, String>();
-//			map.put("userId", "t1001");
-//			map.put("name", "测试1");
-//			map.put("sex", "男");
-//			stringRedisTemplate.opsForHash().putAll("user", map);
-			
 			stringRedisTemplate.opsForHash().put("user", "auditPrjId", schemVO.getAuditPrjId());
 			stringRedisTemplate.opsForHash().put("user", "auditPrjCd", schemVO.getAuditPrjCd());
 			stringRedisTemplate.opsForHash().put("user", "auditPrjNm", schemVO.getAuditPrjNm());
-//			System.out.println(stringRedisTemplate.opsForHash().get("user", "auditPrjId"));
-			
-//			stringRedisTemplate.opsForValue().set("auditPrjId", schemVO.getAuditPrjId());
-//			stringRedisTemplate.opsForValue().set("auditPrjNm", schemVO.getAuditPrjNm());
-//			stringRedisTemplate.opsForValue().set("auditPrjCd", schemVO.getAuditPrjCd());
 			schemVO.setTableSchem("SCM_" + schemVO.getAuditPrjId());
 			return homePageMapper.queryPrjSchem(schemVO);
 		} catch (Exception e) {
@@ -94,6 +91,22 @@ public class HomePageService {
 	        			"_DATA DATAFILE 'TBS_" + schemVO.getAuditPrjId() +"_DATA.data' SIZE 5m" + ";" ;
 	        	Statement statement = conn.createStatement();
 	        	statement.execute(sql);
+	        	//操作日志新增
+				OperLogVO LogVO = new OperLogVO();
+				LogVO.setLogId(CommonUtil.getSeqNum());
+				LogVO.setProjId("项目编号");
+				LogVO.setUserId("用户标识");
+				LogVO.setUserNm("用户名称");
+				LogVO.setOrgId("机构代码");
+				LogVO.setOrgNm("机构名称");
+				LogVO.setLoginIp("登录IP");
+				LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				LogVO.setLogType("01");
+				LogVO.setFunFlg("创建schema仓库");
+				LogVO.setLogCont("日志内容");
+				LogVO.setVisitMicr("ao-ai-bfs");
+				LogVO.setVisitMenu("系统管理");
+				operLogMapper.insertOperLog(LogVO);
 	        	return true;
 			}
 		} catch (Exception e) {

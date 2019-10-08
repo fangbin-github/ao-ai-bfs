@@ -1,10 +1,38 @@
 package gov.cnao.ao.ai.bfs.util;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class CommonUtil {
+	
+	
+	/**
+	 * 生成操作日志的日志编号
+	 * 生成规则：YYYYMMDDHHMMSS（年月日时分秒） + 6位随机数
+	 * @return
+	 */
+	public static synchronized String getSeqNum() {
+		String datetime = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
+		String code = datetime + randomCode();
+		return code;
+	}
+	
+	/**
+	 * 生成6位随机数
+	 * @return
+	 */
+	public static String randomCode() {
+//		int ran = (int) ((Math.random() * 9 + 1) * 100000);
+		StringBuilder builder = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 6; i++) {
+			builder.append(random.nextInt(10));
+		}
+		return builder.toString();
+	}
 	
 	/**
 	 * 将逗号字符串转成SQL所需要的IN格式 如：1,2,3 转成 '1','2','3'

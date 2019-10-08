@@ -46,7 +46,24 @@ public class OperLogService {
 	 */
 	public List<OperLog> queryOperLog(OperLogVO operLogVO) {
 		try {
-			return operLogMapper.queryOperLog(operLogVO);
+			List<OperLog> operLogs = operLogMapper.queryOperLog(operLogVO);
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("查询");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("操作日志管理");
+			operLogMapper.insertOperLog(LogVO);
+			return operLogs;
 		} catch (Exception e) {
 			log.error("操作日志查询失败", e);
 		}
@@ -75,7 +92,24 @@ public class OperLogService {
 	 */
 	public List<OperLog> exportOperLog(OperLogVO operLogVO) {
 		try {
-			return operLogMapper.queryOperLog(operLogVO);
+			List<OperLog> operLogs = operLogMapper.queryOperLog(operLogVO);
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("导出");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("操作日志管理");
+			operLogMapper.insertOperLog(LogVO);
+			return operLogs;
 		} catch (Exception e) {
 			log.error("操作日志导出失败", e);
 		}
@@ -161,6 +195,22 @@ public class OperLogService {
 				operLogVO.getHead().setPgsn((operLogVO.getHead().getPgsn() -1)*operLogVO.getHead().getPgrw());
 				pageBean.setContent(operLogMapper.queryOperLogPage(operLogVO));
 			}
+			//操作日志新增
+			OperLogVO LogVO = new OperLogVO();
+			LogVO.setLogId(CommonUtil.getSeqNum());
+			LogVO.setProjId("项目编号");
+			LogVO.setUserId("用户标识");
+			LogVO.setUserNm("用户名称");
+			LogVO.setOrgId("机构代码");
+			LogVO.setOrgNm("机构名称");
+			LogVO.setLoginIp("登录IP");
+			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			LogVO.setLogType("01");
+			LogVO.setFunFlg("查询");
+			LogVO.setLogCont("日志内容");
+			LogVO.setVisitMicr("ao-ai-bfs");
+			LogVO.setVisitMenu("操作日志管理");
+			operLogMapper.insertOperLog(LogVO);
 		} catch (Exception e) {
 			log.error("分页查询操作日志失败", e);
 		}

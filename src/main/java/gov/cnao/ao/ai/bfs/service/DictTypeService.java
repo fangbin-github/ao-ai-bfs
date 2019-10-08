@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
+import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
+import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
+import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
+import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
 import gov.cnao.ao.ai.bfs.vo.InfoVO;
+import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.TypeVO;
 import net.sf.json.JSONObject;
@@ -37,6 +43,9 @@ public class DictTypeService {
 	
 	@Autowired
     private StringRedisTemplate stringRedisTemplate;
+	
+	@Autowired
+	private OperLogMapper operLogMapper;
 	
 	/**
 	 * 查询字典类别信息目录
@@ -82,7 +91,24 @@ public class DictTypeService {
 	 */
 	public List<DictType> queryDictType(DictTypeVO dictTypeVO) {
 		try {
-			return dictTypeMapper.queryDictType(dictTypeVO);
+			List<DictType> dictTypes = dictTypeMapper.queryDictType(dictTypeVO);
+			//操作日志新增
+			OperLogVO operLogVO = new OperLogVO();
+			operLogVO.setLogId(CommonUtil.getSeqNum());
+			operLogVO.setProjId("项目编号");
+			operLogVO.setUserId("用户标识");
+			operLogVO.setUserNm("用户名称");
+			operLogVO.setOrgId("机构代码");
+			operLogVO.setOrgNm("机构名称");
+			operLogVO.setLoginIp("登录IP");
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogType("01");
+			operLogVO.setFunFlg("查询");
+			operLogVO.setLogCont("日志内容");
+			operLogVO.setVisitMicr("ao-ai-bfs");
+			operLogVO.setVisitMenu("数据字典类型管理");
+			operLogMapper.insertOperLog(operLogVO);
+			return dictTypes;
 		} catch (Exception e) {
 			log.error("查询字典类别信息失败", e);
 		}
@@ -97,6 +123,22 @@ public class DictTypeService {
 			dictTypeVO.setCreateTms(DateTimeUtil.getCurrentTime());
 			stringRedisTemplate.opsForValue().set(dictTypeVO.getDictTypeId(), dictTypeVO.getDictTypeNm());
 			dictTypeMapper.insertDictType(dictTypeVO);
+			//操作日志新增
+			OperLogVO operLogVO = new OperLogVO();
+			operLogVO.setLogId(CommonUtil.getSeqNum());
+			operLogVO.setProjId("项目编号");
+			operLogVO.setUserId("用户标识");
+			operLogVO.setUserNm("用户名称");
+			operLogVO.setOrgId("机构代码");
+			operLogVO.setOrgNm("机构名称");
+			operLogVO.setLoginIp("登录IP");
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogType("01");
+			operLogVO.setFunFlg("新增");
+			operLogVO.setLogCont("日志内容");
+			operLogVO.setVisitMicr("ao-ai-bfs");
+			operLogVO.setVisitMenu("数据字典类型管理");
+			operLogMapper.insertOperLog(operLogVO);
 			return dictTypeVO;
 		} catch (Exception e) {
 			log.error("新增字典类别信息失败", e);
@@ -111,6 +153,22 @@ public class DictTypeService {
 		try {
 			dictTypeVO.setUpdateTm(DateTimeUtil.getCurrentTime());
 			dictTypeMapper.updateDictType(dictTypeVO);
+			//操作日志新增
+			OperLogVO operLogVO = new OperLogVO();
+			operLogVO.setLogId(CommonUtil.getSeqNum());
+			operLogVO.setProjId("项目编号");
+			operLogVO.setUserId("用户标识");
+			operLogVO.setUserNm("用户名称");
+			operLogVO.setOrgId("机构代码");
+			operLogVO.setOrgNm("机构名称");
+			operLogVO.setLoginIp("登录IP");
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogType("01");
+			operLogVO.setFunFlg("修改");
+			operLogVO.setLogCont("日志内容");
+			operLogVO.setVisitMicr("ao-ai-bfs");
+			operLogVO.setVisitMenu("数据字典类型管理");
+			operLogMapper.insertOperLog(operLogVO);
 			return dictTypeVO;
 		} catch (Exception e) {
 			log.error("修改字典类别信息失败", e);
@@ -134,6 +192,22 @@ public class DictTypeService {
 				dictInfoMapper.deleteDictInfoByTypeId(infoVO);
 				num++;
 			}
+			//操作日志新增
+			OperLogVO operLogVO = new OperLogVO();
+			operLogVO.setLogId(CommonUtil.getSeqNum());
+			operLogVO.setProjId("项目编号");
+			operLogVO.setUserId("用户标识");
+			operLogVO.setUserNm("用户名称");
+			operLogVO.setOrgId("机构代码");
+			operLogVO.setOrgNm("机构名称");
+			operLogVO.setLoginIp("登录IP");
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogType("01");
+			operLogVO.setFunFlg("删除");
+			operLogVO.setLogCont("日志内容");
+			operLogVO.setVisitMicr("ao-ai-bfs");
+			operLogVO.setVisitMenu("数据字典类型管理");
+			operLogMapper.insertOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("删除字典类别信息失败", e);
 		}
@@ -173,6 +247,22 @@ public class DictTypeService {
 				dictTypeVO.getHead().setPgsn((dictTypeVO.getHead().getPgsn() -1)*dictTypeVO.getHead().getPgrw());
 				pageBean.setContent(dictTypeMapper.queryDictTypePage(dictTypeVO));
 			}
+			//操作日志新增
+			OperLogVO operLogVO = new OperLogVO();
+			operLogVO.setLogId(CommonUtil.getSeqNum());
+			operLogVO.setProjId("项目编号");
+			operLogVO.setUserId("用户标识");
+			operLogVO.setUserNm("用户名称");
+			operLogVO.setOrgId("机构代码");
+			operLogVO.setOrgNm("机构名称");
+			operLogVO.setLoginIp("登录IP");
+			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogType("01");
+			operLogVO.setFunFlg("查询");
+			operLogVO.setLogCont("日志内容");
+			operLogVO.setVisitMicr("ao-ai-bfs");
+			operLogVO.setVisitMenu("数据字典类型管理");
+			operLogMapper.insertOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("分页查询字典类别信息列表失败", e);
 		}

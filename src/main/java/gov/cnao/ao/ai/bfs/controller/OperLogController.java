@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import gov.cnao.ao.ai.bfs.contract.IOperLog;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.service.OperLogService;
+import gov.cnao.ao.ai.bfs.util.CommonUtil;
+import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
@@ -73,15 +75,11 @@ public class OperLogController implements IOperLog {
 	 * 生成20位的编号，根据年月日时分秒+序号
 	 * @return
 	 */
-//	@RequestMapping(path = "/code", method = RequestMethod.POST)
-//	public String code() {
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-//		String date = dateFormat.format(new Date());
-//		int len = "00000".length();
-//		Long l = Long.valueOf(len)+1;
-//		System.out.println(String.format("%0"+len+"d", 20));
-//		System.out.println(date);
-//		return "";
-//	}
-
+	@RequestMapping(path = "/code", method = RequestMethod.POST)
+	public String code() {
+		String logId = CommonUtil.getSeqNum();
+		System.out.println(logId);
+		return logId;
+	}
+	
 }
