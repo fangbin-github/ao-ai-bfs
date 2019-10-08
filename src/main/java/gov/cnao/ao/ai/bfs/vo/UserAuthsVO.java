@@ -1,15 +1,10 @@
 package gov.cnao.ao.ai.bfs.vo;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class AuthVO extends BaseRequest {
-	
+public class UserAuthsVO extends BaseRequest {
 	private static final long serialVersionUID = 1L;
+	 
 	/**
 	 * 用户编号
 	 */
@@ -44,30 +39,6 @@ public class AuthVO extends BaseRequest {
 	  * @return
 	  */
 	 private List<String> visitTabNms;
-	 private List<UserAuthsVO> authVOs;
-	public List<UserAuthsVO> getAuthVOs() {
-		return authVOs;
-	}
-	public void setAuthVOs(List<UserAuthsVO> authVOs) {
-		this.authVOs = authVOs;
-	}
-
-	public AuthVO() {
-		super();
-	 }
-	 
-	public AuthVO(String json) throws JsonParseException, JsonMappingException, IOException {
-		AuthVO authVO = new ObjectMapper().readValue(json, AuthVO.class);
-		this.userId = authVO.userId;
-		this.auditPrjId = authVO.auditPrjId;
-		this.visitTabNm = authVO.visitTabNm;
-		this.createUser = authVO.createUser;
-		this.createUserNm = authVO.createUserNm;
-		this.createTms = authVO.createTms;
-		this.visitTabNms = authVO.visitTabNms;
-		this.authVOs = authVO.authVOs;
-	}
-
 
 	public List<String> getVisitTabNms() {
 		return visitTabNms;

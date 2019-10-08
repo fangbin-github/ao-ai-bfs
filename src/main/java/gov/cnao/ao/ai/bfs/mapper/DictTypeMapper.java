@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
+import gov.cnao.ao.ai.bfs.vo.TypeVO;
 @Mapper
 public interface DictTypeMapper {
 	 /**
@@ -26,7 +27,7 @@ public interface DictTypeMapper {
 	/**
 	 * 删除字典类别信息
 	 */
-	void deleteDictType(DictTypeVO dictTypeVO);
+	void deleteDictType(TypeVO typeVO);
 	
 	/**
 	 * 查询数据字典类型总数

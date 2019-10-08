@@ -29,6 +29,7 @@ import gov.cnao.ao.ai.bfs.vo.Data;
 import gov.cnao.ao.ai.bfs.vo.DataVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
+import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 import gov.cnao.ao.ai.bfs.vo.Users;
 import gov.cnao.ao.ai.bfs.vo.UsersVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUser;
@@ -86,9 +87,9 @@ public class UserAuthService {
 	 * @param userAuth
 	 * @return
 	 */
-	public int deleteUserAuth(AuthVO authVO) {
+	public int deleteUserAuth(UserAuthsVO userAuthsVO) {
 		try {
-			return userAuthMapper.deleteUserAuth(authVO);
+			return userAuthMapper.deleteUserAuth(userAuthsVO);
 		} catch (Exception e) {
 			log.error("删除授权信息失败", e);
 		}
@@ -122,12 +123,12 @@ public class UserAuthService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<AuthVO> canAuth(AuthVO authVO) {
-		List<AuthVO> authVOs = authVO.getAuthVOs();
+	public List<UserAuthsVO> canAuth(AuthVO authVO) {
+		List<UserAuthsVO> authVOs = authVO.getAuthVOs();
 		try {
 			for (int i = 0; i < authVOs.size(); i++) {
-				AuthVO authVO1 = authVOs.get(i);
-				userAuthMapper.deleteUserAuth(authVO1);
+				UserAuthsVO userAuthsVO = authVOs.get(i);
+				userAuthMapper.deleteUserAuth(userAuthsVO);
 			}
 			return authVOs;
 		} catch (Exception e) {

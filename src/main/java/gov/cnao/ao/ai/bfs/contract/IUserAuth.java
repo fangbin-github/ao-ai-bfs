@@ -6,6 +6,7 @@ import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.vo.AuthVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
+import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
 
 public interface IUserAuth {
@@ -36,7 +37,7 @@ public interface IUserAuth {
 	 * @param userAuth
 	 * @return
 	 */
-	int deleteUserAuth(AuthVO authVO);
+	int deleteUserAuth(UserAuthsVO userAuthsVO);
 	
 	/**
 	 * 授权
@@ -50,7 +51,7 @@ public interface IUserAuth {
 	 * @param userAuths
 	 * @return
 	 */
-	List<AuthVO> canAuth(AuthVO authVO);
+	List<UserAuthsVO> canAuth(AuthVO authVO);
 	
 	/**
 	 * 查询项目组织机构树

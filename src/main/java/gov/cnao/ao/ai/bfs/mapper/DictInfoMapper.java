@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.InfoVO;
 @Mapper
 public interface DictInfoMapper {
 
@@ -25,7 +26,7 @@ public interface DictInfoMapper {
 	/**
 	 * 删除数据字典
 	 */
-	void deleteDictInfo(DictInfoVO dictInfoVO);
+	void deleteDictInfo(InfoVO infoVO);
 	/**
 	 * 根据ID查询字典信息名称
 	 */
@@ -39,7 +40,7 @@ public interface DictInfoMapper {
 	 * 根据数据字典类型删除数据字典信息
 	 * @param dictInfo
 	 */
-	void deleteDictInfoByTypeId(DictInfoVO dictInfoVO);
+	void deleteDictInfoByTypeId(InfoVO infoVO);
 	
 	/**
 	 * 分页查询字典信息列表

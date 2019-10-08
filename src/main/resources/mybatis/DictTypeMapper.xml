@@ -81,7 +81,7 @@
     </if>
    </select>
    <!--删除字典类别信息  -->
-  <delete id="deleteDictType" parameterType="gov.cnao.ao.ai.bfs.vo.DictTypeVO">
+  <delete id="deleteDictType" parameterType="gov.cnao.ao.ai.bfs.vo.TypeVO">
     delete from T_BFS_DICT_TYPE
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </delete> 

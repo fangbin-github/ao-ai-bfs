@@ -106,7 +106,7 @@
     </if> 
   </select>
    <!--删除字典信息  -->
-  <delete id="deleteDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+  <delete id="deleteDictInfo" parameterType="gov.cnao.ao.ai.bfs.vo.InfoVO">
     delete from T_BFS_DICT_INFO where DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </delete> 
   <!--新增字典信息  -->
@@ -226,7 +226,7 @@
       and DICT_CD = #{dictCd,jdbcType=VARCHAR}
   </select>
   
-  <delete id="deleteDictInfoByTypeId" parameterType="gov.cnao.ao.ai.bfs.vo.DictInfoVO">
+  <delete id="deleteDictInfoByTypeId" parameterType="gov.cnao.ao.ai.bfs.vo.InfoVO">
     delete from T_BFS_DICT_INFO
     where DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
   </delete>

@@ -1,14 +1,9 @@
 package gov.cnao.ao.ai.bfs.vo;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class DictInfoVO extends BaseRequest {
+public class InfoVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -66,41 +61,8 @@ public class DictInfoVO extends BaseRequest {
      * 字典项代码
      */
     private String dictCd;
-    
-    /**
-     * 实体外属性
-     */
-    private List<InfoVO> dictInfoVOs;
-	public List<InfoVO> getDictInfoVOs() {
-		return dictInfoVOs;
-	}
-	public void setDictInfoVOs(List<InfoVO> dictInfoVOs) {
-		this.dictInfoVOs = dictInfoVOs;
-	}
 
-	public DictInfoVO() {
-		super();
-    }
-    
-    public DictInfoVO(String json) throws JsonParseException, JsonMappingException, IOException {
-    	DictInfoVO dictInfoVO = new ObjectMapper().readValue(json, DictInfoVO.class);
-		this.dictNm = dictInfoVO.dictNm;
-		this.supDictCd = dictInfoVO.supDictCd;
-		this.sortNo = dictInfoVO.sortNo;
-		this.createUser = dictInfoVO.createUser;
-		this.createUserNm = dictInfoVO.createUserNm;
-		this.createTms = dictInfoVO.createTms;
-		this.updateUser = dictInfoVO.updateUser;
-		this.updateUserNm = dictInfoVO.updateUserNm;
-		this.updateTm = dictInfoVO.updateTm;
-		this.dictTypeId = dictInfoVO.dictTypeId;
-		this.dictCd = dictInfoVO.dictCd;
-		this.dictInfoVOs = dictInfoVO.dictInfoVOs;
-	}
-
-
-
-	public String getDictTypeId() {
+    public String getDictTypeId() {
         return dictTypeId;
     }
 

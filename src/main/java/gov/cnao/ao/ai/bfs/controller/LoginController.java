@@ -1,33 +1,42 @@
 package gov.cnao.ao.ai.bfs.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+//import org.apache.servicecomb.core.Invocation;
 
 import com.bjsasc.drap.auth.AuthUtils;
 import com.bjsasc.drap.auth.IdentityToken;
 import com.bjsasc.drap.pt.context.ContextUser;
+import com.bjsasc.drap.pt.context.ThreadLocalUtil;
 import com.bjsasc.drap.sso.SSOService;
 import com.bjsasc.drap.sso.SimpleClientHttpRequestFactory4Https;
 
@@ -36,15 +45,13 @@ import gov.cnao.ao.ai.bfs.contract.ILogin;
 @RestSchema(schemaId="iLogin")
 @RequestMapping("/login")
 public class LoginController implements ILogin {
-	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(LoginController.class);
 
 	private final static String SSO_CODE = "sso_code";
 
 	/**
 	 * 应用唯一标识,对应统一权限分系统中应用ID
 	 */
-	private String app_id = "edge";
+	//private String app_id = "edge";
 
 	/**
 	 * 查询当前用户对指定应用的的资源数，大于0表示具有访问应用权限
@@ -61,24 +68,28 @@ public class LoginController implements ILogin {
 	@Autowired
 	private SSOService ssoService;
 
+	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
+	
+    @Autowired
+    private Environment evn;
+	
 
-	/**
-	 * sso_code换取token
-	 */
-	@CrossOrigin
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping
+	@PostMapping
 	@Override
-	public ResponseEntity<Map<String,String>> login(@RequestParam(value = "sso_code") String sso_code) throws IOException {
-		log.info("Access /ILogin/login -- sso_code换取token, sso_code =" + sso_code);
-		String app_id = "edge";
-		System.out.println(sso_code);
+	public ResponseEntity<Map<String,String>> login(@RequestParam(value ="sso_code") String  sso_code,HttpServletRequest request) throws IOException {
 		try {
 			Object[] result = null;
-
+			ContextUser user= null;
+			String app_id = evn.getProperty("app_id");
+			request.getHeader("servicecomb-rest-request");
+			request.getHeader("sso_token");
 			// 从url参数获取sso_code
-//			String sso_code = getSSOCodeFromQueryStr(request);
+			//String sso_code = getSSOCodeFromQueryStr(request);
 			if (!StringUtils.isEmpty(sso_code)) {
 				// 换取token
 				result = ssoService.getIdentityTokenByCode(sso_code,app_id);
@@ -87,8 +98,6 @@ public class LoginController implements ILogin {
 			if (result == null) {
 				throw new RuntimeException("sso_code or sso_token is required.");
 			}
-
-			ContextUser user = AuthUtils.createContextUser((String) result[0], (IdentityToken) result[1]);
 
 			// 1 检查用户能否访问该应用,调用上下文用户相关接口需要header【ssotoken】，去掉下划线，nginx默认不支持
 			HttpHeaders requestHeaders = new HttpHeaders();
@@ -106,6 +115,8 @@ public class LoginController implements ILogin {
 			HttpEntity<Map<String, String>> requestEntity = new HttpEntity<Map<String, String>>(data, requestHeaders);
 			List rest_result = restTemplate.postForObject(cntContextResourcePrivilege_url, requestEntity, List.class);
 
+			user = AuthUtils.createContextUser((String)result[0], (IdentityToken)result[1]);
+			ThreadLocalUtil.setContextUser(user);
 			int count = Integer.valueOf(((Map<String, Object>) rest_result.get(0)).get("total").toString());
 			// 无权访问应用
 			if (count < 1) {
@@ -129,6 +140,14 @@ public class LoginController implements ILogin {
 			body.put("ssotoken",(String) result[0]);
 			body.put("menus", rest_result2.getBody().toString());
 			ResponseEntity<Map<String,String>> res = new ResponseEntity<Map<String,String>>(body, requestHeaders,HttpStatus.OK );
+			//redisTemplate.opsForValue().set(user.getUserLoginName(), body.toString());
+			body.put("userId", user.getUserID());
+			body.put("userLoginName", user.getUserLoginName());
+			body.put("ip", user.getIp());
+			body.put("roles", user.getRoles().toString());
+			
+			redisTemplate.opsForHash().putAll(user.getUserLoginName(),body);
+			//System.out.println(redisTemplate.opsForHash().get(key, hashKey));
 			return res;
 
 		} catch (Exception e) {
@@ -140,13 +159,7 @@ public class LoginController implements ILogin {
 
 	}
 
-	/**
-	 * 从请求中获取sso_code
-	 * @param request
-	 * @return
-	 */
 	private String getSSOCodeFromQueryStr(HttpServletRequest request) {
-		log.info("Access /ILogin/getSSOCodeFromQueryStr -- 从请求中获取sso_code");
 		String queryStr = request.getQueryString();
 		if (queryStr != null) {
 			String[] paras = queryStr.split("&");
@@ -160,17 +173,14 @@ public class LoginController implements ILogin {
 		return null;
 	}
 
-	/**
-	 * http请求工程初始化
-	 */
 	@PostConstruct
 	public void init() {
-		log.info("Access /ILogin/init -- http请求工程初始化");
 		SimpleClientHttpRequestFactory4Https requestFactory = new SimpleClientHttpRequestFactory4Https();
 
 		requestFactory.setReadTimeout(120 * 1000);
 
 		this.restTemplate = new RestTemplate(requestFactory);
 	}
+
 
 }

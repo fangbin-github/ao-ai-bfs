@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.vo.AuthVO;
+import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 
 @Mapper
 public interface UserAuthMapper {
@@ -22,7 +23,7 @@ public interface UserAuthMapper {
 	 * @param userAuth
 	 * @return
 	 */
-    int deleteUserAuth(AuthVO authVO);
+    int deleteUserAuth(UserAuthsVO userAuthsVO);
 
     /**
      * 新增授权信息

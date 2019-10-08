@@ -124,7 +124,7 @@
   </select>
   
   <!-- 删除授权信息 -->
-  <delete id="deleteUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.AuthVO">
+  <delete id="deleteUserAuth" parameterType="gov.cnao.ao.ai.bfs.vo.UserAuthsVO">
     delete from T_BFS_USER_AUTH
     where USER_ID = #{userId,jdbcType=VARCHAR}
       and AUDIT_PRJ_ID = #{auditPrjId,jdbcType=VARCHAR}

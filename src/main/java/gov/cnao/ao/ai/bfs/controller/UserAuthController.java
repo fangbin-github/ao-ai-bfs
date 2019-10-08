@@ -14,6 +14,7 @@ import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.service.UserAuthService;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
+import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
 import gov.cnao.ao.ai.bfs.vo.AuthVO;
 
@@ -51,9 +52,9 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/deleteUserAuth", method = RequestMethod.POST)
-	public int deleteUserAuth(@RequestBody AuthVO authVO) {
+	public int deleteUserAuth(@RequestBody UserAuthsVO userAuthsVO) {
 		log.info("Access /IUserAuth/deleteUserAuth -- 删除授权信息");
-		return userAuthService.deleteUserAuth(authVO);
+		return userAuthService.deleteUserAuth(userAuthsVO);
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/canAuth", method = RequestMethod.POST)
-	public List<AuthVO> canAuth(@RequestBody AuthVO authVO) {
+	public List<UserAuthsVO> canAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/canAuth -- 取消授权");
 		return userAuthService.canAuth(authVO);
 	}

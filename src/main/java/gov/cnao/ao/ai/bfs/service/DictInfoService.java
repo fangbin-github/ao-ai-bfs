@@ -15,6 +15,7 @@ import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.InfoVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
 @Service
@@ -74,11 +75,11 @@ public class DictInfoService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int deleteDictInfo(DictInfoVO dictInfoVO) {
 		int num =0;
-		List<DictInfoVO> dictInfoVOs = dictInfoVO.getDictInfoVOs();
+		List<InfoVO> dictInfoVOs = dictInfoVO.getDictInfoVOs();
 		try {
 			for (int i = 0; i < dictInfoVOs.size(); i++) {
-				DictInfoVO dictInfoVO1 = dictInfoVOs.get(i);
-				dictInfoMapper.deleteDictInfo(dictInfoVO1);
+				InfoVO infoVO = dictInfoVOs.get(i);
+				dictInfoMapper.deleteDictInfo(infoVO);
 				num++;
 			}
 		} catch (Exception e) {

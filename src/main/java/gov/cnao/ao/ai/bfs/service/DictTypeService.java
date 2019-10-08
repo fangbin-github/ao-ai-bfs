@@ -19,7 +19,9 @@ import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
+import gov.cnao.ao.ai.bfs.vo.InfoVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
+import gov.cnao.ao.ai.bfs.vo.TypeVO;
 import net.sf.json.JSONObject;
 
 @Service
@@ -122,14 +124,14 @@ public class DictTypeService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int deleteDictType(DictTypeVO dictTypeVO) {
 		int num = 0;
-		List<DictTypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
+		List<TypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
 		try {
 			for (int i = 0; i < dictTypeVOs.size(); i++) {
-				DictTypeVO dictTypeVO1 = dictTypeVOs.get(i);
-				dictTypeMapper.deleteDictType(dictTypeVO1);
-				DictInfoVO dictInfoVO = new DictInfoVO();
-				dictInfoVO.setDictTypeId(dictTypeVO1.getDictTypeId());
-				dictInfoMapper.deleteDictInfoByTypeId(dictInfoVO);
+				TypeVO typeVO = dictTypeVOs.get(i);
+				dictTypeMapper.deleteDictType(typeVO);
+				InfoVO infoVO = new InfoVO();
+				infoVO.setDictTypeId(typeVO.getDictTypeId());
+				dictInfoMapper.deleteDictInfoByTypeId(infoVO);
 				num++;
 			}
 		} catch (Exception e) {
