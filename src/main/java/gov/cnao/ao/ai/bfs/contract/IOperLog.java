@@ -2,6 +2,7 @@ package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
@@ -23,7 +24,7 @@ public interface IOperLog {
 	 * @param operLogVO
 	 * @return
 	 */
-	PageBean queryOperLogPage(OperLogVO operLogVO);
+	BaseResponse<PageBean> queryOperLogPage(OperLogVO operLogVO);
 	
 	/**
 	 * 操作日志新增

@@ -63,22 +63,6 @@ public class UserAuthService {
 	public List<UserAuth> queryUserAuth(AuthVO authVO) {
 		try {
 			List<UserAuth> userAuths = userAuthMapper.queryUserAuth(authVO);
-			//操作日志新增
-			OperLogVO LogVO = new OperLogVO();
-			LogVO.setLogId(CommonUtil.getSeqNum());
-			LogVO.setProjId("项目编号");
-			LogVO.setUserId("用户标识");
-			LogVO.setUserNm("用户名称");
-			LogVO.setOrgId("机构代码");
-			LogVO.setOrgNm("机构名称");
-			LogVO.setLoginIp("登录IP");
-			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			LogVO.setLogType("01");
-			LogVO.setFunFlg("查询");
-			LogVO.setLogCont("日志内容");
-			LogVO.setVisitMicr("ao-ai-bfs");
-			LogVO.setVisitMenu("数据授权管理");
-			operLogMapper.insertOperLog(LogVO);
 			return userAuths;
 		} catch (Exception e) {
 			log.error("查询授权信息列表失败", e);
@@ -215,6 +199,7 @@ public class UserAuthService {
 			List<DataVO> dataVOs = new ArrayList<DataVO>();
 			
 			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("/json/xianProjectUser");
+//			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("classpath:json/xianProjectUser");
 //			JSONObject obj = JsonResourceUtils.getJsonObjFromResource(json);
 			xianProjectUser = JSON.parseObject(obj.toJSONString(), XianProjectUser.class);
 			
@@ -275,22 +260,6 @@ public class UserAuthService {
 				authVO.getHead().setPgsn((authVO.getHead().getPgsn() -1)*authVO.getHead().getPgrw());
 				pageBean.setContent(userAuthMapper.queryUserAuthPage(authVO));
 			}
-			//操作日志新增
-			OperLogVO LogVO = new OperLogVO();
-			LogVO.setLogId(CommonUtil.getSeqNum());
-			LogVO.setProjId("项目编号");
-			LogVO.setUserId("用户标识");
-			LogVO.setUserNm("用户名称");
-			LogVO.setOrgId("机构代码");
-			LogVO.setOrgNm("机构名称");
-			LogVO.setLoginIp("登录IP");
-			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			LogVO.setLogType("01");
-			LogVO.setFunFlg("查询");
-			LogVO.setLogCont("日志内容");
-			LogVO.setVisitMicr("ao-ai-bfs");
-			LogVO.setVisitMenu("数据授权管理");
-			operLogMapper.insertOperLog(LogVO);
 		} catch (Exception e) {
 			log.error("分页查询授权信息失败", e);
 		}

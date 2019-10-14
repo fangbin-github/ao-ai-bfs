@@ -84,6 +84,7 @@ public class DictInfoVO extends BaseRequest {
     
     public DictInfoVO(String json) throws JsonParseException, JsonMappingException, IOException {
     	DictInfoVO dictInfoVO = new ObjectMapper().readValue(json, DictInfoVO.class);
+    	super.setHead(dictInfoVO.getHead());
 		this.dictNm = dictInfoVO.dictNm;
 		this.supDictCd = dictInfoVO.supDictCd;
 		this.sortNo = dictInfoVO.sortNo;
