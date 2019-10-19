@@ -145,6 +145,12 @@
 	        <groupId>org.hibernate</groupId>
 	        <artifactId>hibernate-validator</artifactId>
     	</dependency>
+    	<!-- 国m -->
+    	<dependency>
+    		<groupId>gov.cnao.security</groupId>
+    		<artifactId>cybersecurity</artifactId>
+    		<version>0.0.1-SNAPSHOT</version>
+    	</dependency>
     </dependencies>
     <build>
         <plugins>
