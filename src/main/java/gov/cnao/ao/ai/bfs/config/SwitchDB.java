@@ -1,6 +1,9 @@
 package gov.cnao.ao.ai.bfs.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+
+import gov.cnao.security.service.EncryptDecryptService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ public class SwitchDB {
    // private static String  AoAiSourceKey = "aoai_" ;
     private static String  AoAiSourceKey = "SCM_" ;
 
+    @Autowired
+    private EncryptDecryptService encryptDecryptService;
+    
     @Autowired
     DynamicDataSource dynamicDataSource;
 
@@ -59,14 +65,28 @@ public class SwitchDB {
         log.info("＝＝＝＝＝当前连接的数据库是:" + currentKey);
         return currentKey;
     }
+    public String change()
+    {
+        toDB("default");
+        //获取当前连接的数据源对象的key
+        String currentKey = DynamicDataSourceContextHolder.getDataSourceKey();
+        log.info("＝＝＝＝＝当前连接的数据库是:" + currentKey);
+        return currentKey;
+    }
     /**
      * 切换已存在的数据源
      * @param dbName
      */
     private void toDB(String projectId)
     {
+    	if(null == projectId) {
+    		projectId ="";
+    	}
         //如果不指定数据库，则直接连接默认数据库
         String dbSourceKey = projectId.trim().isEmpty() ? "default" : AoAiSourceKey+projectId.trim();
+        if("default".equalsIgnoreCase(projectId)) {
+        	dbSourceKey ="default";
+        }
         //获取当前连接的数据源对象的key
         String currentKey = DynamicDataSourceContextHolder.getDataSourceKey();
         //如果当前数据库连接已经是想要的连接，则直接返回
@@ -132,7 +152,14 @@ public class SwitchDB {
         log.info("+++创建云平台私有库连接url = " + dbUrl);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(evn.getProperty( prefix + "username"));
-        dataSource.setPassword(evn.getProperty( prefix + "password"));
+        try {
+			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password"),"aoai"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			log.error(e.getMessage());
+		}
         dataSource.setDriverClassName(evn.getProperty( prefix + "driver-class-name"));
         //将创建的数据源，新增到targetDataSources中
         Map<Object,Object> map = new HashMap<>();
