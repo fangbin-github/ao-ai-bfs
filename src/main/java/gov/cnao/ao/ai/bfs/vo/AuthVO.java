@@ -58,6 +58,7 @@ public class AuthVO extends BaseRequest {
 	 
 	public AuthVO(String json) throws JsonParseException, JsonMappingException, IOException {
 		AuthVO authVO = new ObjectMapper().readValue(json, AuthVO.class);
+		super.setHead(authVO.getHead());
 		this.userId = authVO.userId;
 		this.auditPrjId = authVO.auditPrjId;
 		this.visitTabNm = authVO.visitTabNm;

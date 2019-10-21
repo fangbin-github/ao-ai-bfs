@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
+import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
+import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
 import gov.cnao.ao.ai.bfs.util.CommonUtil;
@@ -46,24 +49,7 @@ public class OperLogService {
 	 */
 	public List<OperLog> queryOperLog(OperLogVO operLogVO) {
 		try {
-			List<OperLog> operLogs = operLogMapper.queryOperLog(operLogVO);
-			//操作日志新增
-			OperLogVO LogVO = new OperLogVO();
-			LogVO.setLogId(CommonUtil.getSeqNum());
-			LogVO.setProjId("项目编号");
-			LogVO.setUserId("用户标识");
-			LogVO.setUserNm("用户名称");
-			LogVO.setOrgId("机构代码");
-			LogVO.setOrgNm("机构名称");
-			LogVO.setLoginIp("登录IP");
-			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			LogVO.setLogType("01");
-			LogVO.setFunFlg("查询");
-			LogVO.setLogCont("日志内容");
-			LogVO.setVisitMicr("ao-ai-bfs");
-			LogVO.setVisitMenu("操作日志管理");
-			operLogMapper.insertOperLog(LogVO);
-			return operLogs;
+			return operLogMapper.queryOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("操作日志查询失败", e);
 		}
@@ -92,24 +78,7 @@ public class OperLogService {
 	 */
 	public List<OperLog> exportOperLog(OperLogVO operLogVO) {
 		try {
-			List<OperLog> operLogs = operLogMapper.queryOperLog(operLogVO);
-			//操作日志新增
-			OperLogVO LogVO = new OperLogVO();
-			LogVO.setLogId(CommonUtil.getSeqNum());
-			LogVO.setProjId("项目编号");
-			LogVO.setUserId("用户标识");
-			LogVO.setUserNm("用户名称");
-			LogVO.setOrgId("机构代码");
-			LogVO.setOrgNm("机构名称");
-			LogVO.setLoginIp("登录IP");
-			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			LogVO.setLogType("01");
-			LogVO.setFunFlg("导出");
-			LogVO.setLogCont("日志内容");
-			LogVO.setVisitMicr("ao-ai-bfs");
-			LogVO.setVisitMenu("操作日志管理");
-			operLogMapper.insertOperLog(LogVO);
-			return operLogs;
+			return operLogMapper.queryOperLog(operLogVO);
 		} catch (Exception e) {
 			log.error("操作日志导出失败", e);
 		}
@@ -184,7 +153,9 @@ public class OperLogService {
 	 * @param operLogVO
 	 * @return
 	 */
-	public PageBean queryOperLogPage(OperLogVO operLogVO) {
+	public BaseResponse<PageBean> queryOperLogPage(OperLogVO operLogVO) {
+		BaseResponse<PageBean> baseResponse = 
+					new BaseResponse<PageBean>();
 		PageBean pageBean = new PageBean();
 		try {
 			if(operLogVO.getHead().getPgrw() != null && operLogVO.getHead().getPgsn() != null) {
@@ -195,26 +166,13 @@ public class OperLogService {
 				operLogVO.getHead().setPgsn((operLogVO.getHead().getPgsn() -1)*operLogVO.getHead().getPgrw());
 				pageBean.setContent(operLogMapper.queryOperLogPage(operLogVO));
 			}
-			//操作日志新增
-			OperLogVO LogVO = new OperLogVO();
-			LogVO.setLogId(CommonUtil.getSeqNum());
-			LogVO.setProjId("项目编号");
-			LogVO.setUserId("用户标识");
-			LogVO.setUserNm("用户名称");
-			LogVO.setOrgId("机构代码");
-			LogVO.setOrgNm("机构名称");
-			LogVO.setLoginIp("登录IP");
-			LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			LogVO.setLogType("01");
-			LogVO.setFunFlg("查询");
-			LogVO.setLogCont("日志内容");
-			LogVO.setVisitMicr("ao-ai-bfs");
-			LogVO.setVisitMenu("操作日志管理");
-			operLogMapper.insertOperLog(LogVO);
+			baseResponse.setBody(pageBean);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(operLogVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(operLogVO, RetCodeEnum.SYS_ERROR));
 			log.error("分页查询操作日志失败", e);
 		}
-		return pageBean;
+		return baseResponse;
 	}
 
 }
