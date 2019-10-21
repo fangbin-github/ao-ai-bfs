@@ -1,6 +1,10 @@
 package gov.cnao.ao.ai.bfs.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+
+import gov.cnao.security.service.EncryptDecryptService;
+import gov.cnao.security.service.impl.EncryptDecryptServiceImpl;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,6 +37,9 @@ public class DataSourceConfigurer {
     //自动注入环境类，用于获取配置文件的属性值
     @Autowired
     private Environment evn;
+    
+    @Autowired
+    private EncryptDecryptService encryptDecryptService;
 
     private MybatisProperties mybatisProperties;
     public DataSourceConfigurer(MybatisProperties properties) {
@@ -57,7 +64,15 @@ public class DataSourceConfigurer {
         logger.info("+++default默认数据库连接url = " + dbUrl);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(evn.getProperty( prefix + "username"));
-        dataSource.setPassword(evn.getProperty( prefix + "password"));
+        try {
+        	System.out.println(encryptDecryptService.encrypt("szoscar55"));
+			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password")));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			System.out.println(e.getMessage());
+		}
         dataSource.setDriverClassName(evn.getProperty( prefix + "driver-class-name"));
         return dataSource;
     }
@@ -124,4 +139,9 @@ public class DataSourceConfigurer {
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dynamicDataSource());
     }
+    
+//    public static void main(String[] args) throws Exception {
+//    	EncryptDecryptServiceImpl en = new EncryptDecryptServiceImpl();
+//		System.out.println(en.encrypt("szoscar55","aoai"));
+//	}
 }

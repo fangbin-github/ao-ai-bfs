@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude=DispatcherServletAutoConfiguration.class)
 @EnableServiceComb
-@ComponentScan({"gov.cnao.ao.ai.bfs", "com.bjsasc.drap"})
+@ComponentScan({"gov.cnao.ao.ai.bfs", "com.bjsasc.drap","gov.cnao.security"})
 public class ServerMain {
 	
     public static void main(String[] args) {

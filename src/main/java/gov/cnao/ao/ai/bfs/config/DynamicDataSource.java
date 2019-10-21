@@ -116,5 +116,15 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         return conn;
 	}
     
+	public Connection getConnection(String shcemaName) throws SQLException{
+		Connection conn = super.getConnection();
+        if (!"".equals(shcemaName.trim())) {
+                Statement stamt = conn.createStatement();
+                stamt.execute("set search_path to " + 
+                		shcemaName.trim());
+                logger.info("schema已切换:"+shcemaName);
+            }
+        return conn;
+	}
     
 }
