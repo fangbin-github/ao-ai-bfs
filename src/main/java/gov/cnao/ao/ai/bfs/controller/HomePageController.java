@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.cnao.ao.ai.bfs.contract.IHomePage;
+import gov.cnao.ao.ai.bfs.entity.SchemaState;
 import gov.cnao.ao.ai.bfs.service.HomePageService;
 import gov.cnao.ao.ai.bfs.vo.MethodStatisticalVO;
 import gov.cnao.ao.ai.bfs.vo.SchemVO;
@@ -42,6 +43,15 @@ public class HomePageController implements IHomePage {
 	public SchemVO queryPrjSchem(@RequestBody SchemVO schemVO) {
 		log.info("Access /IHomePage/queryPrjSchem -- 查询项目Schem信息");
 		return homePageService.queryPrjSchem(schemVO);
+	}
+	
+	/**
+	 * 查询SQL初始化脚本执行状态
+	 */
+	@Override
+	public SchemaState querySqlExecutionStatus(SchemVO schemVO) {
+		log.info("Access /IHomePage/querySqlExecutionStatus -- 查询SQL初始化脚本执行状态");
+		return homePageService.querySqlExecutionStatus(schemVO);
 	}
 
 	/**
@@ -84,6 +94,17 @@ public class HomePageController implements IHomePage {
 	public List<MethodStatisticalVO> getMethodStatisticalCount(@RequestBody MethodStatisticalVO methodStatisticalVO) {
 		log.info("Access /IHomePage/getMethodStatisticalCount -- 审计方法数量统计");
 		return homePageService.getMethodStatisticalCount(methodStatisticalVO);
+	}
+
+	/**
+	 * 删除schema仓库
+	 * @param schemVO
+	 * @return
+	 */
+	@Override
+	@RequestMapping(path = "/delSchema", method = RequestMethod.POST)
+	public Boolean delSchema(@RequestBody SchemVO schemVO) {
+		return homePageService.delSchema(schemVO);
 	}
 
 }

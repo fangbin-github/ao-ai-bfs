@@ -69,6 +69,7 @@ public class DictTypeVO extends BaseRequest {
 
     public DictTypeVO(String json) throws JsonParseException, JsonMappingException, IOException {
     	DictTypeVO dictTypeVO = new ObjectMapper().readValue(json, DictTypeVO.class);
+    	super.setHead(dictTypeVO.getHead());
 		this.dictTypeId = dictTypeVO.dictTypeId;
 		this.dictTypeNm = dictTypeVO.dictTypeNm;
 		this.createUser = dictTypeVO.createUser;

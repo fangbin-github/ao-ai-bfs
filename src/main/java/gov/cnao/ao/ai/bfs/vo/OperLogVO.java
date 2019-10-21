@@ -80,6 +80,7 @@ public class OperLogVO extends BaseRequest {
     
     public OperLogVO(String json) throws JsonParseException, JsonMappingException, IOException {
     	OperLogVO operLogVO = new ObjectMapper().readValue(json, OperLogVO.class);
+    	super.setHead(operLogVO.getHead()); 
 		this.logId = operLogVO.logId;
 		this.projId = operLogVO.projId;
 		this.userId = operLogVO.userId;
