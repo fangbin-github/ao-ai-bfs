@@ -122,7 +122,7 @@
         #{dictTypeNm,jdbcType=VARCHAR},
       </if>
       <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
+        #{createUserId,jdbcType=VARCHAR},
       </if>
       <if test="createUserNm != null">
         #{createUserNm,jdbcType=VARCHAR},

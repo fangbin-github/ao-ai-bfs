@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * 数据源配置类,在tomcat启动时触发，在该类中生成多个数据源实例并将其注入到 ApplicationContext 中
- * @author ls
+ * @author lxf 2018-09-27
  */
 
 @Configuration
