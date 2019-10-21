@@ -2,7 +2,6 @@ package gov.cnao.ao.ai.bfs.service;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,12 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.Resources;
@@ -27,9 +21,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
-
-import com.oscar.jdbc.Array;
 
 import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
@@ -97,7 +88,7 @@ public class HomePageService {
 	public BaseResponse<SchemaState> querySqlExecutionStatus(SchemVO schemVO) {
 		BaseResponse<SchemaState> baseResponse = new BaseResponse<SchemaState>();
 		try {
-			switchDB.change("BFS");
+			switchDB.change();
 			stringRedisTemplate.opsForHash().put("user", "auditPrjId", schemVO.getAuditPrjId());
 			stringRedisTemplate.opsForHash().put("user", "auditPrjCd", schemVO.getAuditPrjCd());
 			stringRedisTemplate.opsForHash().put("user", "auditPrjNm", schemVO.getAuditPrjNm());
@@ -171,7 +162,7 @@ public class HomePageService {
 			}
 		} catch (Exception e) {
 			baseResponse.setHead(ResponseHeadUtil.buildFailHead(schemVO, RetCodeEnum.SYS_ERROR));
-			switchDB.change("BFS");
+			switchDB.change();
 			delSchema(schemVO);
 			schemaStateMapper.deleteSchemaState(schemaState);
 			log.error("创建项目库并执行相应的 .sql文件失败", e);
@@ -191,8 +182,7 @@ public class HomePageService {
 				try {
 					
 			        if(StringUtils.isNoneBlank(schemVO.getAuditPrjId())) {
-			        	conn = dynamicDataSource.getConnection();
-			        	switchDB.change(schemVO.getAuditPrjId());
+			        	conn = dynamicDataSource.getConnection(schemVO.getAuditPrjId());
 			        	//设置不自动提交
 			        	conn.setAutoCommit(false);
 			        	ScriptRunner runner = new ScriptRunner(conn);
@@ -224,12 +214,12 @@ public class HomePageService {
 			        	runner.closeConnection();
 			        }
 			        //schema状态表新增（状态设置成已完成）
-			        switchDB.change("BFS");
+			        switchDB.change();
 		        	schemaState.setAuditPrjId(schemVO.getAuditPrjId());
 		        	schemaState.setState("02");
 		        	schemaStateMapper.updateByPrimaryKeySelective(schemaState);
 				} catch (Exception e) {
-					switchDB.change("BFS");
+					switchDB.change();
 					delSchema(schemVO);
 					schemaState.setAuditPrjId(schemVO.getAuditPrjId());
 					schemaStateMapper.deleteSchemaState(schemaState);
@@ -246,7 +236,7 @@ public class HomePageService {
 						if(conn != null) {
 							conn.close();
 						}	
-						switchDB.change("BFS");
+						switchDB.change();
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}

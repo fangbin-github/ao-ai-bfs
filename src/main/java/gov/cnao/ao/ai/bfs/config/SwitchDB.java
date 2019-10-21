@@ -153,7 +153,7 @@ public class SwitchDB {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(evn.getProperty( prefix + "username"));
         try {
-			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password"),"aoai"));
+			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

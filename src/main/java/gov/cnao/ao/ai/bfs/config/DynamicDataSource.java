@@ -121,8 +121,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         if (!"".equals(shcemaName.trim())) {
                 Statement stamt = conn.createStatement();
                 stamt.execute("set search_path to " + 
-                		shcemaName.trim());
-                logger.info("schema已切换:"+shcemaName);
+                		"SCM_"+shcemaName.trim());
+                logger.info("schema已切换:SCM_"+shcemaName);
             }
         return conn;
 	}
