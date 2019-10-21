@@ -1,8 +1,6 @@
 package gov.cnao.ao.ai.bfs.vo;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -28,6 +26,7 @@ public class MethodStatisticalVO extends BaseRequest{
 	
 	public MethodStatisticalVO(String json) throws JsonParseException, JsonMappingException, IOException {
 		MethodStatisticalVO methodStatisticalVO = new ObjectMapper().readValue(json, MethodStatisticalVO.class);
+		super.setHead(methodStatisticalVO.getHead());
 		this.methodName = methodStatisticalVO.methodName;
 		this.methodCount = methodStatisticalVO.methodCount;
 	}

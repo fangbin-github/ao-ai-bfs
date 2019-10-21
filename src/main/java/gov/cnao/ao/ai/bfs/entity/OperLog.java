@@ -49,6 +49,7 @@ public class OperLog implements Serializable {
      * 日志类型
      */
     private String logType;
+    private String logTypeNm;
 
     /**
      * 功能标识
@@ -70,7 +71,15 @@ public class OperLog implements Serializable {
      */
     private String visitMenu;
 
-    public String getLogId() {
+    public String getLogTypeNm() {
+		return logTypeNm;
+	}
+
+	public void setLogTypeNm(String logTypeNm) {
+		this.logTypeNm = logTypeNm;
+	}
+
+	public String getLogId() {
         return logId;
     }
 

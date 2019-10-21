@@ -2,8 +2,10 @@ package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.vo.AuthVO;
+import gov.cnao.ao.ai.bfs.vo.OrgTreeVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
@@ -23,7 +25,7 @@ public interface IUserAuth {
 	 * @param authVO
 	 * @return
 	 */
-	PageBean queryUserAuthPage(AuthVO authVO);
+	BaseResponse<PageBean> queryUserAuthPage(AuthVO authVO);
 	
 	/**
 	 * 新增授权信息
@@ -44,19 +46,19 @@ public interface IUserAuth {
 	 * @param userAuths
 	 * @return
 	 */
-	List<AuthVO> getAuth(UserAuthVO userAuthVO);
+	BaseResponse<List<AuthVO>> getAuth(UserAuthVO userAuthVO);
 	
 	/**
 	 * 取消授权
 	 * @param userAuths
 	 * @return
 	 */
-	List<UserAuthsVO> canAuth(AuthVO authVO);
+	BaseResponse<List<UserAuthsVO>> canAuth(AuthVO authVO);
 	
 	/**
 	 * 查询项目组织机构树
 	 * @return
 	 */
-	XianProjectUserVO xianProjectUser(String userId, String projectIds);
+	XianProjectUserVO xianProjectUser(OrgTreeVO orgTreeVO);
 	
 }

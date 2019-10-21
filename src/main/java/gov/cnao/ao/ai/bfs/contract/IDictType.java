@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.entity.DictType;
+import gov.cnao.ao.ai.bfs.vo.DictTypeTreeVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
@@ -20,6 +22,12 @@ public interface IDictType {
      * 查询字典类别目录
      */
 	List<Map<String, Object>> queryDictTypeCon(DictTypeVO dictTypeVO);
+	
+	/**
+	 * 查询数据字典树信息
+	 * @return
+	 */
+	BaseResponse<List<DictTypeTreeVO>> queryDictTypeTree(DictTypeVO dictTypeVO);
 	 /**
      * 查询字典类别信息列表
      */
@@ -30,20 +38,20 @@ public interface IDictType {
 	 * @param dictType
 	 * @return
 	 */
-	PageBean queryDictTypePage(DictTypeVO dictTypeVO);
+	BaseResponse<PageBean> queryDictTypePage(DictTypeVO dictTypeVO);
 	
 	/**
 	 * 新增字典类别信息
 	 */
-	DictTypeVO insertDictType(DictTypeVO dictTypeVO);
+	BaseResponse<DictTypeVO> insertDictType(DictTypeVO dictTypeVO);
 	/**
 	 * 修改字典类别信息
 	 */
-	DictTypeVO updateDictType(DictTypeVO dictTypeVO);
+	BaseResponse<DictTypeVO> updateDictType(DictTypeVO dictTypeVO);
 	/**
 	 * 删除字典类别信息
 	 * @throws IOException 
 	 */
-	int deleteDictType(DictTypeVO dictTypeVO);
+	BaseResponse<Integer> deleteDictType(DictTypeVO dictTypeVO);
 	
 }

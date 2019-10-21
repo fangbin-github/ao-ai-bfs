@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.contract.IDictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.service.DictInfoService;
@@ -56,7 +57,7 @@ public class DictInfoController implements IDictInfo{
 	 */
 	@Override
 	@RequestMapping(path = "/insertDictInfo", method = RequestMethod.POST)
-	public DictInfoVO insertDictInfo(@RequestBody DictInfoVO dictInfoVO) {
+	public BaseResponse<DictInfoVO> insertDictInfo(@RequestBody DictInfoVO dictInfoVO) {
 		log.info("Access /IDictInfo/insertDictInfo -- 新增字典信息");
 		return dictInfoService.insertDictInfo(dictInfoVO);
 	}
@@ -66,7 +67,7 @@ public class DictInfoController implements IDictInfo{
 	 */
 	@Override
 	@RequestMapping(path = "/updateDictInfo", method = RequestMethod.POST)
-	public DictInfoVO updateDictInfo(@RequestBody DictInfoVO dictInfoVO) {
+	public BaseResponse<DictInfoVO> updateDictInfo(@RequestBody DictInfoVO dictInfoVO) {
 		log.info("Access /IDictInfo/updateDictInfo -- 修改字典信息");
 		return dictInfoService.updateDictInfo(dictInfoVO);
 	}
@@ -76,7 +77,7 @@ public class DictInfoController implements IDictInfo{
 	 */
 	@Override
 	@RequestMapping(path = "/deleteDictInfo", method = RequestMethod.POST)
-	public int deleteDictInfo(@RequestBody DictInfoVO dictInfoVO) {
+	public BaseResponse<Integer> deleteDictInfo(@RequestBody DictInfoVO dictInfoVO) {
 		log.info("Access /IDictInfo/deleteDictInfo -- 删除字典信息");
 		return dictInfoService.deleteDictInfo(dictInfoVO);
 	}
@@ -94,7 +95,7 @@ public class DictInfoController implements IDictInfo{
 	 * 分页查询字典信息列表
 	 */
 	@RequestMapping(path = "/queryDictInfoPage", method = RequestMethod.POST)
-	public PageBean queryDictInfoPage(@RequestBody DictInfoVO dictInfoVO) {
+	public BaseResponse<PageBean> queryDictInfoPage(@RequestBody DictInfoVO dictInfoVO) {
 		log.info("Access /IDictInfo/queryDictInfoPage -- 分页查询字典信息列表");
 		return dictInfoService.queryDictInfoPage(dictInfoVO);
 	}

@@ -1,6 +1,7 @@
 package gov.cnao.ao.ai.bfs.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +20,14 @@ import org.springframework.stereotype.Service;
 import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
 import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
+import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
+import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
 import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.util.excelUtil;
+import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
@@ -39,8 +43,8 @@ public class OperLogService {
 	@Autowired
 	private OperLogMapper operLogMapper;
 	
-//	@Autowired
-//	private HttpServletResponse response;
+	@Autowired
+	private DictInfoMapper dictInfoMapper;
 	
 	/**
 	 * 操作日志查询
@@ -64,6 +68,7 @@ public class OperLogService {
 	public OperLogVO insertOperLog(OperLogVO operLogVO) {
 		try {
 			operLogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			operLogVO.setLogId(CommonUtil.getSeqNum());
 			operLogMapper.insertOperLog(operLogVO);
 			return operLogVO;
 		} catch (Exception e) {
@@ -76,76 +81,26 @@ public class OperLogService {
 	 * 操作日志导出
 	 * @param operLog
 	 */
-	public List<OperLog> exportOperLog(OperLogVO operLogVO) {
+	public BaseResponse<List<OperLog>> exportOperLog(OperLogVO operLogVO) {
+		BaseResponse<List<OperLog>> baseResponse = 
+				new BaseResponse<List<OperLog>>();
 		try {
-			return operLogMapper.queryOperLog(operLogVO);
+			List<OperLog> operLogs = new ArrayList<OperLog>();
+			List<OperLog> list = operLogMapper.queryOperLog(operLogVO);
+			for (OperLog operLog : list) {
+				DictInfoVO dictInfoVO = new DictInfoVO();
+				dictInfoVO.setDictCd(operLog.getLogType());
+				List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
+				operLog.setLogTypeNm(dictInfos.get(0).getDictNm());
+				operLogs.add(operLog);
+			}
+			baseResponse.setBody(operLogs);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(operLogVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(operLogVO, RetCodeEnum.SYS_ERROR));
 			log.error("操作日志导出失败", e);
 		}
-		return null;
-		
-		
-//		HSSFWorkbook workBook = new HSSFWorkbook();
-//		ServletOutputStream out = null;
-//		String[] titles = {"序号", "用户名称", "日志类型", "登录IP", "机构名称", "功能标识", "日志内容"};
-//		List<OperLog> list = operLogMapper.queryOperLog(null);
-//        
-//		HSSFSheet sheet = workBook.createSheet("操作信息");
-//        Row desRow = sheet.createRow(0);
-//        sheet.addMergedRegion(new Region(0, (short) 0, 0, titles.length > 0 ? (short) (titles.length - 1) : (short) 0));
-//        Cell descell = desRow.createCell(0);
-//        descell.setCellValue("操作日志信息表");
-//        descell.setCellStyle(excelUtil.desStyle(workBook));
-//        try {
-//            // 标题信息
-//            Row titleRow = sheet.createRow(1);
-//            for (int i = 0; i < titles.length; i++) {
-//                Cell cell = titleRow.createCell(i);
-//                cell.setCellValue(titles[i]);
-//                cell.setCellStyle(excelUtil.titleStyle(workBook));
-//                titleRow.setHeight((short) 600);
-//                sheet.setColumnWidth(i, 4400);
-//            }
-//            Cell cell = null;
-//            for (int j = 0; j < list.size(); j++) {
-//                OperLog log = list.get(j);
-//                Row row = sheet.createRow(j + 2);
-//                row.setHeight((short) 800);
-//                String[] cellContents = {
-//                        String.valueOf(j + 1),
-//                        log.getUserNm(),
-//                        log.getLogType(),
-//                        log.getLoginIp(),
-//                        log.getOrgNm(),
-//                        log.getFunFlg(),
-//                        log.getLogCont()
-//                };
-//
-//                for (int i = 0; i < cellContents.length; i++) {
-//                    String content = cellContents[i];
-//                    cell = row.createCell(i);
-//                    cell.setCellValue(content);
-//                    cell.setCellStyle(excelUtil.celStyle(workBook));
-//                }
-//            }
-//            // 文件名
-//            StringBuffer fileName = new StringBuffer("操作日志信息表-");
-//            fileName.append(DateUtil.dateToString(new Date(), "yyyy-MM-dd"));
-//            fileName.append(".xls");
-////            response.setHeader("Content-disposition", "attachment;filename=" + CommonUtil.toUTF8String(fileName.toString()));
-////            response.flushBuffer();
-////            out = response.getOutputStream();
-//            workBook.write(out);
-//			out.flush();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				out.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		return baseResponse;
 	}
 
 	/**
@@ -164,7 +119,16 @@ public class OperLogService {
 						operLogVO.getHead().getPgrw(), 
 							operLogMapper.queryOperLogCount(operLogVO));
 				operLogVO.getHead().setPgsn((operLogVO.getHead().getPgsn() -1)*operLogVO.getHead().getPgrw());
-				pageBean.setContent(operLogMapper.queryOperLogPage(operLogVO));
+				List<OperLog> list = operLogMapper.queryOperLogPage(operLogVO);
+				List<OperLog> operLogs = new ArrayList<OperLog>(); 
+				for (OperLog operLog : list) {
+					DictInfoVO dictInfoVO = new DictInfoVO();
+					dictInfoVO.setDictCd(operLog.getLogType());
+					List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
+					operLog.setLogTypeNm(dictInfos.get(0).getDictNm());
+					operLogs.add(operLog);
+				}
+				pageBean.setContent(operLogs);
 			}
 			baseResponse.setBody(pageBean);
 			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(operLogVO));

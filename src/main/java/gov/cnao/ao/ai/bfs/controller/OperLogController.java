@@ -20,7 +20,7 @@ import gov.cnao.ao.ai.bfs.vo.PageBean;
  * @author fangbin
  */
 
-@RestSchema(schemaId = "ioperlog")
+@RestSchema(schemaId = "iOperLog")
 @RequestMapping(path = "/log")
 public class OperLogController implements IOperLog {
 	
@@ -54,7 +54,7 @@ public class OperLogController implements IOperLog {
 	 */
 	@Override
 	@RequestMapping(path = "/exportOperLog", method = RequestMethod.POST)
-	public List<OperLog> exportOperLog(@RequestBody OperLogVO operLogVO) {
+	public BaseResponse<List<OperLog>> exportOperLog(@RequestBody OperLogVO operLogVO) {
 		log.info("Access /IOperLog/exportOperLog -- 操作日志导出");
 		return operLogService.exportOperLog(operLogVO);
 	}

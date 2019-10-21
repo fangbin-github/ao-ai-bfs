@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.contract.IDictType;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.service.DictTypeService;
+import gov.cnao.ao.ai.bfs.vo.DictTypeTreeVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
-@RestSchema(schemaId = "idicttype")
+@RestSchema(schemaId = "iDictType")
 @RequestMapping(path = "/dict")
 public class DictTypeController implements IDictType{
 	
@@ -38,6 +40,7 @@ public class DictTypeController implements IDictType{
 		log.info("Access /IDictType/queryDictTypeCon -- 查询字典类别目录信息");
 	    return dictTypeService.queryDictTypeCon(dictTypeVO);
 	}
+	
 	/**
 	 * 查询字典类别信息
 	 */
@@ -52,7 +55,7 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
 	@RequestMapping(path = "/insertDictType", method = RequestMethod.POST)
-	public DictTypeVO insertDictType(@RequestBody DictTypeVO dictTypeVO) {
+	public BaseResponse<DictTypeVO> insertDictType(@RequestBody DictTypeVO dictTypeVO) {
 		log.info("Access /IDictType/insertDictType -- 新增字典类别信息");
 		return dictTypeService.insertDictType(dictTypeVO);
 	}
@@ -62,7 +65,7 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
 	@RequestMapping(path = "/updateDictType", method = RequestMethod.POST)
-	public DictTypeVO updateDictType(@RequestBody DictTypeVO dictTypeVO) {
+	public BaseResponse<DictTypeVO> updateDictType(@RequestBody DictTypeVO dictTypeVO) {
 		log.info("Access /IDictType/updateDictType -- 修改字典类别信息");
 		return dictTypeService.updateDictType(dictTypeVO);
 	}
@@ -72,7 +75,7 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
 	@RequestMapping(path = "/deleteDictType", method = RequestMethod.POST)
-	public int deleteDictType(@RequestBody DictTypeVO dictTypeVO) {
+	public BaseResponse<Integer> deleteDictType(@RequestBody DictTypeVO dictTypeVO) {
 		log.info("Access /IDictType/deleteDictType -- 删除字典类别信息");
     	return dictTypeService.deleteDictType(dictTypeVO);
     }
@@ -92,8 +95,19 @@ public class DictTypeController implements IDictType{
 	 */
 	@Override
 	@RequestMapping(path = "/queryDictTypePage", method = RequestMethod.POST)
-	public PageBean queryDictTypePage(@RequestBody DictTypeVO dictTypeVO) {
+	public BaseResponse<PageBean> queryDictTypePage(@RequestBody DictTypeVO dictTypeVO) {
 		log.info("Access /IDictType/queryDictTypePage -- 分页查询字典类别信息列表");
 		return dictTypeService.queryDictTypePage(dictTypeVO);
+	}
+	
+	/**
+	 * 查询数据字典树信息
+	 * @return
+	 */
+	@Override
+	@RequestMapping(path = "/queryDictTypeTree", method = RequestMethod.POST)
+	public BaseResponse<List<DictTypeTreeVO>> queryDictTypeTree(@RequestBody DictTypeVO dictTypeVO) {
+		log.info("Access /IDictType/queryDictTypeTree -- 查询数据字典树信息");
+		return dictTypeService.queryDictTypeTree(dictTypeVO);
 	}
 }

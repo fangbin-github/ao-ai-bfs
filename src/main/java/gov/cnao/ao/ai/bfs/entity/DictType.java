@@ -2,6 +2,7 @@ package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class DictType implements Serializable {
 	
@@ -46,10 +47,21 @@ public class DictType implements Serializable {
      * 更新时间
      */
     private Date updateTm;
-
     
+    /**
+     * 数据字典字典项
+     */
+//    private List<DictInfo> dictInfos;
+//
+//    public List<DictInfo> getDictInfos() {
+//		return dictInfos;
+//	}
+//
+//	public void setDictInfos(List<DictInfo> dictInfos) {
+//		this.dictInfos = dictInfos;
+//	}
 
-    public String getDictTypeId() {
+	public String getDictTypeId() {
         return dictTypeId;
     }
 

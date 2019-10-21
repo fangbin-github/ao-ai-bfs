@@ -2,6 +2,7 @@ package gov.cnao.ao.ai.bfs.contract;
 
 import java.util.List;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
@@ -24,7 +25,7 @@ public interface IDictInfo {
 	 * @param dictInfo
 	 * @return
 	 */
-	PageBean queryDictInfoPage(DictInfoVO dictInfoVO);
+	BaseResponse<PageBean> queryDictInfoPage(DictInfoVO dictInfoVO);
 	
 	
 	/**
@@ -38,14 +39,14 @@ public interface IDictInfo {
 	/**
 	 * 新增字典信息
 	 */
-	DictInfoVO insertDictInfo(DictInfoVO dictInfoVO);
+	BaseResponse<DictInfoVO> insertDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 修改字典信息
 	 */
-	DictInfoVO updateDictInfo(DictInfoVO dictInfoVO);
+	BaseResponse<DictInfoVO> updateDictInfo(DictInfoVO dictInfoVO);
 	/**
 	 * 删除字典信息
 	 */
-	int deleteDictInfo(DictInfoVO dictInfoVO);
+	BaseResponse<Integer> deleteDictInfo(DictInfoVO dictInfoVO);
 	
 }

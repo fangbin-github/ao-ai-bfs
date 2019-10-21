@@ -37,6 +37,7 @@ public class SchemVO extends BaseRequest {
 	
 	public SchemVO(String json) throws JsonParseException, JsonMappingException, IOException {
 		SchemVO schemVO = new ObjectMapper().readValue(json, SchemVO.class);
+		super.setHead(schemVO.getHead());
 		this.tableSchem = schemVO.tableSchem;
 		this.auditPrjId = schemVO.auditPrjId;
 		this.auditPrjNm = schemVO.auditPrjNm;

@@ -1,5 +1,6 @@
 package gov.cnao.ao.ai.bfs.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,15 +10,20 @@ import org.apache.servicecomb.provider.springmvc.reference.RestTemplateBuilder;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bjsasc.drap.pt.context.ThreadLocalUtil;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
+import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
+import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
 import gov.cnao.ao.ai.bfs.contract.Hello;
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
@@ -30,6 +36,7 @@ import gov.cnao.ao.ai.bfs.vo.AuditGroups;
 import gov.cnao.ao.ai.bfs.vo.Data;
 import gov.cnao.ao.ai.bfs.vo.DataVO;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
+import gov.cnao.ao.ai.bfs.vo.OrgTreeVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
@@ -106,7 +113,8 @@ public class UserAuthService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<AuthVO> getAuth(UserAuthVO userAuthVO) {
+	public BaseResponse<List<AuthVO>> getAuth(UserAuthVO userAuthVO) {
+		BaseResponse<List<AuthVO>> baseResponse = new BaseResponse<List<AuthVO>>();
 		try {
 			List<AuthVO> userAuths = userAuthVO.getUserAuths();
 			for (int i = 0; i < userAuths.size(); i++) {
@@ -130,11 +138,13 @@ public class UserAuthService {
 			LogVO.setVisitMicr("ao-ai-bfs");
 			LogVO.setVisitMenu("数据授权管理");
 			operLogMapper.insertOperLog(LogVO);
-			return userAuths;
+			baseResponse.setBody(userAuths);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(userAuthVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(userAuthVO, RetCodeEnum.SYS_ERROR));
 			log.error("表数据授权失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 
 	/**
@@ -143,7 +153,8 @@ public class UserAuthService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public List<UserAuthsVO> canAuth(AuthVO authVO) {
+	public BaseResponse<List<UserAuthsVO>> canAuth(AuthVO authVO) {
+		BaseResponse<List<UserAuthsVO>> baseResponse = new BaseResponse<List<UserAuthsVO>>();
 		List<UserAuthsVO> authVOs = authVO.getAuthVOs();
 		try {
 			for (int i = 0; i < authVOs.size(); i++) {
@@ -166,18 +177,20 @@ public class UserAuthService {
 			LogVO.setVisitMicr("ao-ai-bfs");
 			LogVO.setVisitMenu("数据授权管理");
 			operLogMapper.insertOperLog(LogVO);
-			return authVOs;
+			baseResponse.setBody(authVOs);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(authVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(authVO, RetCodeEnum.SYS_ERROR));
 			log.error("表数据取消授权失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 
 	/**
 	 * 查询项目组织机构树
 	 * @return
 	 */
-	public XianProjectUserVO xianProjectUser(String userId, String projectIds) {
+	public XianProjectUserVO xianProjectUser(OrgTreeVO orgTreeVO) {
 		
 //		调用工行的接口
 //		String userId = ThreadLocalUtil.getContextUser().getUserID();
@@ -198,10 +211,14 @@ public class UserAuthService {
 			List<UsersVO> usersVOs = null;
 			List<DataVO> dataVOs = new ArrayList<DataVO>();
 			
-			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("/json/xianProjectUser");
-//			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("classpath:json/xianProjectUser");
-//			JSONObject obj = JsonResourceUtils.getJsonObjFromResource(json);
-			xianProjectUser = JSON.parseObject(obj.toJSONString(), XianProjectUser.class);
+			String obj = "";
+			ClassPathResource resource = new ClassPathResource("json/xianProjectUser.json");
+			byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+			obj = new String(bdata, StandardCharsets.UTF_8);
+			xianProjectUser = JSON.parseObject(obj, XianProjectUser.class);
+			
+//			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("/json/xianProjectUser");
+//			xianProjectUser = JSON.parseObject(obj.toJSONString(), XianProjectUser.class);
 			
 			List<Data> datas = xianProjectUser.getData();
 			for (Data data : datas) {
@@ -249,7 +266,8 @@ public class UserAuthService {
 	 * @param authVO
 	 * @return
 	 */
-	public PageBean queryUserAuthPage(AuthVO authVO) {
+	public BaseResponse<PageBean> queryUserAuthPage(AuthVO authVO) {
+		BaseResponse<PageBean> baseResponse = new BaseResponse<PageBean>();
 		PageBean pageBean = new PageBean();
 		try {
 			if(authVO.getHead().getPgrw() != null && authVO.getHead().getPgsn() != null) {
@@ -260,10 +278,13 @@ public class UserAuthService {
 				authVO.getHead().setPgsn((authVO.getHead().getPgsn() -1)*authVO.getHead().getPgrw());
 				pageBean.setContent(userAuthMapper.queryUserAuthPage(authVO));
 			}
+			baseResponse.setBody(pageBean);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(authVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(authVO, RetCodeEnum.SYS_ERROR));
 			log.error("分页查询授权信息失败", e);
 		}
-		return pageBean;
+		return baseResponse;
 	}
 
 }

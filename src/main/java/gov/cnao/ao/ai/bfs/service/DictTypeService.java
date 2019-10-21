@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
+import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
+import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
@@ -23,6 +26,7 @@ import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateTimeUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
+import gov.cnao.ao.ai.bfs.vo.DictTypeTreeVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
 import gov.cnao.ao.ai.bfs.vo.InfoVO;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
@@ -51,7 +55,6 @@ public class DictTypeService {
 	 * 查询字典类别信息目录
 	 */
 	public List<Map<String, Object>> queryDictTypeCon(DictTypeVO dictTypeVO){
-		
 		List<Map<String, Object>> list3 = null;
 		try {
 			List<DictType> list1= dictTypeMapper.queryDictTypeConent(dictTypeVO);
@@ -82,7 +85,6 @@ public class DictTypeService {
 		} catch (Exception e) {
 			log.error("查询字典类别信息目录失败", e);
 		}
-		//返回包装的数据
 		return list3;
 	}
 	
@@ -101,7 +103,8 @@ public class DictTypeService {
     /**
 	 * 新增字典类别信息
 	 */
-	public DictTypeVO insertDictType(DictTypeVO dictTypeVO) {
+	public BaseResponse<DictTypeVO> insertDictType(DictTypeVO dictTypeVO) {
+		BaseResponse<DictTypeVO> baseResponse = new BaseResponse<DictTypeVO>();
 		try {
 			dictTypeVO.setCreateTms(DateTimeUtil.getCurrentTime());
 			stringRedisTemplate.opsForValue().set(dictTypeVO.getDictTypeId(), dictTypeVO.getDictTypeNm());
@@ -122,17 +125,20 @@ public class DictTypeService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典类型管理");
 			operLogMapper.insertOperLog(operLogVO);
-			return dictTypeVO;
+			baseResponse.setBody(dictTypeVO);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictTypeVO, RetCodeEnum.SYS_ERROR));
 			log.error("新增字典类别信息失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 	
 	/**
 	 * 修改字典类别信息
 	 */
-	public DictTypeVO updateDictType(DictTypeVO dictTypeVO) {
+	public BaseResponse<DictTypeVO> updateDictType(DictTypeVO dictTypeVO) {
+		BaseResponse<DictTypeVO> baseResponse = new BaseResponse<DictTypeVO>();
 		try {
 			dictTypeVO.setUpdateTm(DateTimeUtil.getCurrentTime());
 			stringRedisTemplate.opsForValue().set(dictTypeVO.getDictTypeId(), dictTypeVO.getDictTypeNm());
@@ -153,19 +159,22 @@ public class DictTypeService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典类型管理");
 			operLogMapper.insertOperLog(operLogVO);
-			return dictTypeVO;
+			baseResponse.setBody(dictTypeVO);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictTypeVO, RetCodeEnum.SYS_ERROR));
 			log.error("修改字典类别信息失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 	
 	/**
 	 * 删除字典类别信息
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int deleteDictType(DictTypeVO dictTypeVO) {
-		int num = 0;
+	public BaseResponse<Integer> deleteDictType(DictTypeVO dictTypeVO) {
+		BaseResponse<Integer> baseResponse = new BaseResponse<Integer>();
+		Integer num = 0;
 		List<TypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
 		try {
 			for (int i = 0; i < dictTypeVOs.size(); i++) {
@@ -175,7 +184,9 @@ public class DictTypeService {
 				List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
 				if(dictInfos.size()>0) {
 					num = -1;
-					return num;
+					baseResponse.setBody(num);
+					baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
+					return baseResponse;
 				}
 				dictTypeMapper.deleteDictType(typeVO);
 				num++;
@@ -196,10 +207,13 @@ public class DictTypeService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典类型管理");
 			operLogMapper.insertOperLog(operLogVO);
+			baseResponse.setBody(num);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictTypeVO, RetCodeEnum.SYS_ERROR));
 			log.error("删除字典类别信息失败", e);
 		}
-    	return num;
+    	return baseResponse;
     }
 	
 	/**
@@ -224,7 +238,8 @@ public class DictTypeService {
 	 * @param dictType
 	 * @return
 	 */
-	public PageBean queryDictTypePage(DictTypeVO dictTypeVO) {
+	public BaseResponse<PageBean> queryDictTypePage(DictTypeVO dictTypeVO) {
+		BaseResponse<PageBean> baseResponse = new BaseResponse<PageBean>();
 		PageBean pageBean = new PageBean();
 		try {
 			if(dictTypeVO.getHead().getPgrw() != null && dictTypeVO.getHead().getPgsn() != null) {
@@ -235,9 +250,43 @@ public class DictTypeService {
 				dictTypeVO.getHead().setPgsn((dictTypeVO.getHead().getPgsn() -1)*dictTypeVO.getHead().getPgrw());
 				pageBean.setContent(dictTypeMapper.queryDictTypePage(dictTypeVO));
 			}
+			baseResponse.setBody(pageBean);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictTypeVO, RetCodeEnum.SYS_ERROR));
 			log.error("分页查询字典类别信息列表失败", e);
 		}
-		return pageBean;
+		return baseResponse;
+	}
+
+	/**
+	 * 查询数据字典树信息
+	 * @return
+	 */
+	public BaseResponse<List<DictTypeTreeVO>> queryDictTypeTree(DictTypeVO dictTypeVO) {
+		BaseResponse<List<DictTypeTreeVO>> baseResponse = 
+					new BaseResponse<List<DictTypeTreeVO>>();
+		List<DictTypeTreeVO> treeVOs = new ArrayList<DictTypeTreeVO>();
+		DictTypeTreeVO dictTypeTreeVO = new DictTypeTreeVO();
+		try {
+			List<DictType> list = dictTypeMapper.queryDictType(dictTypeVO);
+//			List<DictType> dictTypes = new ArrayList<DictType>();
+//			for (DictType dictType : list) {
+//				DictInfoVO dictInfoVO = new DictInfoVO();
+//				dictInfoVO.setDictTypeId(dictType.getDictTypeId());
+//				List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
+//				dictType.setDictInfos(dictInfos);
+//				dictTypes.add(dictType);
+//			}
+			dictTypeTreeVO.setDictTypeNm("字典类别");
+			dictTypeTreeVO.setDictTypes(list);
+			treeVOs.add(dictTypeTreeVO);
+			baseResponse.setBody(treeVOs);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
+		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictTypeVO, RetCodeEnum.SYS_ERROR));
+			log.error("查询数据字典树信息失败", e);
+		}
+		return baseResponse;
 	}
 }

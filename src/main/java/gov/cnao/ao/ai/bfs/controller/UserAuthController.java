@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.contract.IUserAuth;
 import gov.cnao.ao.ai.bfs.entity.UserAuth;
 import gov.cnao.ao.ai.bfs.service.UserAuthService;
@@ -17,6 +18,7 @@ import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 import gov.cnao.ao.ai.bfs.vo.XianProjectUserVO;
 import gov.cnao.ao.ai.bfs.vo.AuthVO;
+import gov.cnao.ao.ai.bfs.vo.OrgTreeVO;
 
 @RestSchema(schemaId = "iuserauth")
 @RequestMapping(path = "/auth")
@@ -62,7 +64,7 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/getAuth", method = RequestMethod.POST)
-	public List<AuthVO> getAuth(@RequestBody UserAuthVO userAuthVO) {
+	public BaseResponse<List<AuthVO>> getAuth(@RequestBody UserAuthVO userAuthVO) {
 		log.info("Access /IUserAuth/getAuth -- 授权");
 		return userAuthService.getAuth(userAuthVO);
 	}
@@ -72,7 +74,7 @@ public class UserAuthController implements IUserAuth{
 	 */
 	@Override
 	@RequestMapping(path = "/canAuth", method = RequestMethod.POST)
-	public List<UserAuthsVO> canAuth(@RequestBody AuthVO authVO) {
+	public BaseResponse<List<UserAuthsVO>> canAuth(@RequestBody AuthVO authVO) {
 		log.info("Access /IUserAuth/canAuth -- 取消授权");
 		return userAuthService.canAuth(authVO);
 	}
@@ -81,16 +83,16 @@ public class UserAuthController implements IUserAuth{
 	 * 查询项目组织机构树
 	 */
 	@RequestMapping(path = "/xianProjectUser", method = RequestMethod.POST)
-	public XianProjectUserVO xianProjectUser(String userId, String projectIds) {
+	public XianProjectUserVO xianProjectUser(@RequestBody OrgTreeVO orgTreeVO) {
 		log.info("Access /IUserAuth/xianProjectUser -- 查询项目组织机构树");
-		return userAuthService.xianProjectUser(userId, projectIds);
+		return userAuthService.xianProjectUser(orgTreeVO);
 	}
 
 	/**
 	 * 分页查询授权信息
 	 */
 	@RequestMapping(path = "/queryUserAuthPage", method = RequestMethod.POST)
-	public PageBean queryUserAuthPage(@RequestBody AuthVO authVO) {
+	public BaseResponse<PageBean> queryUserAuthPage(@RequestBody AuthVO authVO) {
 		return userAuthService.queryUserAuthPage(authVO);
 	}
 	

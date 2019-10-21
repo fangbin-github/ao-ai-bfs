@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gov.cnao.ao.ai.bfs.entity.DictInfo;
+
 public class DictTypeVO extends BaseRequest {
 
 	private static final long serialVersionUID = 1L;
@@ -56,12 +58,20 @@ public class DictTypeVO extends BaseRequest {
      * 实体外属性
      */
     private List<TypeVO> dictTypeVOs;
+    private List<DictInfo> dictInfos;
+	public List<DictInfo> getDictInfos() {
+		return dictInfos;
+	}
+	public void setDictInfos(List<DictInfo> dictInfos) {
+		this.dictInfos = dictInfos;
+	}
 	public List<TypeVO> getDictTypeVOs() {
 		return dictTypeVOs;
 	}
 	public void setDictTypeVOs(List<TypeVO> dictTypeVOs) {
 		this.dictTypeVOs = dictTypeVOs;
 	}
+	
 
 	public DictTypeVO() {
     	super();
@@ -79,6 +89,7 @@ public class DictTypeVO extends BaseRequest {
 		this.updateUserNm = dictTypeVO.updateUserNm;
 		this.updateTm = dictTypeVO.updateTm;
 		this.dictTypeVOs = dictTypeVO.dictTypeVOs;
+		this.dictInfos = dictTypeVO.dictInfos;
 	}
 
 

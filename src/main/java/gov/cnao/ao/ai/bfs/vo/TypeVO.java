@@ -1,9 +1,8 @@
 package gov.cnao.ao.ai.bfs.vo;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class TypeVO implements Serializable {
+public class TypeVO extends BaseRequest {
 	
 	private static final long serialVersionUID = 1L;
 	

@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import gov.cnao.ao.ai.bfs.common.BaseResponse;
+import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
+import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
@@ -78,8 +81,9 @@ public class DictInfoService {
 	 * 删除字典信息
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int deleteDictInfo(DictInfoVO dictInfoVO) {
-		int num =0;
+	public BaseResponse<Integer> deleteDictInfo(DictInfoVO dictInfoVO) {
+		BaseResponse<Integer> baseResponse = new BaseResponse<Integer>();
+		Integer num =0;
 		List<InfoVO> dictInfoVOs = dictInfoVO.getDictInfoVOs();
 		try {
 			for (int i = 0; i < dictInfoVOs.size(); i++) {
@@ -103,17 +107,21 @@ public class DictInfoService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典信息管理");
 			operLogMapper.insertOperLog(operLogVO);
+			baseResponse.setBody(num);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictInfoVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictInfoVO, RetCodeEnum.SYS_ERROR));
 			log.error("删除字典信息失败", e);
 		}
-		return num;
+		return baseResponse;
 	}
 	
 	
     /**
 	 * 新增字典信息
 	 */
-	public DictInfoVO insertDictInfo(DictInfoVO dictInfoVO) {
+	public BaseResponse<DictInfoVO> insertDictInfo(DictInfoVO dictInfoVO) {
+		BaseResponse<DictInfoVO> baseResponse = new BaseResponse<DictInfoVO>();
 		try {
 			dictInfoVO.setCreateTms(DateTimeUtil.getCurrentTime());
 			stringRedisTemplate.opsForValue().set(dictInfoVO.getDictCd(), dictInfoVO.getDictNm());
@@ -134,17 +142,20 @@ public class DictInfoService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典信息管理");
 			operLogMapper.insertOperLog(operLogVO);
-			return dictInfoVO;
+			baseResponse.setBody(dictInfoVO);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictInfoVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictInfoVO, RetCodeEnum.SYS_ERROR));
 			log.error("新增字典信息失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 	
 	/**
 	 * 修改字典信息
 	 */
-	public DictInfoVO updateDictInfo(DictInfoVO dictInfoVO) {
+	public BaseResponse<DictInfoVO> updateDictInfo(DictInfoVO dictInfoVO) {
+		BaseResponse<DictInfoVO> baseResponse = new BaseResponse<DictInfoVO>();
 		try {
 			dictInfoVO.setUpdateTm(DateTimeUtil.getCurrentTime());
 			stringRedisTemplate.opsForValue().set(dictInfoVO.getDictCd(), dictInfoVO.getDictNm());
@@ -165,11 +176,13 @@ public class DictInfoService {
 			operLogVO.setVisitMicr("ao-ai-bfs");
 			operLogVO.setVisitMenu("数据字典信息管理");
 			operLogMapper.insertOperLog(operLogVO);
-			return dictInfoVO;
+			baseResponse.setBody(dictInfoVO);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictInfoVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictInfoVO, RetCodeEnum.SYS_ERROR));
 			log.error("修改字典信息失败", e);
 		}
-		return null;
+		return baseResponse;
 	}
 	
 	/**
@@ -194,7 +207,8 @@ public class DictInfoService {
 	 * @param dictInfoVO
 	 * @return
 	 */
-	public PageBean queryDictInfoPage(DictInfoVO dictInfoVO) {
+	public BaseResponse<PageBean> queryDictInfoPage(DictInfoVO dictInfoVO) {
+		BaseResponse<PageBean> baseResponse = new BaseResponse<PageBean>();
 		PageBean pageBean = new PageBean();
 		try {
 			if(dictInfoVO.getHead().getPgrw() != null && dictInfoVO.getHead().getPgsn() != null) {
@@ -205,10 +219,13 @@ public class DictInfoService {
 				dictInfoVO.getHead().setPgsn((dictInfoVO.getHead().getPgsn() -1)*dictInfoVO.getHead().getPgrw());
 				pageBean.setContent(dictInfoMapper.queryDictInfoPage(dictInfoVO));
 			}
+			baseResponse.setBody(pageBean);
+			baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictInfoVO));
 		} catch (Exception e) {
+			baseResponse.setHead(ResponseHeadUtil.buildFailHead(dictInfoVO, RetCodeEnum.SYS_ERROR));
 			log.error("分页查询字典信息列表失败", e);
 		}
-		return pageBean;
+		return baseResponse;
 	}
 	
 }

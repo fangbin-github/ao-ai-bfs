@@ -1,8 +1,8 @@
 package gov.cnao.ao.ai.bfs.entity;
 
-import java.io.Serializable;
+import gov.cnao.ao.ai.bfs.vo.BaseRequest;
 
-public class SchemaState implements Serializable {
+public class SchemaState extends BaseRequest {
 	
 	private static final long serialVersionUID = 1L;
     /**
