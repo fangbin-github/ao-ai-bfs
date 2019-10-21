@@ -30,10 +30,8 @@ import com.oscar.jdbc.Array;
 
 import gov.cnao.ao.ai.bfs.config.DynamicDataSource;
 import gov.cnao.ao.ai.bfs.config.SwitchDB;
-import gov.cnao.ao.ai.bfs.entity.SchemaState;
 import gov.cnao.ao.ai.bfs.mapper.HomePageMapper;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
-import gov.cnao.ao.ai.bfs.mapper.SchemaStateMapper;
 import gov.cnao.ao.ai.bfs.util.CommonUtil;
 import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.MethodStatisticalVO;
@@ -60,9 +58,6 @@ public class HomePageService {
 	@Autowired
 	private OperLogMapper operLogMapper;
 	
-	@Autowired
-	private SchemaStateMapper schemaStateMapper;
-	
 	/**
 	 * 查询项目Schem信息
 	 * @param schemVO
@@ -82,43 +77,12 @@ public class HomePageService {
 	}
 	
 	/**
-	 * 查询SQL初始化脚本执行状态
-	 */
-	public SchemaState querySqlExecutionStatus(SchemVO schemVO) {
-		try {
-			SchemaState schemaState = new SchemaState();
-			schemaState.setAuditPrjId(schemVO.getAuditPrjId());
-			schemaState = schemaStateMapper.querySchemaState(schemaState);
-			return schemaState;
-		} catch (Exception e) {
-			log.error("查询SQL初始化脚本执行状态失败", e);
-		}
-		return null;
-	}
-	
-	/**
 	 * 创建schema仓库
 	 * @param auditPrjId
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Boolean creSchema(SchemVO schemVO) {
-		//操作日志新增
-		OperLogVO LogVO = new OperLogVO();
-		LogVO.setLogId(CommonUtil.getSeqNum());
-		LogVO.setProjId("项目编号");
-		LogVO.setUserId("用户标识");
-		LogVO.setUserNm("用户名称");
-		LogVO.setOrgId("机构代码");
-		LogVO.setOrgNm("机构名称");
-		LogVO.setLoginIp("登录IP");
-		LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		LogVO.setLogType("01");
-		LogVO.setFunFlg("创建schema仓库");
-		LogVO.setLogCont("日志内容");
-		LogVO.setVisitMicr("ao-ai-bfs");
-		LogVO.setVisitMenu("系统管理");
-		operLogMapper.insertOperLog(LogVO);
 		try {
 			Connection conn = dynamicDataSource.getConnection();
 			if(StringUtils.isNoneBlank(schemVO.getAuditPrjId())) {
@@ -127,15 +91,22 @@ public class HomePageService {
 	        			"_DATA DATAFILE 'TBS_" + schemVO.getAuditPrjId() +"_DATA.data' SIZE 5m" + ";" ;
 	        	Statement statement = conn.createStatement();
 	        	statement.execute(sql);
-	        	
-	        	//schema状态表新增（状态设置成执行中）
-	        	SchemaState schemaState = new SchemaState();
-	        	schemaState.setAuditPrjId(schemVO.getAuditPrjId());
-	        	schemaState.setState("01");
-	        	schemaState.setCreateUser("");
-	        	schemaState.setCreateUserNm("");
-	        	schemaState.setCreateTms(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-	        	schemaStateMapper.insertSchemaState(schemaState);
+	        	//操作日志新增
+				OperLogVO LogVO = new OperLogVO();
+				LogVO.setLogId(CommonUtil.getSeqNum());
+				LogVO.setProjId("项目编号");
+				LogVO.setUserId("用户标识");
+				LogVO.setUserNm("用户名称");
+				LogVO.setOrgId("机构代码");
+				LogVO.setOrgNm("机构名称");
+				LogVO.setLoginIp("登录IP");
+				LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+				LogVO.setLogType("01");
+				LogVO.setFunFlg("创建schema仓库");
+				LogVO.setLogCont("日志内容");
+				LogVO.setVisitMicr("ao-ai-bfs");
+				LogVO.setVisitMenu("系统管理");
+				operLogMapper.insertOperLog(LogVO);
 	        	return true;
 			}
 		} catch (Exception e) {
@@ -149,65 +120,65 @@ public class HomePageService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Boolean creProLibrary(SchemVO schemVO) {
-		Thread thread = new Thread( new Runnable() {
-			Connection conn = null;
-			@Override
-			public void run() {
-				try {
-					
-			        if(StringUtils.isNoneBlank(schemVO.getAuditPrjId())) {
-			        	switchDB.change(schemVO.getAuditPrjId());
-			        	conn = dynamicDataSource.getConnection();
-			        	//设置不自动提交
-			        	conn.setAutoCommit(false);
-			        	ScriptRunner runner = new ScriptRunner(conn);
-			        	Resources.setCharset(Charset.forName("UTF-8"));
-			        	runner.setSendFullScript(false);
-			        	runner.setDelimiter("；");
-			        	runner.setFullLineDelimiter(false);
-			        	
-//			        	File file = new File("classpath:sql");
-			        	File file = new File("src/main/resources/sql");
-			        	File[] files = file.listFiles();
-			        	List fileList = Arrays.asList(files);
-			        	Collections.sort(fileList);
-//			        	
-			        	for (Object object : fileList) {
-			        		String obj = object.toString().substring(object.toString().lastIndexOf("\\") + 1);
-			        		runner.runScript(Resources.getResourceAsReader("sql/"+obj));
-						}
-			        	conn.commit();
-			        	runner.closeConnection();
-			        }
-			        //schema状态表新增（状态设置成已完成）
-			        switchDB.change("BFS");
-		        	SchemaState schemaState = new SchemaState();
-		        	schemaState.setAuditPrjId(schemVO.getAuditPrjId());
-		        	schemaState.setState("02");
-		        	schemaStateMapper.updateByPrimaryKeySelective(schemaState);
-				} catch (Exception e) {
-					log.error("根据项目ID，向仓库中执行相应的 .sql文件失败", e);
-					try {
-						if(conn != null) {
-							conn.rollback();
-						}
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				} finally {
-					try {
-						if(conn != null) {
-							conn.close();
-						}	
-						switchDB.change("BFS");
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+		Connection conn = null;
+		try {
+	        if(StringUtils.isNoneBlank(schemVO.getAuditPrjId())) {
+	        	switchDB.change(schemVO.getAuditPrjId());
+	        	conn = dynamicDataSource.getConnection();
+	        	//设置不自动提交
+	        	conn.setAutoCommit(false);
+	        	ScriptRunner runner = new ScriptRunner(conn);
+	        	Resources.setCharset(Charset.forName("UTF-8"));
+	        	runner.setSendFullScript(false);
+	        	runner.setDelimiter("；");
+	        	runner.setFullLineDelimiter(false);
+	        	
+	        	File file = new File("src/main/resources/sql");
+	        	File[] files = file.listFiles();
+	        	List fileList = Arrays.asList(files);
+	        	Collections.sort(fileList);
+//	        	
+	        	for (Object object : fileList) {
+	        		String obj = object.toString().substring(object.toString().lastIndexOf("\\") + 1);
+	        		runner.runScript(Resources.getResourceAsReader("sql/"+obj));
 				}
+	        	
+//	        	String[] fileNames = file.list();
+//	        	for (String fileName : fileNames) {
+//	        		runner.runScript(Resources.getResourceAsReader("sql/" + fileName));
+//				}
+	        	
+//	       		runner.setLogWriter(null);//设置是否输出日志
+//	        	runner.runScript(Resources.getResourceAsReader("sql/01_create_cj.sql"));
+//	        	runner.runScript(Resources.getResourceAsReader("sql/02_create_cz.sql"));
+//	        	runner.runScript(Resources.getResourceAsReader("sql/02_insert_cz.sql"));
+//	        	runner.runScript(Resources.getResourceAsReader("sql/03_create_jr.sql"));
+//	        	runner.runScript(Resources.getResourceAsReader("sql/04_create_sjfx.sql"));
+	        	conn.commit();
+	        	runner.closeConnection();
+	        }
+	        return true;
+	        
+		} catch (Exception e) {
+			log.error("根据项目ID，向仓库中执行相应的 .sql文件失败", e);
+			try {
+				if(conn != null) {
+					conn.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
-		});
-		thread.start();
-		return true;
+		} finally {
+			try {
+				if(conn != null) {
+					conn.close();
+				}	
+				switchDB.change("");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -261,58 +232,6 @@ public class HomePageService {
 			log.error("审计方法数量统计失败", e);
 		}
 		return null;
-	}
-
-	/**
-	 * 删除schema仓库
-	 * @param schemVO
-	 * @return
-	 */
-	@Transactional(propagation = Propagation.REQUIRED)
-	public Boolean delSchema(SchemVO schemVO) {
-		//操作日志新增
-		OperLogVO LogVO = new OperLogVO();
-		LogVO.setLogId(CommonUtil.getSeqNum());
-		LogVO.setProjId("项目编号");
-		LogVO.setUserId("用户标识");
-		LogVO.setUserNm("用户名称");
-		LogVO.setOrgId("机构代码");
-		LogVO.setOrgNm("机构名称");
-		LogVO.setLoginIp("登录IP");
-		LogVO.setOperTm(DateUtil.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		LogVO.setLogType("01");
-		LogVO.setFunFlg("删除schema仓库");
-		LogVO.setLogCont("日志内容");
-		LogVO.setVisitMicr("ao-ai-bfs");
-		LogVO.setVisitMenu("系统管理");
-		operLogMapper.insertOperLog(LogVO);
-		Thread thread = new Thread( new Runnable() {
-			Connection conn = null;
-			@Override
-			public void run() {
-				try {
-					conn = dynamicDataSource.getConnection();
-					if(StringUtils.isNoneBlank(schemVO.getAuditPrjId())) {
-			        	String sql = "DROP SCHEMA SCM_" + schemVO.getAuditPrjId() + " CASCADE;" + 
-			        			"\r\nDROP TABLESPACE TBS_"+ schemVO.getAuditPrjId() + "_DATA;" ;
-			        	Statement statement = conn.createStatement();
-			        	statement.execute(sql);
-					}
-				} catch (Exception e) {
-					log.error("删除schema仓库失败", e);
-				}finally {
-					try {
-						if(conn != null) {
-							conn.close();
-						}	
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		thread.start();
-		return true;
 	}
 
 }

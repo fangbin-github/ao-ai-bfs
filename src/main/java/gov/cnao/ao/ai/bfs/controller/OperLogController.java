@@ -1,5 +1,7 @@
 package gov.cnao.ao.ai.bfs.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
@@ -9,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.contract.IOperLog;
 import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.service.OperLogService;
+import gov.cnao.ao.ai.bfs.util.CommonUtil;
+import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 
@@ -63,9 +66,20 @@ public class OperLogController implements IOperLog {
 	 * 分页查询操作日志
 	 */
 	@RequestMapping(path = "/queryOperLogPage", method = RequestMethod.POST)
-	public BaseResponse<PageBean> queryOperLogPage(@RequestBody OperLogVO operLogVO) {
+	public PageBean queryOperLogPage(@RequestBody OperLogVO operLogVO) {
 		log.info("Access /IOperLog/queryOperLogPage -- 分页查询操作日志");
 		return operLogService.queryOperLogPage(operLogVO);
+	}
+	
+	/**
+	 * 生成20位的编号，根据年月日时分秒+序号
+	 * @return
+	 */
+	@RequestMapping(path = "/code", method = RequestMethod.POST)
+	public String code() {
+		String logId = CommonUtil.getSeqNum();
+		System.out.println(logId);
+		return logId;
 	}
 	
 }
