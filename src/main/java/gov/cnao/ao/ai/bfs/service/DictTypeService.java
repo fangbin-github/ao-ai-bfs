@@ -18,7 +18,6 @@ import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
 import gov.cnao.ao.ai.bfs.common.RetCodeEnum;
 import gov.cnao.ao.ai.bfs.entity.DictInfo;
 import gov.cnao.ao.ai.bfs.entity.DictType;
-import gov.cnao.ao.ai.bfs.entity.OperLog;
 import gov.cnao.ao.ai.bfs.mapper.DictInfoMapper;
 import gov.cnao.ao.ai.bfs.mapper.DictTypeMapper;
 import gov.cnao.ao.ai.bfs.mapper.OperLogMapper;
@@ -28,7 +27,6 @@ import gov.cnao.ao.ai.bfs.util.DateUtil;
 import gov.cnao.ao.ai.bfs.vo.DictInfoVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeTreeVO;
 import gov.cnao.ao.ai.bfs.vo.DictTypeVO;
-import gov.cnao.ao.ai.bfs.vo.InfoVO;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
 import gov.cnao.ao.ai.bfs.vo.TypeVO;
@@ -175,6 +173,7 @@ public class DictTypeService {
 	public BaseResponse<Integer> deleteDictType(DictTypeVO dictTypeVO) {
 		BaseResponse<Integer> baseResponse = new BaseResponse<Integer>();
 		Integer num = 0;
+		Boolean flag = true;
 		List<TypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
 		try {
 			for (int i = 0; i < dictTypeVOs.size(); i++) {
@@ -183,12 +182,16 @@ public class DictTypeService {
 				dictInfoVO.setDictTypeId(typeVO.getDictTypeId());
 				List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
 				if(dictInfos.size()>0) {
+					flag = false;
 					num = -1;
 					baseResponse.setBody(num);
 					baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 					return baseResponse;
 				}
-				dictTypeMapper.deleteDictType(typeVO);
+				
+				if(flag) {
+					dictTypeMapper.deleteDictType(typeVO);
+				}
 				num++;
 			}
 			//操作日志新增
