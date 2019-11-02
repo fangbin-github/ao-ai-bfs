@@ -10,7 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UserAuthVO extends BaseRequest{
 	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 用户编号
+	 */
 	private String userId;
+	
 	private List<AuthVO> userAuths;
 	
 	public UserAuthVO() {

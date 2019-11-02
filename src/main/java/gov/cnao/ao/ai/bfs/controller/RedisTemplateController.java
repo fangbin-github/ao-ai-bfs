@@ -164,7 +164,7 @@ public class RedisTemplateController implements IRedisTemplate {
      */
 	@Override
 	@RequestMapping(path = "/getRedisForHash", method = RequestMethod.POST)
-	public String getRedisForHash(String key, String key1) {
+	public String getRedisForHash(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "key1") String key1) {
 		log.info("Access /IRedisTemplate/getRedisForHash -- 获取key对应的map中key1的值");
 		return redisTemplateService.getRedisForHash(key, key1);
 	}

@@ -149,7 +149,7 @@
     	<dependency>
     		<groupId>gov.cnao.security</groupId>
     		<artifactId>cybersecurity</artifactId>
-    		<version>0.0.1-SNAPSHOT</version>
+    		<version>1.0.1-SNAPSHOT</version>
     	</dependency>
     </dependencies>
     <build>

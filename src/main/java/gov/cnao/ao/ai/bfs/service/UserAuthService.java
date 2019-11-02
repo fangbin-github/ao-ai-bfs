@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ import gov.cnao.ao.ai.bfs.vo.DataVO;
 import gov.cnao.ao.ai.bfs.vo.OperLogVO;
 import gov.cnao.ao.ai.bfs.vo.OrgTreeVO;
 import gov.cnao.ao.ai.bfs.vo.PageBean;
+import gov.cnao.ao.ai.bfs.vo.RequestVo;
 import gov.cnao.ao.ai.bfs.vo.UserAuthVO;
 import gov.cnao.ao.ai.bfs.vo.UserAuthsVO;
 import gov.cnao.ao.ai.bfs.vo.Users;
@@ -59,6 +61,9 @@ public class UserAuthService {
 	
 	@Autowired
 	private OperLogMapper operLogMapper;
+	
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 	
 	RestTemplate restTemplate = RestTemplateBuilder.create();
 	
@@ -201,9 +206,19 @@ public class UserAuthService {
 //					http://"+ip+":"+port+"/rest/apmservice/operationSystem/xianProjectUser?userId =" + 
 //					userId + "&projectIds=" + projectIds , String.class);
 //		调用武开的接口
-//		String json = restTemplate.getForObject("cse://ao-ai-oes/fileShare/querySameTeam?userId=" + 
-//					userId + "&projectIds" + projectIds, String.class);
-//		System.out.println(json);
+//		String json = restTemplate.getForObject("cse://ao-ai-oes/fileShare/querySameTeam?userId=" + "0001"  + "&projectIds" + 
+//					 "00000002" , String.class);
+		
+		
+//		String json = restTemplate.postForObject("cse://ao-ai-dms-sjm/hello/sayhi", orgTreeVO , String.class);
+//		System.out.println(str);
+		
+		orgTreeVO.setUserId("0001");
+		orgTreeVO.setProjectIds("00000001");
+		RequestVo requestVo = new RequestVo();
+		requestVo.setUserId(orgTreeVO.getUserId());
+		requestVo.setAuditGrpId(orgTreeVO.getProjectIds());;
+		String json = restTemplate.postForObject("cse://ao-ai-oes/syncFromICBC/syncGrpMembToYX", requestVo , String.class);
 		try {
 			XianProjectUser xianProjectUser = new XianProjectUser();
 			XianProjectUserVO xianProjectUserVO = new XianProjectUserVO();
@@ -211,11 +226,14 @@ public class UserAuthService {
 			List<UsersVO> usersVOs = null;
 			List<DataVO> dataVOs = new ArrayList<DataVO>();
 			
-			String obj = "";
-			ClassPathResource resource = new ClassPathResource("json/xianProjectUser.json");
-			byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
-			obj = new String(bdata, StandardCharsets.UTF_8);
-			xianProjectUser = JSON.parseObject(obj, XianProjectUser.class);
+			xianProjectUser = JSON.parseObject(json, XianProjectUser.class);
+			
+//			String obj = "";
+//			ClassPathResource resource = new ClassPathResource("json/xianProjectUser.json");
+//			byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+//			obj = new String(bdata, StandardCharsets.UTF_8);
+//			xianProjectUser = JSON.parseObject(obj, XianProjectUser.class);
+//			
 			
 //			JSONObject obj = JsonResourceUtils.getJsonObjFromResource("/json/xianProjectUser");
 //			xianProjectUser = JSON.parseObject(obj.toJSONString(), XianProjectUser.class);

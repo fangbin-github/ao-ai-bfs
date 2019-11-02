@@ -1,7 +1,16 @@
 package gov.cnao.ao.ai.bfs.service;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,11 +25,15 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
 
 import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.common.ResponseHeadUtil;
@@ -59,6 +72,9 @@ public class HomePageService {
 	
 	@Autowired
 	private SchemaStateMapper schemaStateMapper;
+	
+	@Autowired
+	private Environment env;
 	
 	/**
 	 * 查询项目Schem信息
@@ -191,28 +207,47 @@ public class HomePageService {
 			        	runner.setDelimiter("；");
 			        	runner.setFullLineDelimiter(false);
 			        	
-			        	String str = "";
-						ClassPathResource resource = new ClassPathResource("sql");
-//						ClassPathResource resource = new ClassPathResource("sql/01_create_cz.sql");
-						File file = resource.getFile();
-//						byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
-//						str = new String(bdata, StandardCharsets.UTF_8);
-//						System.out.println(str);
-						
-//			        	File file = new File(str);
-			        	File[] files = file.listFiles();
-			        	List fileList = Arrays.asList(files);
-			        	Collections.sort(fileList);
+//			        	String str = getClass().getClassLoader().getResource("sql").getFile();
+//			        	System.out.println(str);
 			        	
-			        	for (Object object : fileList) {
-			        		String obj = object.toString().substring(object.toString().lastIndexOf("\\") + 1);
-			        		System.out.println("========================================" + obj);
-			        		runner.setLogWriter(null);
-			        		runner.runScript(Resources.getResourceAsReader("sql/" +obj));
-						}
+			        	
+//			        	String str = getClass().getClassLoader().getResource("sql").getPath();
+//			        	System.out.println("===========================================" + str);
+//			        	String str = "";
+			        	
+			        	
+						
+//						File file = resource.getFile();
+//						byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+//						String str = new String(bdata, StandardCharsets.UTF_8);
+//						System.out.println("===================================================" + str);
+						
+			        	File file = new File(env.getProperty("sqlPath"));
+//			        	File file = new File(str.substring(1));
+//			        	File file = ResourceUtils.getFile("classpath:sql");
+			        	
+//			        	File file = ResourceUtils.getFile();
+			        	
+			        	
+		        		File[] files = file.listFiles();
+		        		System.out.println("====================================files:" + files);
+		        		if(files != null) {
+		        			List<File> fileList = Arrays.asList(files);
+		        			Collections.sort(fileList);
+		        			for (File object : fileList) {
+		        				System.out.println("======================================" + object);
+//				        		String obj = object.toString().substring(object.toString().lastIndexOf("\\") + 1);
+				        		runner.setLogWriter(null);
+				        		runner.runScript(new InputStreamReader(new FileInputStream(object),"UTF-8"));
+//				        		runner.runScript(new FileReader(new File(object.getPath())));
+//				        		runner.runScript(Resources.getResourceAsReader(object.toString()));
+							}
+		        		}
+			        	
 			        	conn.commit();
 			        	runner.closeConnection();
 			        }
+			        System.out.println("初始化数据完成！！！");
 			        //schema状态表新增（状态设置成已完成）
 			        switchDB.change();
 		        	schemaState.setAuditPrjId(schemVO.getAuditPrjId());

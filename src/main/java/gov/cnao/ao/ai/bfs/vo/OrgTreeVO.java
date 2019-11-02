@@ -29,6 +29,7 @@ public class OrgTreeVO extends BaseRequest{
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 	public String getProjectIds() {
 		return projectIds;
 	}

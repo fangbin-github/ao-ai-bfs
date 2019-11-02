@@ -175,9 +175,10 @@ public class DictTypeService {
 		Integer num = 0;
 		Boolean flag = true;
 		List<TypeVO> dictTypeVOs = dictTypeVO.getDictTypeVOs();
+		TypeVO typeVO = null;
 		try {
 			for (int i = 0; i < dictTypeVOs.size(); i++) {
-				TypeVO typeVO = dictTypeVOs.get(i);
+				typeVO = dictTypeVOs.get(i);
 				DictInfoVO dictInfoVO = new DictInfoVO();
 				dictInfoVO.setDictTypeId(typeVO.getDictTypeId());
 				List<DictInfo> dictInfos = dictInfoMapper.queryDictInfo(dictInfoVO);
@@ -188,11 +189,14 @@ public class DictTypeService {
 					baseResponse.setHead(ResponseHeadUtil.buildSuccessHead(dictTypeVO));
 					return baseResponse;
 				}
-				
-				if(flag) {
+			}
+			
+			if(flag) {
+				for (int i = 0; i < dictTypeVOs.size(); i++) {
+					typeVO = dictTypeVOs.get(i);
 					dictTypeMapper.deleteDictType(typeVO);
+					num++;
 				}
-				num++;
 			}
 			//操作日志新增
 			OperLogVO operLogVO = new OperLogVO();

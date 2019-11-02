@@ -4,7 +4,7 @@ spring:
   datasource: 
     default:
        username: sysdba
-       password: 0feedb10025e96e94679728143d44111
+       password: 3664b8215e2ec66b1f579d9b9d477f6c
 #      url: jdbc:oscar://106.13.59.131:2003/aidb
        driver-class-name: com.oscar.Driver
        url-base: jdbc:oscar://
@@ -15,7 +15,7 @@ spring:
        url-other: 
     private:
        username: sysdba
-       password: 0feedb10025e96e94679728143d44111
+       password: 3664b8215e2ec66b1f579d9b9d477f6c
 #      url: jdbc:oscar://106.13.59.131:2003/aidb
        driver-class-name: com.oscar.Driver
        url-base: jdbc:oscar://
@@ -63,3 +63,5 @@ eureka:
       instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
 app_id: edge
 drap_platform.auth.identity.serviceId: edge
+sqlPath: H:\sql
+#sqlPath: /soft/aoai/bfs/sql
