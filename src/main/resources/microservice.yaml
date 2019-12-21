@@ -1,11 +1,12 @@
 APPLICATION_ID: ao-ai  #应用名
 service_description:
-  name: ao-ai-bfs-fb  #微服务名
-  version: 0.20.6  #微服务版本
+  name: ao-ai-bfs  #微服务名
+  version: 0.21.7  #微服务版本
 cse:
   service:
     registry:
-      address: http://128.194.10.223:30100  #连接SC(Service Center,注册中心)的地址
+#      address: http://128.194.10.223:30100  #连接SC(Service Center,注册中心)的地址
+      address: http://127.0.0.1:30100
   rest:
     address: 0.0.0.0:7112  #Rest通信地址
   handler:
@@ -18,7 +19,3 @@ drap_platform:
     sso_server.rootpath: http://128.194.10.223:9006/aa
     cybersecurity.enabled: true
     auth.identity.serviceId: aoai
-icbc:
-  service:
-    ip: 127.0.0.1
-    port: 8080

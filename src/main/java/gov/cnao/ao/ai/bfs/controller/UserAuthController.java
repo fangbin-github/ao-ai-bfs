@@ -24,7 +24,7 @@ import gov.cnao.ao.ai.bfs.vo.OrgTreeVO;
 @RequestMapping(path = "/auth")
 public class UserAuthController implements IUserAuth{
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(UserAuthController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(UserAuthController.class);
 	
 	@Autowired
 	private UserAuthService userAuthService;

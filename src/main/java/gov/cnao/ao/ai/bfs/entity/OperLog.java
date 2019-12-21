@@ -1,8 +1,10 @@
 package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
-import java.util.Date;
-
+/**
+ * 操作日志实体
+ * @author fangbin
+ */
 public class OperLog implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**

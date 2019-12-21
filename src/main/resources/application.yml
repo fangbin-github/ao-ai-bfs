@@ -30,11 +30,11 @@ spring:
 #    url: jdbc:oscar://128.194.10.215:2003/aidb
 #    driver-class-name: com.oscar.Driver
   redis:
-    host: 128.194.10.223
-    port: 6379
+#    host: 192.168.43.19
+#    port: 6379
     password: 
-   # cluster:
-     # nodes:
+    cluster: 
+      nodes: 192.168.43.19:6379,192.168.43.19:7000,192.168.43.19:7001
        #    - 128.194.10.223:6379
            # - 10.0.47.22:22400
            # - 10.0.47.23:22400
@@ -65,3 +65,4 @@ app_id: edge
 drap_platform.auth.identity.serviceId: edge
 sqlPath: H:\sql
 #sqlPath: /soft/aoai/bfs/sql
+#sqlPath: /soft/aoai/20191106/bfs/sql

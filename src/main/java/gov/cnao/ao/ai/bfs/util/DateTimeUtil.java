@@ -8,7 +8,8 @@ public class DateTimeUtil {
 	/**
 	 * 日期格式化
 	 */
-	public static final String TIME_PATTER = "yyyy-MM-dd HH:mm:ss";
+	public final static String TIME_PATTER = "yyyy-MM-dd HH:mm:ss";
+	
 	public static String getFormatTime() {
 		return format(getCurrentTime(), TIME_PATTER);
 	}

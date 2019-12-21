@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @version:2019年9月5日下午7:26:40
 */
 public class BaseResponseHead implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
     private ResponseHead head;
 
     public BaseResponseHead() {

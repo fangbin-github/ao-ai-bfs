@@ -24,7 +24,7 @@ import gov.cnao.ao.ai.bfs.vo.PageBean;
 @RequestMapping(path = "/log")
 public class OperLogController implements IOperLog {
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(OperLogController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(OperLogController.class);
 	
 	@Autowired
 	private OperLogService operLogService;

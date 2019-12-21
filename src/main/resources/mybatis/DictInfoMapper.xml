@@ -35,7 +35,7 @@
     from T_BFS_DICT_INFO 
     where 1=1
     <if test="dictTypeId != null and dictTypeId != '' ">
-	     and   DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
+	     and DICT_TYPE_ID = #{dictTypeId,jdbcType=VARCHAR}
 	</if>
 	<if test="dictNm != null and dictNm != '' ">
          and DICT_NM like ('%'|| #{dictNm,jdbcType=VARCHAR} || '%') 

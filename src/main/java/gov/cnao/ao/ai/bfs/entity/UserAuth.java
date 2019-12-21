@@ -1,9 +1,11 @@
 package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-
+/**
+ * 数据授权实体
+ * @author fangbin
+ */
 public class UserAuth implements Serializable {
 	private static final long serialVersionUID = 1L;
 	 

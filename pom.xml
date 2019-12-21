@@ -151,6 +151,23 @@
     		<artifactId>cybersecurity</artifactId>
     		<version>1.0.1-SNAPSHOT</version>
     	</dependency>
+    	
+    	<!-- 连接华为redis -->
+    	<dependency>
+   			<groupId>com.huawei</groupId>
+   			<artifactId>wcc_krb5</artifactId>
+   			<version>1.0.2</version>
+   			<scope>system</scope>
+   			<systemPath>${project.basedir}/extlib/wcc_krb5-1.0.2.jar</systemPath>
+   		</dependency>
+   		
+		<dependency>
+   			<groupId>com.huawei</groupId>
+   			<artifactId>jredisclient</artifactId>
+   			<version>0.0.2</version>
+   			<scope>system</scope>
+   			<systemPath>${project.basedir}/extlib/jredisclient-0.0.2.jar</systemPath>
+   		</dependency>
     </dependencies>
     <build>
         <plugins>

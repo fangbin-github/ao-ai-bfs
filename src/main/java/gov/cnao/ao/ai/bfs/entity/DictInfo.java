@@ -2,7 +2,10 @@ package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * 数据字典字典项实体
+ * @author fangbin
+ */
 public class DictInfo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -56,13 +59,23 @@ public class DictInfo implements Serializable {
      * 数据字典类型代码
      */
     private String dictTypeId;
+    private String dictTypeNm;
 
     /**
      * 字典项代码
      */
     private String dictCd;
 
-    public String getDictTypeId() {
+    
+    public String getDictTypeNm() {
+		return dictTypeNm;
+	}
+
+	public void setDictTypeNm(String dictTypeNm) {
+		this.dictTypeNm = dictTypeNm;
+	}
+
+	public String getDictTypeId() {
         return dictTypeId;
     }
 

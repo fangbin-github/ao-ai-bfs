@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 //@Aspect
 //@Component
 public class DynamicDataSourceAspect {
-    private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
+    private final static Logger logger = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
 
     private final String[] QUERY_PREFIX = {"select"};
 
@@ -32,15 +32,15 @@ public class DynamicDataSourceAspect {
 
     @Before("daoAspect()")
     public void switchDataSource(JoinPoint point) {
-        Object[] params = point.getArgs();
-        System.out.println(params.toString());
-        String param = (String) params[0];
-        for (Object string:params
-             ) {
-            System.out.println(string.toString());
-        }
-        System.out.println("###################################################");
-        System.out.println(point.getSignature().getName());
+//        Object[] params = point.getArgs();
+//        System.out.println(params.toString());
+//        String param = (String) params[0];
+//        for (Object string:params
+//             ) {
+//            System.out.println(string.toString());
+//        }
+//        System.out.println("###################################################");
+//        System.out.println(point.getSignature().getName());
         Boolean isQueryMethod = isQueryMethod(point.getSignature().getName());
         //DynamicDataSourceContextHolder.setDataSourceKey("slave");
         if (isQueryMethod) {

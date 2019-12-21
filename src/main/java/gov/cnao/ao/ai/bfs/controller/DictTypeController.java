@@ -3,17 +3,12 @@ package gov.cnao.ao.ai.bfs.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import gov.cnao.ao.ai.bfs.common.BaseResponse;
 import gov.cnao.ao.ai.bfs.contract.IDictType;
 import gov.cnao.ao.ai.bfs.entity.DictType;
@@ -26,7 +21,7 @@ import gov.cnao.ao.ai.bfs.vo.PageBean;
 @RequestMapping(path = "/dict")
 public class DictTypeController implements IDictType{
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictTypeController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(DictTypeController.class);
 	
 	@Autowired
 	private DictTypeService dictTypeService;

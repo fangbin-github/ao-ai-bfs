@@ -22,26 +22,28 @@ import java.util.List;
 @RequestMapping(path = "/homePage")
 public class HomePageController implements IHomePage {
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(HomePageController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(HomePageController.class);
 	
 	@Autowired
 	private HomePageService homePageService;
 	
 	/**
 	 * 查询项目Schem信息
+	 * @throws IOException 
 	 */
 	@RequestMapping(path = "/queryPrjSchem", method = RequestMethod.POST)
-	public BaseResponse<SchemVO> queryPrjSchem(@RequestBody SchemVO schemVO) {
+	public BaseResponse<SchemVO> queryPrjSchem(@RequestBody SchemVO schemVO) throws IOException {
 		log.info("Access /IHomePage/queryPrjSchem -- 查询项目Schem信息");
 		return homePageService.queryPrjSchem(schemVO);
 	}
 	
 	/**
 	 * 查询SQL初始化脚本执行状态
+	 * @throws IOException 
 	 */
 	@Override
 	@RequestMapping(path = "/querySqlExecutionStatus", method = RequestMethod.POST)
-	public BaseResponse<SchemaState> querySqlExecutionStatus(@RequestBody SchemVO schemVO) {
+	public BaseResponse<SchemaState> querySqlExecutionStatus(@RequestBody SchemVO schemVO) throws IOException {
 		log.info("Access /IHomePage/querySqlExecutionStatus -- 查询SQL初始化脚本执行状态");
 		return homePageService.querySqlExecutionStatus(schemVO);
 	}

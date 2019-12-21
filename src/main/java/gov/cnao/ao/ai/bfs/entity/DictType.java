@@ -2,8 +2,10 @@ package gov.cnao.ao.ai.bfs.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
+/**
+ * 数据字典字典类型实体
+ * @author fangbin
+ */
 public class DictType implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

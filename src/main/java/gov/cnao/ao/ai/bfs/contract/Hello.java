@@ -1,5 +1,7 @@
 package gov.cnao.ao.ai.bfs.contract;
 
+import java.io.IOException;
+
 public interface Hello {
 	
 	/**
@@ -9,7 +11,12 @@ public interface Hello {
 	 */
 	String queryAudiMethCol(String id, String auditPrjId);
 	
-	
-    String sayHi(String name);
+	/**
+	 * sayhi
+	 * @param name
+	 * @return
+	 * @throws IOException
+	 */
+    String sayHi(String name) throws IOException;
     
 }

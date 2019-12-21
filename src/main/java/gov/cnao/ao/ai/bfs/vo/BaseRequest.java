@@ -30,5 +30,4 @@ public class BaseRequest implements Serializable {
 				+ hashCode() + ", toString()=" + super.toString() + "]";
 	}
 
-	
 }

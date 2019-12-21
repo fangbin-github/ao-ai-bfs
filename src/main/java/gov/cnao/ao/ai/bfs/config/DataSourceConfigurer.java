@@ -3,7 +3,6 @@ package gov.cnao.ao.ai.bfs.config;
 import com.alibaba.druid.pool.DruidDataSource;
 
 import gov.cnao.security.service.EncryptDecryptService;
-import gov.cnao.security.service.impl.EncryptDecryptServiceImpl;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -42,6 +41,7 @@ public class DataSourceConfigurer {
     private EncryptDecryptService encryptDecryptService;
 
     private MybatisProperties mybatisProperties;
+    
     public DataSourceConfigurer(MybatisProperties properties) {
         this.mybatisProperties = properties;
     }
@@ -65,13 +65,12 @@ public class DataSourceConfigurer {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(evn.getProperty( prefix + "username"));
         try {
-        	System.out.println(encryptDecryptService.encrypt("szoscar55"));
+//        	System.out.println(encryptDecryptService.encrypt("szoscar55"));
 			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			logger.error(e.getMessage());
-			System.out.println(e.getMessage());
+//			System.out.println(e.getMessage());
 		}
         dataSource.setDriverClassName(evn.getProperty( prefix + "driver-class-name"));
         return dataSource;

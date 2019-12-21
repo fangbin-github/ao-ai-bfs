@@ -20,7 +20,7 @@ import gov.cnao.ao.ai.bfs.vo.PageBean;
 @RequestMapping(path = "/dict")
 public class DictInfoController implements IDictInfo{
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(DictInfoController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(DictInfoController.class);
 	
 	@Autowired
 	private DictInfoService dictInfoService;

@@ -15,13 +15,15 @@ public interface IHomePage {
 	 * 查询项目Schem信息
 	 * @param schemVO
 	 * @return
+	 * @throws IOException 
 	 */
-	BaseResponse<SchemVO> queryPrjSchem(SchemVO schemVO);
+	BaseResponse<SchemVO> queryPrjSchem(SchemVO schemVO) throws IOException;
 	
 	/**
 	 * 查询SQL初始化脚本执行状态
+	 * @throws IOException 
 	 */
-	BaseResponse<SchemaState> querySqlExecutionStatus(SchemVO schemVO);
+	BaseResponse<SchemaState> querySqlExecutionStatus(SchemVO schemVO) throws IOException;
 	
 	/**
 	 * 创建schema仓库

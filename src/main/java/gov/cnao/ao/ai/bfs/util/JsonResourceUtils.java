@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 public class JsonResourceUtils {
-    private static Logger logger = Logger.getLogger(JsonResourceUtils.class);
+    private final static Logger logger = Logger.getLogger(JsonResourceUtils.class);
     private JsonResourceUtils() {}
     //filename 为文件名字 如 “/json/app_version_info.json”
     public static JSONObject getJsonObjFromResource(String filename) {
@@ -25,8 +26,7 @@ public class JsonResourceUtils {
                 logger.info("file not exist!");
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             logger.info("readFileToString" + e.getMessage());
         }
         return json;

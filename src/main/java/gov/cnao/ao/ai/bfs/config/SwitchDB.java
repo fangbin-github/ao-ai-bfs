@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.transaction.PlatformTransactionManager;
+//import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +33,8 @@ public class SwitchDB {
     @Autowired
     DynamicDataSource dynamicDataSource;
 
-    @Autowired
-    private PlatformTransactionManager transactionManager;
+//    @Autowired
+//    private PlatformTransactionManager transactionManager;
 
     /**
      * 切换数据库对外方法,如果私有库newDbName参数非空,则首先连接私有库，否则连接其他已存在的数据源
@@ -54,8 +54,8 @@ public class SwitchDB {
         log.info("＝＝＝＝＝当前连接的数据库是:" + currentKey);
         return currentKey;
     }
-    public String change(String project)
-    {
+    
+    public String change(String project){
         if( "".equals(project) || project == null){
             toDB("default");
         }
@@ -65,20 +65,20 @@ public class SwitchDB {
         log.info("＝＝＝＝＝当前连接的数据库是:" + currentKey);
         return currentKey;
     }
-    public String change()
-    {
+    
+    public String change(){
         toDB("default");
         //获取当前连接的数据源对象的key
         String currentKey = DynamicDataSourceContextHolder.getDataSourceKey();
         log.info("＝＝＝＝＝当前连接的数据库是:" + currentKey);
         return currentKey;
     }
+    
     /**
      * 切换已存在的数据源
      * @param dbName
      */
-    private void toDB(String projectId)
-    {
+    private void toDB(String projectId) {
     	if(null == projectId) {
     		projectId ="";
     	}
@@ -90,7 +90,9 @@ public class SwitchDB {
         //获取当前连接的数据源对象的key
         String currentKey = DynamicDataSourceContextHolder.getDataSourceKey();
         //如果当前数据库连接已经是想要的连接，则直接返回
-        if(currentKey.equals(dbSourceKey) ) return;
+        if(currentKey.equals(dbSourceKey) ) {
+        	return;
+        }
         //判断储存动态数据源实例的map中key值是否存在
         if( DynamicDataSource.isExistDataSource(dbSourceKey) ){
         	if("default".equalsIgnoreCase(projectId)) {
@@ -139,8 +141,7 @@ public class SwitchDB {
      */
     private DruidDataSource createPrivateDataSource(String projectId){
         //创建新的数据源
-        if("".equals(projectId) || projectId == null )
-        {
+        if("".equals(projectId) || projectId == null ) {
             log.info("动态创建私有库数据时，私有库主键丢失");
         }
         DruidDataSource dataSource = new DruidDataSource();
@@ -156,8 +157,7 @@ public class SwitchDB {
 			dataSource.setPassword(encryptDecryptService.decrypt(evn.getProperty( prefix + "password")));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+//			System.out.println(e.getMessage());
 			log.error(e.getMessage());
 		}
         dataSource.setDriverClassName(evn.getProperty( prefix + "driver-class-name"));

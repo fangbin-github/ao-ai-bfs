@@ -6,9 +6,9 @@ package gov.cnao.ao.ai.bfs.common;
  * @version:2019年9月5日下午7:26:09
  */
 public class BaseResponse<T>  extends BaseResponseHead {
-    public static final String S = "S";
-    public static final String F = "F";
-	private static final long serialVersionUID = 1L;
+    public final static String S = "S";
+    public final static String F = "F";
+	private final static long serialVersionUID = 1L;
 
 	private T body;
 	
@@ -30,14 +30,6 @@ public class BaseResponse<T>  extends BaseResponseHead {
 	@Override
 	public String toString() {
 		return "BaseResponse [body=" + body + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((body == null) ? 0 : body.hashCode());
-		return result;
 	}
 
 }

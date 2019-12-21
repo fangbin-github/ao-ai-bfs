@@ -1,8 +1,10 @@
 package gov.cnao.ao.ai.bfs.controller;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.slf4j.LoggerFactory;
@@ -14,15 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import gov.cnao.ao.ai.bfs.contract.IRedisTemplate;
 import gov.cnao.ao.ai.bfs.service.RedisTemplateService;
+import gov.cnao.ao.ai.bfs.vo.RedisVO;
+import redis.clients.jedis.HostAndPort;
 
 @RestSchema(schemaId="iRedisTemplate")
 @RequestMapping(path="/redisTemplate")
 public class RedisTemplateController implements IRedisTemplate {
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(RedisTemplateController.class);
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(RedisTemplateController.class);
     
 	@Autowired
 	private RedisTemplateService redisTemplateService;
+	
+	public Set<HostAndPort> getHosts() {
+        return redisTemplateService.getHosts();
+	}
 
 	/**
 	 * redis操作String
@@ -32,9 +40,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/insertStringRedisTemplate", method = RequestMethod.POST)
-	public Boolean insertStringRedisTemplate(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value")  String value) {
+	public void insertStringRedisTemplate(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value")  String value) {
 		log.info("Access /IRedisTemplate/insertStringRedisTemplate -- redis新增String类型的数据");
-		return redisTemplateService.insertStringRedisTemplate(key, value);
+		redisTemplateService.insertStringRedisTemplate(key, value);
 	}
 
 	/**
@@ -44,9 +52,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/getStringRedisTemplate", method = RequestMethod.POST)
-	public Boolean getStringRedisTemplate(@RequestParam(defaultValue = "key")  String key) {
+	public void getStringRedisTemplate(@RequestParam(defaultValue = "key")  String key) {
 		log.info("Access /IRedisTemplate/getStringRedisTemplate -- redis通过键获取String类型的数据");
-		return redisTemplateService.getStringRedisTemplate(key);
+		redisTemplateService.getStringRedisTemplate(key);
 	}
 
 	/**
@@ -56,9 +64,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/deleteStringRedisTemplate", method = RequestMethod.POST)
-	public Boolean deleteStringRedisTemplate(@RequestParam(defaultValue = "key") String key) {
+	public void deleteStringRedisTemplate(@RequestParam(defaultValue = "key") String key) {
 		log.info("Access /IRedisTemplate/getStringRedisTemplate -- redis通过键删除String类型的数据");
-		return redisTemplateService.deleteStringRedisTemplate(key);
+		redisTemplateService.deleteStringRedisTemplate(key);
 	}
 	
 	/**
@@ -67,9 +75,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 * @return
 	 */
 	@RequestMapping(path = "/delete", method = RequestMethod.POST)
-    public Boolean delete(@RequestBody Collection<String> keys) {
+    public void delete(@RequestBody Collection<String> keys) {
     	log.info("Access /IRedisTemplate/delete -- 批量删除key");
-		return redisTemplateService.delete(keys);
+		redisTemplateService.delete(keys);
     }
 
 	/**
@@ -80,9 +88,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/insertListRedisTemplateLeftPush", method = RequestMethod.POST)
-	public Boolean insertListRedisTemplateLeftPush(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value") String value) {
+	public void insertListRedisTemplateLeftPush(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value") String value) {
 		log.info("Access /IRedisTemplate/insertListRedisTemplateLeftPush -- redis操作list,将数据添加到key对应的现有数据的左边");
-		return redisTemplateService.insertListRedisTemplateLeftPush(key, value);
+		redisTemplateService.insertListRedisTemplateLeftPush(key, value);
 	}
 
 	/**
@@ -93,9 +101,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/insertListRedisTemplateRightPush", method = RequestMethod.POST)
-	public Boolean insertListRedisTemplateRightPush(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value") String value) {
+	public void insertListRedisTemplateRightPush(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "value") String value) {
 		log.info("Access /IRedisTemplate/insertListRedisTemplateRightPush -- redis操作list,将数据添加到key对应的现有数据的左边");
-		return redisTemplateService.insertListRedisTemplateRightPush(key, value);
+		redisTemplateService.insertListRedisTemplateRightPush(key, value);
 	}
 
 	/**
@@ -105,9 +113,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/getListRedisTemplateLeftPop", method = RequestMethod.POST)
-	public Boolean getListRedisTemplateLeftPop(@RequestParam(defaultValue = "key") String key) {
+	public void getListRedisTemplateLeftPop(@RequestParam(defaultValue = "key") String key) {
 		log.info("Access /IRedisTemplate/getListRedisTemplateLeftPop -- redis操作list,通过key从左往右遍历数据");
-		return redisTemplateService.getListRedisTemplateLeftPop(key);
+		redisTemplateService.getListRedisTemplateLeftPop(key);
 	}
 
 	/**
@@ -117,9 +125,9 @@ public class RedisTemplateController implements IRedisTemplate {
 	 */
 	@Override
 	@RequestMapping(path = "/getListRedisTemplateRightPop", method = RequestMethod.POST)
-	public Boolean getListRedisTemplateRightPop(@RequestParam(defaultValue = "key") String key) {
+	public void getListRedisTemplateRightPop(@RequestParam(defaultValue = "key") String key) {
 		log.info("Access /IRedisTemplate/getListRedisTemplateRightPop -- redis操作list,通过key从右往左遍历数据");
-		return redisTemplateService.getListRedisTemplateRightPop(key);
+		redisTemplateService.getListRedisTemplateRightPop(key);
 	}
 	
 	/**
@@ -139,9 +147,9 @@ public class RedisTemplateController implements IRedisTemplate {
      * @return
      */
 	@RequestMapping(path = "/multiSet", method = RequestMethod.POST)
-    public Boolean multiSet(@RequestBody Map<String, String> maps) {
+    public void multiSet(@RequestBody Map<String, String> maps) {
     	log.info("Access /IRedisTemplate/multiSet -- 批量添加");
-    	return redisTemplateService.multiSet(maps);
+    	redisTemplateService.multiSet(maps);
     }
 
 	/**
@@ -161,14 +169,13 @@ public class RedisTemplateController implements IRedisTemplate {
      * @param key map的键
      * @param key1 map中值的键
      * @return
+	 * @throws IOException 
      */
 	@Override
 	@RequestMapping(path = "/getRedisForHash", method = RequestMethod.POST)
-	public String getRedisForHash(@RequestParam(defaultValue = "key") String key, @RequestParam(defaultValue = "key1") String key1) {
+	public String getRedisForHash(@RequestBody RedisVO redisVO) throws IOException {
 		log.info("Access /IRedisTemplate/getRedisForHash -- 获取key对应的map中key1的值");
-		return redisTemplateService.getRedisForHash(key, key1);
+		return redisTemplateService.getRedisForHash(redisVO.getUsno(), redisVO.getAuditPrjId());
 	}
-	
-	
     
 }

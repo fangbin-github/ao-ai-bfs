@@ -71,11 +71,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      */
     public static synchronized DynamicDataSource getInstance(){
         if(instance==null){
-            synchronized (lock){
-                if(instance==null){
-                    instance=new DynamicDataSource();
-                }
-            }
+            instance=new DynamicDataSource();
         }
         return instance;
     }

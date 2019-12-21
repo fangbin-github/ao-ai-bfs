@@ -4,8 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.LoggerFactory;
+
 public class DateUtil {
 
+	private final static org.slf4j.Logger log = LoggerFactory.getLogger(DateUtil.class);
+	 
 	/**
 	 * 将date转换为string
 	 * 
@@ -34,6 +38,7 @@ public class DateUtil {
 		try {
 			date = sdf.parse(dateStr);
 		} catch (ParseException e) {
+			log.error(e.getMessage());
 		}
 		return date;
 	}

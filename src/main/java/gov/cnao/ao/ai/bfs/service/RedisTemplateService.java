@@ -1,23 +1,30 @@
 package gov.cnao.ao.ai.bfs.service;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
+
 @Service
 public class RedisTemplateService {
 	
-	private static org.slf4j.Logger log = LoggerFactory.getLogger(RedisTemplateService.class);
-	
 	@Autowired
     private StringRedisTemplate stringRedisTemplate;
+	
+	@Autowired
+	private Environment env;
 
 	/**
 	 * redis操作String
@@ -25,14 +32,8 @@ public class RedisTemplateService {
 	 * @param key
 	 * @param value
 	 */
-	public Boolean insertStringRedisTemplate(String key, String value) {
-		try {
-			stringRedisTemplate.opsForValue().set(key, value);
-			return true;
-		} catch (Exception e) {
-			log.error("redis新增String类型的数据失败", e);
-		}
-		return false;
+	public void insertStringRedisTemplate(String key, String value) {
+		stringRedisTemplate.opsForValue().set(key, value);
 	}
 
 	/**
@@ -40,14 +41,8 @@ public class RedisTemplateService {
 	 * redis通过键获取String类型的数据
 	 * @param key
 	 */
-	public Boolean getStringRedisTemplate(String key) {
-		try {
-			stringRedisTemplate.opsForValue().get(key);
-			return true;
-		} catch (Exception e) {
-			log.error("redis通过键获取String类型的数据失败", e);
-		}
-		return false;
+	public void getStringRedisTemplate(String key) {
+		stringRedisTemplate.opsForValue().get(key);
 	}
 
 	/**
@@ -55,14 +50,8 @@ public class RedisTemplateService {
 	 * redis通过键删除String类型的数据
 	 * @param key
 	 */
-	public Boolean deleteStringRedisTemplate(String key) {
-		try {
-			stringRedisTemplate.delete(key);
-			return true;
-		} catch (Exception e) {
-			log.error("redis通过键删除String类型的数据失败", e);
-		}
-		return false;
+	public void deleteStringRedisTemplate(String key) {
+		stringRedisTemplate.delete(key);
 	}
 	
 	/**
@@ -71,14 +60,8 @@ public class RedisTemplateService {
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-    public Boolean delete(Collection<String> keys) {
-    	try {
-    		stringRedisTemplate.delete(keys);
-    		return true;
-		} catch (Exception e) {
-			log.error("批量删除key失败", e);
-		}
-    	return false;
+    public void delete(Collection<String> keys) {
+		stringRedisTemplate.delete(keys);
     }
 
 	/**
@@ -87,14 +70,8 @@ public class RedisTemplateService {
 	 * @param key
 	 * @param value
 	 */
-	public Boolean insertListRedisTemplateLeftPush(String key, String value) {
-		try {
-			stringRedisTemplate.opsForList().leftPush(key, value);
-			return true;
-		} catch (Exception e) {
-			log.error("redis操作list,将数据添加到key对应的现有数据的左边失败", e);
-		}
-		return false;
+	public void insertListRedisTemplateLeftPush(String key, String value) {
+		stringRedisTemplate.opsForList().leftPush(key, value);
 	}
 
 	/**
@@ -103,14 +80,8 @@ public class RedisTemplateService {
 	 * @param key
 	 * @param value
 	 */
-	public Boolean insertListRedisTemplateRightPush(String key, String value) {
-		try {
-			stringRedisTemplate.opsForList().leftPush(key, value);
-			return true;
-		} catch (Exception e) {
-			log.error("redis操作list,将数据添加到key对应的现有数据的右边失败", e);
-		}
-		return false;
+	public void insertListRedisTemplateRightPush(String key, String value) {
+		stringRedisTemplate.opsForList().leftPush(key, value);
 	}
 
 	/**
@@ -119,14 +90,8 @@ public class RedisTemplateService {
 	 * @param key
 	 * @param value
 	 */
-	public Boolean getListRedisTemplateLeftPop(String key) {
-		try {
-			stringRedisTemplate.opsForList().leftPop(key);
-			return true;
-		} catch (Exception e) {
-			log.error("redis操作list,通过key从左往右遍历数据失败", e);
-		}
-		return false;
+	public void getListRedisTemplateLeftPop(String key) {
+		stringRedisTemplate.opsForList().leftPop(key);
 	}
 
 	/**
@@ -134,14 +99,8 @@ public class RedisTemplateService {
 	 * 通过key从右往左遍历数据
 	 * @param key
 	 */
-	public Boolean getListRedisTemplateRightPop(String key) {
-		try {
-			stringRedisTemplate.opsForList().rightPop(key);
-			return true;
-		} catch (Exception e) {
-			log.error("redis操作list,通过key从右往左遍历数据失败", e);
-		}
-		return false;
+	public void getListRedisTemplateRightPop(String key) {
+		stringRedisTemplate.opsForList().rightPop(key);
 	}
 	
 	/**
@@ -150,12 +109,7 @@ public class RedisTemplateService {
 	 * @return
 	 */
     public List<String> multiGet(Collection<String> keys) {
-        try {
-        	return stringRedisTemplate.opsForValue().multiGet(keys);
-		} catch (Exception e) {
-			log.error("批量获取失败", e);
-		}
-        return null;
+    	return stringRedisTemplate.opsForValue().multiGet(keys);
     }
     
     /**
@@ -164,14 +118,8 @@ public class RedisTemplateService {
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public Boolean multiSet(Map<String, String> maps) {
-    	try {
-    		stringRedisTemplate.opsForValue().multiSet(maps);
-    		return true;
-		} catch (Exception e) {
-			log.error("批量添加失败", e);
-		}
-    	return false;
+    public void multiSet(Map<String, String> maps) {
+		stringRedisTemplate.opsForValue().multiSet(maps);
     }
 
     /**
@@ -180,12 +128,7 @@ public class RedisTemplateService {
 	 * @return
 	 */
 	public List<String> rangeListRedisTemplate(String key) {
-		try {
-			return stringRedisTemplate.opsForList().range(key, 0, -1);
-		} catch (Exception e) {
-			log.error("通过key查询全部元素失败", e);
-		}
-		return null;
+		return stringRedisTemplate.opsForList().range(key, 0, -1);
 	}
 
 	/**
@@ -193,14 +136,28 @@ public class RedisTemplateService {
      * @param key map的键
      * @param key1 map中值的键
      * @return
+	 * @throws IOException 
      */
-	public String getRedisForHash(String key, String key1) {
-		try {
-			return (String) stringRedisTemplate.opsForHash().get(key, key1);
-		} catch (Exception e) {
-			log.error("通过key查询全部元素失败", e);
-		}
-		return null;
+	public String getRedisForHash(String key, String key1) throws IOException {
+		Set<HostAndPort> hosts = getHosts();
+		final JedisCluster client = new JedisCluster(hosts, 15000);
+		String auditPrjId = client.hget(key, key1);
+		client.close();
+		return auditPrjId;
+	}
+
+	/**
+	 * 获取华为ridis连接
+	 * @return
+	 */
+	public Set<HostAndPort> getHosts() {
+		String prefix = "spring.redis.cluster.";
+        String redisIPPort = env.getProperty( prefix + "nodes");
+        Set<HostAndPort> hosts = new HashSet<HostAndPort>();
+        for (String hostAndPort : redisIPPort.split(",")) {
+            hosts.add(new HostAndPort(hostAndPort.split(":")[0], Integer.parseInt(hostAndPort.split(":")[1])));
+        }
+		return hosts;
 	}
 	
 }

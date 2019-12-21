@@ -59,12 +59,9 @@ public class CommonUtil {
                 sb.append(c);
             } else {
                 byte[] b;
-                try {
-                    b = Character.toString(c).getBytes(StandardCharsets.UTF_8);
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                    b = new byte[0];
-                }
+                b = Character.toString(c).getBytes(StandardCharsets.UTF_8);
+//              System.out.println(ex);
+                b = new byte[0];
                 for (int j = 0; j < b.length; j++) {
                     int k = b[j];
                     if (k < 0)

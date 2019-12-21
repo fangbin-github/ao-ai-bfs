@@ -8,7 +8,7 @@ public class DynamicDataSourceContextHolder {
     /**
      * Maintain variable for every thread, to avoid effect other thread
      */
-    private static final ThreadLocal<String> contextHolder = new ThreadLocal<String>() {
+    private final static ThreadLocal<String> contextHolder = new ThreadLocal<String>() {
         /**
          * 将 default 数据源的 key 作为默认数据源的 key
          */
